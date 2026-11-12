@@ -1,0 +1,98 @@
+---
+// Accessible testimonial carousel: native horizontal scrolling with snap, plus previous / next buttons.
+// Quotes are shown word for word; long ones open in full with "Read more".
+import Icon from '@/components/Icon.astro';
+import { rich } from '@/lib/text';
+interface Item { about?: string; name?: string; role?: string; quote: string[] }
+interface Props { items: Item[]; label: string; anonymousLabel?: string }
+const { items, label, anonymousLabel = 'Workshop participant' } = Astro.props;
+const isLong = (q: string[]) => q.join(' ').length > 360;
+---
+<div class="tm" data-carousel>
+  <ul class="rail" tabindex="0" aria-label={label} data-rail>
+    {items.map((t) => (
+      <li class="slide">
+        <figure class:list={['glass', 'tcard', isLong(t.quote) && 'long']} data-tcard>
+          {t.about && <p class:list={['about', t.about === 'Andy' ? 'about-silver' : 'about-gold']}>About {t.about}</p>}
+          <span class="mark" aria-hidden="true">“</span>
+          <blockquote data-quote>
+            {t.quote.map((p) => <p set:html={rich(p)} />)}
+          </blockquote>
+          {isLong(t.quote) && (
+            <button type="button" class="more" data-more aria-expanded="false">
+              <span data-more-label>Read more</span><Icon name="plus" />
+            </button>
+          )}
+          <figcaption>
+            <span class="who">{t.name ?? anonymousLabel}</span>
+            {t.role && <span class="role">{t.role}</span>}
+          </figcaption>
+        </figure>
+      </li>
+    ))}
+  </ul>
+  <div class="ctl">
+    <button type="button" class="nav" data-prev aria-label="Previous testimonials"><Icon name="arrow" class="flip" /></button>
+    <button type="button" class="nav" data-next aria-label="Next testimonials"><Icon name="arrow" /></button>
+  </div>
+</div>
+
+<style>
+  .tm { position: relative; }
+  .rail { display: flex; gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); padding: .5rem var(--gutter) 1.5rem; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .rail::-webkit-scrollbar { display: none; }
+  .slide { flex: none; width: min(86vw, 30rem); scroll-snap-align: start; display: flex; }
+  .tcard { position: relative; display: flex; flex-direction: column; width: 100%; padding: clamp(1.5rem, 2.6vw, 2.25rem); }
+  .about { align-self: flex-start; font-size: .66rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; padding: .35rem .8rem; border-radius: 999px; border: 1px solid currentColor; margin-bottom: 1rem; }
+  .about-gold { color: var(--color-gold); }
+  .about-silver { color: var(--color-silver); }
+  .mark { font-family: var(--font-display); font-size: 4rem; line-height: .6; height: 1.6rem; color: var(--color-copper); }
+  blockquote { font-size: 1rem; line-height: 1.65; color: rgb(255 255 255 / .88); }
+  blockquote :global(p + p) { margin-top: .9em; }
+  :global(.js) .long:not(.open) blockquote { max-height: 13.2em; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent); mask-image: linear-gradient(180deg, #000 62%, transparent); }
+  .more { display: none; align-self: flex-start; align-items: center; gap: .5rem; margin-top: .75rem; padding: .5rem 0; min-height: 2.75rem; font-size: .7rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--color-gold); cursor: pointer; }
+  :global(.js) .more { display: inline-flex; }
+  .more :global(svg) { width: .9rem; height: .9rem; transition: transform .4s var(--ease-flow); }
+  .open .more :global(svg) { transform: rotate(45deg); }
+  figcaption { margin-top: auto; padding-top: 1.5rem; display: grid; gap: .25rem; }
+  figcaption::before { content: ""; width: 2.5rem; height: 2px; background: var(--grad-copper); margin-bottom: .9rem; }
+  .who { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; }
+  .role { font-size: .82rem; line-height: 1.45; color: rgb(255 255 255 / .62); }
+  .ctl { display: flex; justify-content: center; gap: .75rem; margin-top: .5rem; }
+  .nav { width: 3rem; height: 3rem; border-radius: 50%; display: grid; place-items: center; border: 1px solid rgb(221 198 134 / .5); color: var(--color-gold); cursor: pointer; transition: background-color .3s, border-color .3s, opacity .3s, transform .35s var(--ease-flow); }
+  .nav:hover:not(:disabled) { background: rgb(221 198 134 / .12); border-color: var(--color-gold); transform: translateY(-2px); }
+  .nav:disabled { opacity: .3; cursor: default; }
+  .nav :global(svg) { width: 1.1rem; height: 1.1rem; }
+  .nav :global(.flip) { transform: scaleX(-1); }
+  @media (min-width: 82rem) { .rail { scroll-padding-inline: calc((100vw - 82rem) / 2 + var(--gutter)); padding-inline: calc((100vw - 82rem) / 2 + var(--gutter)); } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((root) => {
+    const rail = root.querySelector<HTMLElement>('[data-rail]')!;
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const step = () => (rail.querySelector<HTMLElement>('.slide')?.offsetWidth ?? 320) + 20;
+    const update = () => {
+      prev.disabled = rail.scrollLeft < 8;
+      next.disabled = rail.scrollLeft + rail.clientWidth > rail.scrollWidth - 8;
+    };
+    prev.addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next.addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
+    rail.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+    root.querySelectorAll<HTMLElement>('[data-tcard]').forEach((card) => {
+      const btn = card.querySelector<HTMLButtonElement>('[data-more]');
+      if (!btn) return;
+      const quote = card.querySelector<HTMLElement>('[data-quote]')!;
+      // Hide the control when the full quote already fits
+      if (quote.scrollHeight <= quote.clientHeight + 4) { card.classList.add('open'); btn.remove(); return; }
+      btn.addEventListener('click', () => {
+        const open = card.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+        btn.querySelector('[data-more-label]')!.textContent = open ? 'Read less' : 'Read more';
+      });
+    });
+  });
+</script>

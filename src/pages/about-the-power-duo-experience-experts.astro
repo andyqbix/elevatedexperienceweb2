@@ -1,0 +1,257 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import Icon from '@/components/Icon.astro';
+import { powerDuo as c } from '@/content/power-duo';
+import { rich } from '@/lib/text';
+import heroImg from '@/assets/photos/stage-duo-close.jpg';
+import duoStudio from '@/assets/photos/duo-studio-a.jpg';
+import clairePhoto from '@/assets/photos/claire-portrait-csp.jpg';
+import andyPhoto from '@/assets/photos/andy-portrait.jpg';
+import logo from '@/assets/brand/ee-logo-full.png';
+
+const profiles = [
+  { ...c.meet.claire, key: 'claire', photo: clairePhoto, alt: 'Claire Boscq CSP, the CX Energiser', accent: 'accent-gold', pos: '50% 12%' },
+  { ...c.meet.andy, key: 'andy', photo: andyPhoto, alt: 'Andy Jarvis, the Digital King', accent: 'accent-silver', pos: '50% 10%' },
+];
+const swatches = [
+  { name: 'Gold', grad: 'var(--grad-gold)' },
+  { name: 'Silver', grad: 'var(--grad-silver)' },
+  { name: 'Copper', grad: 'var(--grad-copper)' },
+  { name: 'Blue', grad: 'var(--grad-blue)' },
+];
+---
+<Base title={c.meta.title} description={c.meta.description} breadcrumb="The Power Duo" aboutPage>
+  <!-- SECTION 1 | HERO -->
+  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.heading} image={heroImg} alt="Andy Jarvis and Claire Boscq CSP on stage together" position="50% 25%" mobileFit>
+    {c.hero.lines.map((l, i) => <p class:list={['hero-line', i === 1 && 'gold']}>{l}</p>)}
+  </PageHero>
+
+  <!-- SECTION 2 | WHY US? THE POWER OF TWO -->
+  <section class="section on-light">
+    <div class="wrap two">
+      <div class="two-copy">
+        <p class="eyebrow reveal">{c.powerOfTwo.eyebrow}</p>
+        <h2 class="display-md mt-6 reveal">{c.powerOfTwo.heading}</h2>
+        <p class="sub reveal">{c.powerOfTwo.sub}</p>
+        <div class="prose-ee reveal">
+          {c.powerOfTwo.body.map((p) => <p set:html={rich(p)} />)}
+        </div>
+      </div>
+      <div class="two-media">
+        <div class="photo photo-frame reveal-img two-photo">
+          <Image src={duoStudio} alt="Andy Jarvis and Claire Boscq CSP side by side" widths={[480, 800, 1200]} sizes="(min-width: 64rem) 40vw, 92vw" />
+        </div>
+        <div class="energy energy-gold" aria-hidden="true"></div>
+        <div class="energy energy-silver" aria-hidden="true"></div>
+      </div>
+    </div>
+    <div class="wrap-narrow statement reveal">
+      <hr class="rule-metal" />
+      <p class="display-md" set:html={rich(c.powerOfTwo.statement)} />
+      <p class="statement-close">{c.powerOfTwo.closing}</p>
+    </div>
+  </section>
+
+  <!-- SECTION 3 | MEET THE POWER DUO -->
+  <section class="section bg-charcoal" id="meet">
+    <div class="atmos"></div>
+    <div class="wrap relative">
+      <div class="head-center">
+        <p class="eyebrow no-rule reveal">{c.meet.eyebrow}</p>
+        <h2 class="display-lg reveal">{c.meet.heading}</h2>
+      </div>
+      <div class="profiles">
+        {profiles.map((p, i) => (
+          <article class={`glass accent-top profile ${p.accent} reveal`} style={`--d:${i * 150}ms`}>
+            <div class="profile-photo">
+              <Image src={p.photo} alt={p.alt} widths={[480, 800, 1100]} sizes="(min-width: 64rem) 42vw, 92vw" style={`object-position:${p.pos}`} />
+              <div class="profile-id">
+                <h3 class="display-sm">{p.name}</h3>
+                <p class="profile-role">{p.role}</p>
+              </div>
+            </div>
+            <div class="profile-body">
+              <p class="profile-areas">{p.areas}</p>
+              <p class="profile-lead">{p.lead}</p>
+              <div class="prose-ee">
+                {p.bio.map((b) => <p set:html={rich(b)} />)}
+              </div>
+              <p class="superpower" set:html={rich(p.superpower)} />
+              <div class="creds">
+                <p class="creds-label" set:html={rich(p.credentialsLabel)} />
+                <ul class="tick-list">
+                  {p.credentials.map((cr) => <li>{cr}</li>)}
+                </ul>
+              </div>
+              <details class="expand">
+                <summary><span set:html={rich(p.expandLabel)} /><span class="chev"><Icon name="plus" /></span></summary>
+                <div class="expand-body prose-ee">
+                  {p.full.map((b) => <p set:html={rich(b)} />)}
+                  <p class="signoff"><em>{p.signoff}</em></p>
+                </div>
+              </details>
+              <a class="link-arrow" href={p.cta.href} target="_blank" rel="noopener noreferrer"><span set:html={rich(p.cta.label)} /> <Icon name="external" /></a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 | THE POWER OF TWO IN ACTION -->
+  <section class="section on-light">
+    <div class="wrap">
+      <div class="action-grid">
+        <div class="reveal">
+          <p class="eyebrow">{c.inAction.eyebrow}</p>
+          <h2 class="display-md mt-6">{c.inAction.heading}</h2>
+        </div>
+        <div class="reveal" style="--d:120ms">
+          <div class="prose-ee">
+            {c.inAction.body.map((p) => <p set:html={rich(p)} />)}
+          </div>
+          <p class="pull" set:html={rich(c.inAction.statement)} />
+        </div>
+      </div>
+
+      <div class="values">
+        <div class="values-intro reveal">
+          <p class="eyebrow">{c.inAction.valuesEyebrow}</p>
+          <div class="prose-ee mt-6">
+            {c.inAction.valuesBody.map((p) => <p set:html={rich(p)} />)}
+          </div>
+        </div>
+        <ol class="shine-values reveal" aria-label="Our five shared values spell SHINE">
+          {c.inAction.values.map((v, i) => (
+            <li style={`--i:${i}`}>
+              <span class="letter" aria-hidden="true">{v.letter}</span>
+              <span class="vname">{v.name}</span>
+            </li>
+          ))}
+        </ol>
+        <div class="values-after reveal">
+          <p class="lede" set:html={rich(c.inAction.valuesAfter)} />
+          <p class="values-close">{c.inAction.valuesClosing}</p>
+          <a class="btn btn-primary" href={c.inAction.cta.href}>{c.inAction.cta.label} <Icon name="arrow" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 | THE SOUL BEHIND OUR BRAND -->
+  <section class="section bg-ink soul">
+    <div class="wrap soul-grid">
+      <div class="soul-logo reveal">
+        <div class="halo" aria-hidden="true"></div>
+        <Image src={logo} alt="The Elevated eXperience logo: a flame formed of copper, gold, silver and blue elements within a circle" widths={[320, 520, 856]} sizes="(min-width: 64rem) 30vw, 70vw" />
+      </div>
+      <div>
+        <p class="eyebrow reveal">{c.soul.eyebrow}</p>
+        <h2 class="display-md mt-6 reveal">{c.soul.heading}</h2>
+        <div class="prose-ee mt-8 reveal">
+          {c.soul.body.map((p) => <p set:html={rich(p)} />)}
+        </div>
+        <div class="symbolism reveal">
+          <ul class="swatches" aria-hidden="true">
+            {swatches.map((s) => <li><span style={`background:${s.grad}`}></span>{s.name}</li>)}
+          </ul>
+          <p set:html={rich(c.soul.symbolism)} />
+        </div>
+        <div class="prose-ee reveal">
+          {c.soul.body2.map((p) => <p set:html={rich(p)} />)}
+        </div>
+        <div class="soul-close reveal">
+          <p class="kicker">{c.soul.line1}</p>
+          <p class="soul-em"><em>{c.soul.line2}</em></p>
+          <p class="soul-final">{c.soul.closing}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6 | LET'S ELEVATE TOGETHER -->
+  <CtaBand eyebrow={c.cta.eyebrow} heading={c.cta.heading} body={c.cta.body} closing={c.cta.closing} buttons={[c.cta.button]} />
+</Base>
+
+<style>
+  .relative { position: relative; }
+  .head-center { text-align: center; display: grid; justify-items: center; gap: 1.5rem; max-width: 56rem; margin: 0 auto clamp(3rem, 6vw, 5rem); }
+
+  /* Power of two */
+  .two { display: grid; gap: clamp(2.5rem, 6vw, 5.5rem); align-items: center; }
+  .sub { margin: 1.25rem 0 1.75rem; font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-copper-deep); line-height: 1.6; }
+  .two-media { position: relative; isolation: isolate; }
+  .two-photo { aspect-ratio: 4 / 5; }
+  .two-photo :global(img) { object-position: 50% 15%; }
+  .energy { position: absolute; border-radius: 50%; z-index: -1; filter: blur(2px); }
+  .energy-gold { width: 46%; aspect-ratio: 1; right: -7%; top: -5%; background: conic-gradient(from 200deg, #f8ecb3, #b69748, #cb6c52, #f8ecb3); opacity: .5; }
+  .energy-silver { width: 38%; aspect-ratio: 1; left: -6%; bottom: -5%; background: conic-gradient(from 20deg, #e2e3e6, #9ba0a7, #157ed9, #e2e3e6); opacity: .45; }
+  .statement { margin-top: clamp(3.5rem, 7vw, 6rem); text-align: center; display: grid; gap: 2rem; justify-items: center; }
+  .statement hr { width: 100%; }
+  .statement :global(strong) { font-weight: inherit; }
+  .statement-close { font-size: .82rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--color-copper-deep); }
+
+  /* Profiles */
+  .profiles { display: grid; gap: 2rem; align-items: start; }
+  .profile { display: flex; flex-direction: column; overflow: hidden; }
+  .profile-photo { position: relative; aspect-ratio: 4 / 4.2; overflow: hidden; background: var(--color-soft-black); }
+  .profile-photo :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .profile-photo::after { content: ""; position: absolute; inset: 40% 0 0 0; background: linear-gradient(180deg, transparent, rgb(17 19 22 / .96)); }
+  .profile-id { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; padding: clamp(1.5rem, 3vw, 2.5rem); }
+  .profile-role { margin-top: .4rem; font-family: var(--font-display); font-size: 1.5rem; font-weight: 600; background: var(--accent); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .profile-body { padding: 0 clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 2.5rem); display: grid; gap: 1.4rem; }
+  .profile-areas { font-style: italic; color: var(--accent-solid); font-size: .98rem; padding-bottom: 1.25rem; border-bottom: 1px solid rgb(255 255 255 / .1); }
+  .profile-lead { font-weight: 650; color: #fff; font-size: 1.1rem; line-height: 1.45; }
+  .superpower { padding: 1.1rem 1.25rem; border-left: 3px solid var(--accent-solid); background: rgb(255 255 255 / .04); border-radius: 0 .75rem .75rem 0; color: rgb(255 255 255 / .9); }
+  .superpower :global(strong) { color: var(--accent-solid); }
+  .creds-label { font-size: .7rem; font-weight: 700; letter-spacing: .24em; color: rgb(255 255 255 / .6); margin-bottom: 1rem; }
+  .creds :global(li) { font-size: .95rem; color: rgb(255 255 255 / .86); }
+  .profile :global(details summary) { font-size: .76rem; letter-spacing: .16em; }
+  .signoff { color: var(--accent-solid); }
+  .profile .link-arrow { justify-self: start; color: var(--accent-solid); border-color: color-mix(in srgb, var(--accent-solid) 40%, transparent); }
+
+  /* In action + values */
+  .action-grid { display: grid; gap: 2.5rem; }
+  .pull { margin-top: 2rem; padding-left: 1.25rem; border-left: 3px solid var(--color-copper); font-family: var(--font-display); font-weight: 700; font-size: clamp(1.35rem, 2.2vw, 1.75rem); line-height: 1.2; }
+  .pull :global(strong) { font-weight: inherit; }
+  .values { margin-top: clamp(4rem, 8vw, 7rem); padding-top: clamp(3rem, 6vw, 5rem); border-top: 1px solid rgb(23 25 29 / .1); display: grid; gap: clamp(2.5rem, 5vw, 4rem); }
+  .values-intro { max-width: 46rem; }
+  .shine-values { display: grid; gap: .75rem; position: relative; }
+  .shine-values li { position: relative; display: flex; align-items: center; gap: 1.25rem; padding: 1.1rem 1.5rem; border-radius: 1rem; background: var(--color-charcoal); color: #fff; overflow: hidden; transition: transform .5s var(--ease-flow); }
+  .shine-values li:hover { transform: translateY(-5px); }
+  .shine-values li::after { content: ""; position: absolute; inset: auto 0 0 0; height: 3px; background: var(--grad-copper); }
+  .shine-values li:nth-child(2)::after, .shine-values li:nth-child(5)::after { background: var(--grad-gold); }
+  .shine-values li:nth-child(3)::after { background: var(--grad-silver); }
+  .shine-values li:nth-child(4)::after { background: var(--grad-blue); }
+  .letter { font-family: var(--font-display); font-weight: 800; font-size: 3.5rem; line-height: 1; background: var(--grad-gold); -webkit-background-clip: text; background-clip: text; color: transparent; min-width: 2.5rem; }
+  .vname { font-size: .78rem; font-weight: 700; letter-spacing: .16em; line-height: 1.4; }
+  .values-after { max-width: 50rem; display: grid; gap: 1.5rem; justify-items: start; }
+  .values-close { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.4rem, 2.4vw, 2rem); line-height: 1.15; color: var(--color-copper-deep); }
+
+  /* Soul */
+  .soul-grid { display: grid; gap: clamp(3rem, 6vw, 6rem); align-items: center; }
+  .soul-logo { position: relative; display: grid; place-items: center; padding: 2rem; }
+  .soul-logo :global(img) { position: relative; width: min(100%, 22rem); height: auto; filter: drop-shadow(0 30px 60px rgb(0 0 0 / .6)); }
+  .halo { position: absolute; width: 90%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgb(203 108 82 / .28), rgb(221 198 134 / .1) 45%, transparent 70%); animation: breathe 9s ease-in-out infinite; }
+  @keyframes breathe { 50% { transform: scale(1.08); opacity: .8; } }
+  .symbolism { margin-block: 2rem; padding: clamp(1.5rem, 3vw, 2.25rem); border-radius: 1.25rem; border: 1px solid rgb(255 255 255 / .1); background: linear-gradient(160deg, rgb(255 255 255 / .06), rgb(255 255 255 / .015)); font-weight: 600; line-height: 1.65; color: #fff; }
+  .swatches { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; margin-bottom: 1.25rem; font-size: .7rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: rgb(255 255 255 / .6); }
+  .swatches li { display: flex; align-items: center; gap: .6rem; }
+  .swatches span { width: 1.75rem; height: 1.75rem; border-radius: 50%; box-shadow: inset 0 1px 1px rgb(255 255 255 / .4), 0 6px 14px -6px #000; }
+  .soul-close { margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid rgb(255 255 255 / .1); display: grid; gap: .6rem; }
+  .soul-em { color: var(--color-gold); font-size: 1.1rem; }
+  .soul-final { margin-top: .75rem; font-size: .8rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: rgb(255 255 255 / .7); }
+
+  @media (min-width: 40rem) { .shine-values { grid-template-columns: repeat(5, 1fr); gap: .6rem; } .shine-values li { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.5rem 1.1rem 1.6rem; min-height: 11rem; justify-content: space-between; } }
+  @media (min-width: 64rem) {
+    .two { grid-template-columns: 1fr .8fr; }
+    .profiles { grid-template-columns: 1fr 1fr; }
+    .action-grid { grid-template-columns: 1fr 1fr; gap: 5rem; }
+    .soul-grid { grid-template-columns: .75fr 1fr; }
+    .shine-values li { padding: 1.75rem 1.5rem; }
+    .letter { font-size: 4.5rem; }
+  }
+</style>

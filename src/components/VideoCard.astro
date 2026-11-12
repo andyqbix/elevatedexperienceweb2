@@ -1,0 +1,72 @@
+---
+// Click-to-play video: a poster with a play button that becomes the player.
+// Local clips play in place. YouTube videos load from youtube-nocookie.com only after the visitor presses play.
+import { Image } from 'astro:assets';
+import Icon from '@/components/Icon.astro';
+import type { Video } from '@/data/videos';
+interface Props { video: Video; featured?: boolean }
+const { video: v, featured = false } = Astro.props;
+---
+<figure class:list={['vcard', featured && 'featured']}>
+  <div class="frame photo" data-video data-kind={v.kind} data-src={v.kind === 'file' ? v.src : v.id} data-title={v.title}>
+    {v.kind === 'youtube' && v.thumb
+      ? <Image src={v.thumb} alt="" widths={[480, 800, 1280]} sizes={featured ? '(min-width: 64rem) 60vw, 92vw' : '(min-width: 64rem) 30vw, 92vw'} loading="lazy" />
+      : <img src={v.poster} alt="" loading="lazy" decoding="async" />}
+    <button type="button" class="play" aria-label={`Play video: ${v.title}`}>
+      <span class="disc"><Icon name="play" /></span>
+    </button>
+    {v.duration && <span class="dur">{v.duration}</span>}
+  </div>
+  <figcaption>
+    <span class="type">{v.type}</span>
+    <span class="title">{v.title}</span>
+    {v.kind === 'youtube' && <a class="yt" href={`https://www.youtube.com/watch?v=${v.id}`} target="_blank" rel="noopener noreferrer">Watch on YouTube<span class="sr-only">: {v.title} (opens in a new tab)</span> <Icon name="external" /></a>}
+  </figcaption>
+</figure>
+
+<style>
+  .vcard { display: grid; gap: 1rem; align-content: start; }
+  .frame { aspect-ratio: 16 / 9; box-shadow: 0 30px 60px -36px #000; }
+  .frame::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(255 255 255 / .12); pointer-events: none; }
+  .frame :global(img) { position: absolute; inset: 0; }
+  .frame :global(iframe), .frame :global(video) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #000; }
+  .play { position: absolute; inset: 0; display: grid; place-items: center; cursor: pointer; background: linear-gradient(180deg, rgb(11 12 15 / .1), rgb(11 12 15 / .5)); transition: background-color .4s; }
+  .disc { width: 4.25rem; height: 4.25rem; border-radius: 50%; display: grid; place-items: center; background: var(--grad-copper); color: #fff; box-shadow: 0 0 0 8px rgb(255 255 255 / .12), 0 18px 40px -12px rgb(0 0 0 / .8); transition: transform .45s var(--ease-flow), box-shadow .45s; }
+  .disc :global(svg) { width: 1.5rem; height: 1.5rem; fill: currentColor; margin-left: .2rem; }
+  .play:hover .disc, .play:focus-visible .disc { transform: scale(1.1); box-shadow: 0 0 0 12px rgb(255 255 255 / .14), 0 18px 40px -12px rgb(0 0 0 / .8); }
+  .featured .disc { width: 5.5rem; height: 5.5rem; }
+  .featured .disc :global(svg) { width: 2rem; height: 2rem; }
+  .dur { position: absolute; right: .75rem; bottom: .75rem; font-size: .72rem; font-weight: 600; padding: .2rem .55rem; border-radius: .4rem; background: rgb(11 12 15 / .8); color: #fff; font-variant-numeric: tabular-nums; pointer-events: none; }
+  .playing .play, .playing .dur, .playing :global(img) { display: none; }
+  figcaption { display: grid; gap: .35rem; }
+  .type { font-size: .66rem; font-weight: 700; letter-spacing: .22em; color: var(--color-copper-soft); }
+  .title { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; line-height: 1.2; }
+  .featured .title { font-size: clamp(1.4rem, 2.4vw, 1.9rem); }
+  .yt { display: inline-flex; align-items: center; gap: .4rem; font-size: .8rem; color: rgb(255 255 255 / .62); padding-block: .35rem; transition: color .3s; width: fit-content; }
+  .yt:hover { color: var(--color-gold); }
+  .yt :global(svg) { width: .85rem; height: .85rem; }
+  :global(.on-light) .type { color: var(--color-copper-deep); }
+  :global(.on-light) .yt { color: #5d6067; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-video]').forEach((frame) => {
+    const btn = frame.querySelector<HTMLButtonElement>('.play')!;
+    btn.addEventListener('click', () => {
+      const { kind, src, title } = frame.dataset;
+      // Only one video plays at a time
+      document.querySelectorAll<HTMLVideoElement>('video').forEach((v) => { if (!v.muted || !v.hasAttribute('data-bg')) v.pause(); });
+      if (kind === 'file') {
+        const v = document.createElement('video');
+        v.src = src!; v.controls = true; v.autoplay = true; v.playsInline = true; v.setAttribute('aria-label', title!);
+        frame.append(v); v.focus();
+      } else {
+        const f = document.createElement('iframe');
+        f.src = `https://www.youtube-nocookie.com/embed/${src}?autoplay=1&rel=0`;
+        f.title = title!; f.allow = 'accelerometer; autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen = true;
+        frame.append(f); f.focus();
+      }
+      frame.classList.add('playing');
+    });
+  });
+</script>

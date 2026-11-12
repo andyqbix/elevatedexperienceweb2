@@ -1,0 +1,250 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import LogoStrip from '@/components/LogoStrip.astro';
+import Testimonials from '@/components/Testimonials.astro';
+import VideoCard from '@/components/VideoCard.astro';
+import Journey from '@/components/Journey.astro';
+import Icon from '@/components/Icon.astro';
+import { masterclass as c } from '@/content/masterclass';
+import { participantComments } from '@/data/testimonials';
+import { videos } from '@/data/videos';
+import { rich } from '@/lib/text';
+import expImg from '@/assets/photos/masterclass-06.jpg';
+import g1 from '@/assets/photos/masterclass-01.jpg';
+import g2 from '@/assets/photos/masterclass-04.jpg';
+import g3 from '@/assets/photos/masterclass-07.jpg';
+import g4 from '@/assets/photos/stage-duo-flipchart.jpg';
+
+const gallery = [
+  { src: g1, alt: 'Andy Jarvis and Claire Boscq CSP opening the SHINE Executive Masterclass in Jersey' },
+  { src: g2, alt: 'Andy and Claire leading a discussion during the masterclass' },
+  { src: g3, alt: 'Andy making a point while Claire looks on during the masterclass' },
+  { src: g4, alt: 'Andy and Claire working at a flipchart with an audience' },
+];
+const accentClass: Record<string, string> = { copper: 'accent-copper', blue: 'accent-blue', gold: 'accent-gold' };
+const btnClass: Record<string, string> = { copper: 'btn-primary', blue: 'btn-blue', gold: 'btn-gold' };
+const offers = [
+  { '@type': 'Offer', name: 'Conference & Event Add-On', price: '998', priceCurrency: 'USD', description: 'Per participant, minimum 12 paying participants.' },
+  { '@type': 'Offer', name: 'City Edition', price: '998', priceCurrency: 'USD', description: 'Per participant. One day, 12 to 20 participants, all-inclusive.' },
+  { '@type': 'Offer', name: 'Private Retreat', price: '19998', priceCurrency: 'USD', description: 'From $19,998. Two-day private leadership experience.' },
+];
+---
+<Base title={c.meta.title} description={c.meta.description} breadcrumb="Executive Masterclasses" service={{ name: 'Executive Masterclasses: SHINE and ELEVATE', type: 'Executive education', description: c.meta.description, offers }}>
+  <!-- SECTION 1 | THE HERO -->
+  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.heading} video={{ src: '/video/masterclass-hero.mp4', poster: '/video/masterclass-hero-poster.jpg', sound: true }} position="50% 40%">
+    <p class="hero-line gold">{c.hero.line}</p>
+    {c.hero.body.map((p) => <p class="hero-text" set:html={rich(p)} />)}
+    <div class="hero-cta"><a class="btn btn-primary" href={c.hero.cta.href}>{c.hero.cta.label} <Icon name="arrow-down" /></a></div>
+  </PageHero>
+
+  <!-- SECTION 2 | THE EXPERIENCE -->
+  <section class="section on-light">
+    <div class="wrap split-2">
+      <div>
+        <p class="eyebrow reveal">{c.experience.eyebrow}</p>
+        <h2 class="display-md mt-6 reveal">{c.experience.heading}</h2>
+        <div class="prose-ee mt-8 reveal">
+          {c.experience.body.map((p) => <p set:html={rich(p)} />)}
+        </div>
+        <p class="statement statement-gold mt-8 reveal">{c.experience.closing}</p>
+      </div>
+      <div class="exp-media">
+        <div class="photo photo-frame reveal-img exp-photo">
+          <Image src={expImg} alt="Andy Jarvis and Claire Boscq CSP facilitating an Executive Masterclass" widths={[480, 800, 1160]} sizes="(min-width: 64rem) 45vw, 92vw" />
+        </div>
+        <ul class="aspects">
+          {c.experience.aspects.map((a, i) => (
+            <li class="card aspect reveal" style={`--d:${i * 80}ms`}><span class="icon-ring"><Icon name={a.icon} /></span><span>{a.label}</span></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 | TWO SIGNATURE MASTERCLASSES -->
+  <section class="section bg-ink" id="programmes">
+    <div class="atmos"></div>
+    <div class="wrap rel">
+      <div class="head head-center reveal">
+        <p class="eyebrow no-rule">{c.programmes.eyebrow}</p>
+        <h2 class="display-lg mt-6">{c.programmes.heading}</h2>
+        <div class="prose-ee">{c.programmes.body.map((p) => <p set:html={rich(p)} />)}</div>
+      </div>
+
+      <div class="panels">
+        {c.programmes.panels.map((p) => {
+          const accent = p.key === 'shine' ? 'accent-gold' : 'accent-blue';
+          return (
+            <article class={`glass accent-top ${accent} prog prog-${p.key} reveal`} id={p.key}>
+              <header class="prog-head">
+                <h3 class="prog-name">{p.name}</h3>
+                <p class="prog-tag">{p.tagline}</p>
+              </header>
+
+              <section class="blk">
+                <h4 class="label">{p.whyLabel}</h4>
+                <div class="prose-ee">{p.why.map((t) => <p set:html={rich(t)} />)}</div>
+              </section>
+
+              <section class="blk">
+                <h4 class="label">{p.howLabel}</h4>
+                <Journey id={`mc-${p.key}`} steps={p.steps} label={p.howLabel} accent={p.key === 'shine' ? 'gold' : 'blue'} size="sm" />
+                {p.howCta && <p class="mt-6"><a class="link-arrow" href={p.howCta.href}>{p.howCta.label} <Icon name="arrow" /></a></p>}
+              </section>
+
+              <details class="expand blk-d" open data-mobile-collapse>
+                <summary><h4 class="label">{p.whoLabel}</h4><span class="chev"><Icon name="plus" /></span></summary>
+                <div class="expand-body">
+                  <p class="who-lead">{p.whoLead}</p>
+                  <p class="muted mt-3">{p.whoIntro}</p>
+                  <ol class="who-list">
+                    {p.who.map((w, i) => (
+                      <li><span class="who-n">{i + 1}</span><div><strong>{w.title}</strong><p>{w.text}</p></div></li>
+                    ))}
+                  </ol>
+                </div>
+              </details>
+
+              <details class="expand blk-d" open data-mobile-collapse>
+                <summary><h4 class="label">{p.whatLabel}</h4><span class="chev"><Icon name="plus" /></span></summary>
+                <div class="expand-body">
+                  <p class="muted">{p.whatIntro}</p>
+                  <ul class="tick-list mt-4">{p.what.map((t) => <li>{t}</li>)}</ul>
+                </div>
+              </details>
+
+              <footer class="prog-out">
+                <p class="label">{p.outcomeLabel}</p>
+                <p class="out">{p.outcome}</p>
+              </footer>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 | THE INVESTMENT -->
+  <section class="section bg-charcoal" id="investment">
+    <div class="wrap">
+      <div class="head head-center reveal">
+        <p class="eyebrow no-rule">{c.investment.eyebrow}</p>
+        <h2 class="display-lg mt-6">{c.investment.heading}</h2>
+        <p class="lede">{c.investment.intro}</p>
+      </div>
+      <div class="options">
+        {c.investment.options.map((o, i) => (
+          <article class={`card accent-top ${accentClass[o.accent]} opt reveal`} style={`--d:${i * 120}ms`}>
+            <p class="label">{o.label}</p>
+            <h3 class="display-sm">{o.title}</h3>
+            <p class="opt-price"><span class="price">{o.price}</span>{o.priceUnit && <span class="unit">{o.priceUnit}</span>}</p>
+            <p class="terms">{o.terms}</p>
+            {o.body.map((t) => <p class="opt-text" set:html={rich(t)} />)}
+            <p class="list-label">{o.includedLabel}</p>
+            <ul class="tick-list">{o.included.map((t) => <li>{t}</li>)}</ul>
+            {o.provides && (<><p class="list-label">{o.providesLabel}</p><ul class="dot-list">{o.provides.map((t) => <li set:html={rich(t)} />)}</ul></>)}
+            {o.note && <p class="opt-note">{o.note}</p>}
+            <p class="opt-close">{o.closing}</p>
+            <a class={`btn ${btnClass[o.accent]} btn-block`} href={o.cta.href} target={o.cta.external ? '_blank' : undefined} rel={o.cta.external ? 'noopener noreferrer' : undefined}>{o.cta.label} <Icon name={o.cta.external ? 'external' : 'arrow'} /></a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 | THE PROOF -->
+  <section class="section bg-ink proof">
+    <div class="wrap">
+      <div class="split-2 wide-left proof-top">
+        <div class="reveal">
+          <p class="eyebrow">{c.proof.eyebrow}</p>
+          <h2 class="display-md mt-6">{c.proof.heading}</h2>
+          <div class="prose-ee mt-8">{c.proof.body.map((p) => <p set:html={rich(p)} />)}</div>
+          <p class="statement statement-gold mt-6">{c.proof.closing}</p>
+        </div>
+        <div class="reveal"><VideoCard video={videos.jerseyMasterclass} /></div>
+      </div>
+      <ul class="gallery">
+        {gallery.map((g, i) => (
+          <li class="photo photo-frame photo-zoom reveal-img" style={`--d:${i * 90}ms`}>
+            <Image src={g.src} alt={g.alt} widths={[400, 700, 1000]} sizes="(min-width: 64rem) 24vw, 46vw" />
+          </li>
+        ))}
+      </ul>
+      <h2 class="display-sm tm-head reveal">{c.proof.testimonialsHeading}</h2>
+    </div>
+    <div class="reveal"><Testimonials items={participantComments} label="Comments from workshop and session participants" /></div>
+    <div class="wrap logos-head">
+      <hr class="rule-metal" />
+      <h2 class="label reveal">{c.proof.logosHeading}</h2>
+    </div>
+    <LogoStrip />
+  </section>
+
+  <!-- SECTION 6 | THE ACTION -->
+  <CtaBand eyebrow={c.cta.eyebrow} heading={c.cta.heading} body={c.cta.body} closing={c.cta.closing} buttons={[{ label: c.cta.button.label, href: c.cta.button.href }]} />
+</Base>
+
+<style>
+  .rel { position: relative; }
+  .exp-media { display: grid; gap: 1.25rem; }
+  .exp-photo { aspect-ratio: 16 / 10; }
+  .aspects { display: grid; grid-template-columns: repeat(2, 1fr); gap: .9rem; }
+  .aspect { display: flex; align-items: center; gap: .9rem; padding: 1rem 1.1rem; font-weight: 600; font-size: .95rem; line-height: 1.25; }
+
+  .panels { display: grid; gap: 2rem; margin-top: clamp(3rem, 6vw, 5rem); align-items: start; }
+  .prog { padding: clamp(1.5rem, 3vw, 2.75rem); display: grid; gap: 2rem; min-width: 0; }
+  .prog-shine { background: linear-gradient(170deg, rgb(203 108 82 / .16), rgb(221 198 134 / .05) 40%, rgb(255 255 255 / .02)); border-color: rgb(221 198 134 / .3); }
+  .prog-elevate { background: linear-gradient(170deg, rgb(21 126 217 / .18), rgb(189 194 205 / .05) 40%, rgb(255 255 255 / .02)); border-color: rgb(75 173 221 / .32); }
+  .prog-name { font-size: clamp(3rem, 6vw, 4.5rem); font-weight: 800; letter-spacing: .02em; line-height: .9; background: var(--accent); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .prog-tag { margin-top: .9rem; font-family: var(--font-display); font-weight: 600; font-size: clamp(1.25rem, 2vw, 1.55rem); line-height: 1.2; }
+  .blk { display: grid; gap: 1.1rem; min-width: 0; }
+  .prog :global(.prose-ee) { font-size: 1rem; }
+  .prog h4.label { font-family: var(--font-sans); line-height: 1.5; }
+  .blk-d { margin-block: -1rem; }
+  .who-lead { font-weight: 600; color: #fff; }
+  .who-list { display: grid; gap: 1.1rem; margin-top: 1.25rem; }
+  .who-list li { display: flex; gap: 1rem; }
+  .who-n { flex: none; width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: .95rem; color: var(--accent-solid); border: 1px solid color-mix(in srgb, var(--accent-solid) 50%, transparent); }
+  .who-list strong { display: block; color: #fff; }
+  .who-list p { color: rgb(255 255 255 / .76); font-size: .96rem; line-height: 1.55; margin-top: .15rem; }
+  .prog :global(.tick-list) { font-size: .98rem; color: rgb(255 255 255 / .86); }
+  .prog-out { padding-top: 1.75rem; border-top: 1px solid color-mix(in srgb, var(--accent-solid) 35%, transparent); display: grid; gap: .6rem; }
+  .out { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 2.6vw, 2.1rem); line-height: 1.1; }
+
+  .options { display: grid; gap: 1.5rem; margin-top: clamp(3rem, 6vw, 5rem); }
+  .opt { padding: clamp(1.6rem, 2.6vw, 2.4rem); display: flex; flex-direction: column; gap: .85rem; }
+  .opt .display-sm { font-size: clamp(1.5rem, 2.1vw, 1.9rem); }
+  .opt-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: .6rem; margin-top: .4rem; }
+  .unit { font-size: .74rem; font-weight: 700; letter-spacing: .16em; color: rgb(255 255 255 / .75); }
+  .terms { font-size: .72rem; font-weight: 700; letter-spacing: .14em; color: var(--accent-solid); padding: .5rem .8rem; border-radius: .5rem; border: 1px solid color-mix(in srgb, var(--accent-solid) 40%, transparent); align-self: flex-start; line-height: 1.5; }
+  .opt-text { color: rgb(255 255 255 / .8); font-size: .97rem; line-height: 1.6; }
+  .opt-text :global(strong) { color: #fff; }
+  .list-label { font-size: .72rem; font-weight: 700; letter-spacing: .18em; margin-top: .7rem; }
+  .opt :global(.tick-list), .opt :global(.dot-list) { font-size: .95rem; color: rgb(255 255 255 / .86); }
+  .opt-note { font-size: .88rem; line-height: 1.5; color: rgb(255 255 255 / .66); font-style: italic; }
+  .opt-close { margin-top: auto; padding-top: 1rem; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; line-height: 1.2; }
+  .opt .btn { margin-top: .5rem; }
+
+  .proof { padding-bottom: clamp(3.5rem, 7vw, 6rem); }
+  .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .gallery li { aspect-ratio: 4 / 3; }
+  .tm-head { margin-top: clamp(3rem, 6vw, 5rem); margin-bottom: 1.5rem; }
+  .logos-head { margin-top: clamp(3rem, 6vw, 5rem); margin-bottom: 2rem; text-align: center; display: grid; gap: 2.5rem; }
+  .logos-head .label { font-family: var(--font-sans); }
+  @media (min-width: 64rem) {
+    .options { grid-template-columns: repeat(3, 1fr); }
+    .gallery { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (min-width: 72rem) { .panels { grid-template-columns: 1fr 1fr; } }
+</style>
+
+<script>
+  // On phones the WHO and WHAT blocks start collapsed to shorten the page; the content stays one tap away.
+  if (window.matchMedia('(max-width: 47.99rem)').matches) {
+    document.querySelectorAll<HTMLDetailsElement>('details[data-mobile-collapse]').forEach((d) => { d.open = false; });
+  }
+</script>

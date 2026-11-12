@@ -1,0 +1,24 @@
+---
+import Base from '@/layouts/Base.astro';
+import Icon from '@/components/Icon.astro';
+import { links } from '@/data/site';
+---
+<Base title="Page not found" description="This page could not be found on Elevated eXperience." noindex>
+  <section class="nf">
+    <div class="atmos atmos-gold"></div>
+    <div class="wrap-narrow inner">
+      <p class="eyebrow no-rule">404</p>
+      <h1 class="display-lg">Page not found</h1>
+      <p class="lede">This page has moved or no longer exists.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={links.home}>Go to the homepage <Icon name="arrow" /></a>
+        <a class="btn btn-ghost" href={links.contact}>Contact us <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .nf { position: relative; min-height: 80svh; display: grid; align-items: center; background: var(--color-ink); padding-top: var(--header-h); }
+  .inner { position: relative; text-align: center; display: grid; justify-items: center; gap: 1.5rem; padding-block: 4rem; }
+  .btn-row { justify-content: center; margin-top: 1rem; }
+</style>

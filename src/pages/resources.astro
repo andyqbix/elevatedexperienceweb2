@@ -1,0 +1,97 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import VideoCard from '@/components/VideoCard.astro';
+import Icon from '@/components/Icon.astro';
+import { resources as c } from '@/content/resources';
+import { resourceVideos } from '@/data/videos';
+import { rich } from '@/lib/text';
+import flame from '@/assets/brand/ee-flame.png';
+import dx from '@/assets/brand/dx-colour.png';
+import ex from '@/assets/brand/ex-colour.png';
+import cx from '@/assets/brand/cx-colour.png';
+// Featured Insights and Explore the Resources stay hidden until the articles are connected through Sanity.
+---
+<Base title={c.meta.title} description={c.meta.description} breadcrumb="Resources">
+  <!-- SECTION 1 | HERO -->
+  <section class="r-hero">
+    <div class="atmos atmos-gold"></div>
+    <Image src={flame} alt="" height={900} class="motif" loading="eager" />
+    <div class="wrap r-inner">
+      <p class="eyebrow">{c.hero.eyebrow}</p>
+      <h1 class="display-xl r-title">{c.hero.heading}</h1>
+      <p class="kicker metal-gold r-line">{c.hero.line}</p>
+      <div class="prose-ee r-body">{c.hero.body.map((p) => <p set:html={rich(p)} />)}</div>
+      <p class="statement r-close">{c.hero.closing}</p>
+    </div>
+  </section>
+
+  <!-- SECTION 4 | WATCH & LISTEN -->
+  <section class="section bg-charcoal" id="watch">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">{c.watch.eyebrow}</p>
+        <h2 class="display-lg mt-6">{c.watch.heading}</h2>
+        <p class="lede">{c.watch.text}</p>
+      </div>
+      <div class="media">
+        <div class="m-main reveal"><VideoCard video={resourceVideos[0]} featured /></div>
+        {resourceVideos.slice(1).map((v, i) => <div class="reveal" style={`--d:${(i % 3) * 100}ms`}><VideoCard video={v} /></div>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 | PRACTICAL TOOLS -->
+  <section class="section on-light" id="tools">
+    <div class="wrap split-2">
+      <div>
+        <p class="eyebrow reveal">{c.tools.eyebrow}</p>
+        <h2 class="display-md mt-6 reveal">{c.tools.heading}</h2>
+        <div class="prose-ee mt-8 reveal">{c.tools.body.map((p) => <p set:html={rich(p)} />)}</div>
+      </div>
+      <article class="tool reveal">
+        <div class="tool-marks" aria-hidden="true">
+          <Image src={dx} alt="" height={56} /><Image src={ex} alt="" height={56} /><Image src={cx} alt="" height={56} />
+        </div>
+        <p class="label">{c.tools.featuredLabel}</p>
+        <h3 class="display-sm">{c.tools.toolName}</h3>
+        <p class="tool-text">{c.tools.toolText}</p>
+        <a class="btn btn-gold" href={c.tools.cta.href} target="_blank" rel="noopener noreferrer">{c.tools.cta.label} <Icon name="external" /></a>
+      </article>
+    </div>
+  </section>
+
+  <!-- SECTION 6 | STAY INSPIRED -->
+  <section class="section on-copper">
+    <div class="wrap-narrow stay">
+      <p class="eyebrow no-rule reveal">{c.stay.eyebrow}</p>
+      <h2 class="display-lg reveal">{c.stay.heading}</h2>
+      {c.stay.body.map((p) => <p class="stay-text reveal">{p}</p>)}
+      <p class="reveal"><a class="btn btn-primary" href={c.stay.cta.href} target="_blank" rel="noopener noreferrer">{c.stay.cta.label} <Icon name="external" /></a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .r-hero { position: relative; overflow: hidden; background: var(--color-ink); }
+  .motif { position: absolute; right: -6%; top: 50%; height: 120%; width: auto; transform: translateY(-46%); opacity: .13; pointer-events: none; -webkit-mask-image: linear-gradient(270deg, #000 30%, transparent 95%); mask-image: linear-gradient(270deg, #000 30%, transparent 95%); }
+  .r-inner { position: relative; padding-top: calc(var(--header-h) + clamp(3rem, 8vh, 6rem)); padding-bottom: clamp(4rem, 9vw, 7rem); }
+  .r-title { max-width: 14ch; margin-top: 1.5rem; animation: rise 1.1s var(--ease-flow) both .15s; }
+  .r-line { margin-top: 1.75rem; animation: rise 1.1s var(--ease-flow) both .3s; }
+  .r-body { margin-top: 1.5rem; animation: rise 1.1s var(--ease-flow) both .4s; }
+  .r-close { margin-top: 1.75rem; padding-left: 1.25rem; border-left: 3px solid var(--color-copper); animation: rise 1.1s var(--ease-flow) both .5s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(28px); } }
+  .media { display: grid; gap: 2.25rem 1.5rem; margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .tool { position: relative; overflow: hidden; padding: clamp(1.75rem, 4vw, 3.25rem); border-radius: 1.5rem; background: linear-gradient(150deg, #17191d, #0b0c0f); color: #fff; display: grid; gap: 1.1rem; justify-items: start; box-shadow: 0 40px 80px -40px rgb(82 38 29 / .6); }
+  .tool::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: linear-gradient(90deg, #157ed9, #bdc2cd, #ddc686, #cb6c52); }
+  .tool-marks { display: flex; gap: 1.25rem; align-items: center; margin-bottom: .5rem; }
+  .tool-marks :global(img) { height: 2.1rem; width: auto; }
+  .tool .label { color: var(--color-gold); }
+  .tool-text { color: rgb(255 255 255 / .82); }
+  .tool .btn { margin-top: .5rem; }
+  .stay { text-align: center; display: grid; justify-items: center; gap: 1.4rem; }
+  .stay .eyebrow { color: var(--color-gold-pale); }
+  .stay-text { max-width: 58ch; color: rgb(255 255 255 / .9); }
+  @media (min-width: 48rem) { .media { grid-template-columns: repeat(2, 1fr); } .m-main { grid-column: 1 / -1; } }
+  @media (min-width: 64rem) { .media { grid-template-columns: repeat(6, 1fr); } .media > div { grid-column: span 2; } .media > .m-main { grid-column: span 4; grid-row: span 2; } }
+</style>

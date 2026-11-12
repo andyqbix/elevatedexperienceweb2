@@ -1,0 +1,162 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import { contact as c } from '@/content/contact';
+import { social } from '@/data/site';
+import { rich, plain } from '@/lib/text';
+import heroImg from '@/assets/photos/stage-duo-wide.jpg';
+import duoImg from '@/assets/photos/duo-studio-b.jpg';
+import hxLogo from '@/assets/brand/hx-hive-experience-full.png';
+import logo from '@/assets/brand/ee-logo-full.png';
+import mark from '@/assets/brand/ee-x-mark.png';
+
+const accentClass: Record<string, string> = { copper: 'accent-copper', silver: 'accent-silver', gold: 'accent-gold' };
+---
+<Base title={c.meta.title} description={c.meta.description} breadcrumb="Contact" contactPage>
+  <!-- SECTION 1 | HERO -->
+  <PageHero eyebrow={plain(c.hero.eyebrow)} title={c.hero.heading} image={heroImg} alt="Andy Jarvis and Claire Boscq CSP on stage together" position="70% 40%" size="compact" mobileFit>
+    <p class="hero-line gold">{plain(c.hero.line)}</p>
+    {c.hero.body.map((p) => <p class="hero-text" set:html={rich(p)} />)}
+    <p class="hero-line hero-close">{plain(c.hero.closing)}</p>
+  </PageHero>
+
+  <!-- SECTION 2 | LET'S CONNECT DIRECTLY -->
+  <section class="section bg-charcoal" id="reach">
+    <div class="atmos"></div>
+    <div class="wrap rel">
+      <div class="head head-center reveal">
+        <p class="eyebrow no-rule">{c.direct.eyebrow}</p>
+        <h2 class="display-lg mt-6">{c.direct.heading}</h2>
+        <div class="prose-ee">{c.direct.body.map((p) => <p set:html={rich(p)} />)}</div>
+      </div>
+      <p class="label center-label reveal">{c.direct.label}</p>
+      <div class="grid-3 ways">
+        {c.direct.cards.map((k, i) => (
+          <article class={`glass accent-top ${accentClass[k.accent]} way reveal`} style={`--d:${i * 120}ms`}>
+            <div class="way-head"><span class="icon-ring big"><Icon name={k.icon} /></span><span class="way-n">{k.n}</span></div>
+            <h3 class="display-sm">{k.title}</h3>
+            {k.text.map((p) => <p class="way-text" set:html={rich(p)} />)}
+            {k.detail && <a class="way-detail" href={k.detail.href}>{k.detail.label}</a>}
+            <a class:list={['btn', 'btn-block', k.accent === 'gold' ? 'btn-gold' : k.accent === 'copper' ? 'btn-primary' : 'btn-ghost']} href={k.button.href} target={k.button.external ? '_blank' : undefined} rel={k.button.external ? 'noopener noreferrer' : undefined}>
+              {k.button.label} <Icon name={k.button.external ? 'external' : 'arrow'} />
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 | CONNECT WITH US -->
+  <section class="section bg-ink">
+    <div class="wrap social">
+      <div class="reveal">
+        <p class="eyebrow">{plain(c.social.eyebrow)}</p>
+        <h2 class="display-md mt-6">{c.social.heading}</h2>
+        <p class="lede mt-6">{c.social.text}</p>
+      </div>
+      <div class="card group reveal" style="--d:120ms">
+        <div class="group-head">
+          <Image src={mark} alt="" height={96} class="group-mark" />
+          <h3 class="label">{c.social.groupLabel}</h3>
+        </div>
+        <ul class="socials">
+          {social.map((s) => (
+            <li><a href={s.href} target="_blank" rel="noopener noreferrer"><Icon name={s.icon} /><span>{s.name}</span><span class="sr-only"> (opens in a new tab)</span><Icon name="external" class="ext" /></a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 | JOIN OUR HX COMMUNITY -->
+  <section class="section hx">
+    <div class="hx-glow" aria-hidden="true"></div>
+    <div class="wrap rel hx-grid">
+      <div class="hx-brand reveal">
+        <Image src={hxLogo} alt="HX, Hive eXperience" height={260} />
+      </div>
+      <div>
+        <p class="eyebrow eyebrow-blue reveal">{c.hx.eyebrow}</p>
+        <h2 class="display-md mt-6 reveal">{c.hx.heading}</h2>
+        <div class="prose-ee mt-8 reveal">{c.hx.body.map((p) => <p set:html={rich(p)} />)}</div>
+        <p class="statement metal-blue mt-6 reveal">{c.hx.closing}</p>
+        <p class="mt-8 reveal"><a class="btn btn-blue" href={c.hx.cta.href} target="_blank" rel="noopener noreferrer">{c.hx.cta.label} <Icon name="external" /></a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 | MEET THE POWER DUO -->
+  <section class="section on-light">
+    <div class="wrap split-2 wide-right">
+      <div class="photo photo-frame reveal-img duo-photo">
+        <Image src={duoImg} alt="Claire Boscq CSP and Andy Jarvis, the Power Duo" widths={[480, 800, 1200]} sizes="(min-width: 64rem) 36vw, 92vw" />
+      </div>
+      <div>
+        <p class="eyebrow reveal">{c.duo.eyebrow}</p>
+        <h2 class="display-md mt-6 reveal">{c.duo.heading}</h2>
+        <div class="prose-ee mt-8 reveal">{c.duo.body.map((p) => <p set:html={rich(p)} />)}</div>
+        <p class="statement statement-gold mt-6 reveal">{c.duo.closing}</p>
+        <p class="mt-8 reveal"><a class="btn btn-primary" href={c.duo.cta.href}>{c.duo.cta.label} <Icon name="arrow" /></a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6 | FINAL CLOSING -->
+  <section class="section bg-ink closing">
+    <div class="atmos atmos-gold"></div>
+    <div class="wrap-narrow rel closing-inner">
+      <Image src={logo} alt="Elevated eXperience" height={360} class="closing-logo reveal" />
+      <p class="eyebrow no-rule reveal">{plain(c.closing.eyebrow)}</p>
+      <h2 class="display-lg reveal">{c.closing.heading}</h2>
+      <p class="lede reveal">{c.closing.text}</p>
+      <p class="statement statement-gold reveal">{plain(c.closing.line)}</p>
+      <p class="signoff reveal">{c.closing.signoff}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .rel { position: relative; }
+  .hero-close { margin-top: 1.25rem !important; font-size: clamp(1.1rem, 1.7vw, 1.4rem) !important; }
+  .center-label { text-align: center; margin: clamp(2.5rem, 5vw, 4rem) 0 2rem; }
+  .way { padding: clamp(1.6rem, 2.8vw, 2.5rem); display: flex; flex-direction: column; gap: 1rem; }
+  .way-head { display: flex; align-items: center; justify-content: space-between; }
+  .icon-ring.big { width: 3.75rem; height: 3.75rem; }
+  .icon-ring.big :global(svg) { width: 1.7rem; height: 1.7rem; }
+  .way-n { font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; line-height: 1; color: rgb(255 255 255 / .14); }
+  .way-text { color: rgb(255 255 255 / .8); font-size: .98rem; line-height: 1.6; }
+  .way-detail { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.15rem, 1.7vw, 1.4rem); line-height: 1.2; color: var(--accent-solid); overflow-wrap: anywhere; text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent-solid) 40%, transparent); text-underline-offset: .25em; padding-block: .4rem; }
+  .way-detail:hover { text-decoration-color: currentColor; }
+  .way .btn { margin-top: auto; }
+  .way .way-text:last-of-type { margin-bottom: .5rem; }
+
+  .social { display: grid; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .group { padding: clamp(1.5rem, 3vw, 2.5rem); }
+  .group-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+  .group-mark { height: 3rem; width: auto; }
+  .group-head .label { font-family: var(--font-sans); }
+  .socials { display: grid; gap: .75rem; }
+  .socials a { display: flex; align-items: center; gap: 1rem; min-height: 3.5rem; padding: .75rem 1.1rem; border-radius: .9rem; border: 1px solid rgb(255 255 255 / .1); font-weight: 600; transition: border-color .3s, background-color .3s, transform .35s var(--ease-flow); }
+  .socials a:hover { border-color: var(--color-gold); background: rgb(221 198 134 / .08); transform: translateX(4px); }
+  .socials :global(svg) { width: 1.35rem; height: 1.35rem; color: var(--color-gold); flex: none; }
+  .socials :global(.ext) { margin-left: auto; width: 1rem; height: 1rem; color: rgb(255 255 255 / .4); }
+
+  .hx { background: linear-gradient(160deg, #071a33 0%, #0b0c0f 70%); overflow: hidden; }
+  .hx-glow { position: absolute; inset: 0; background: radial-gradient(50% 70% at 15% 40%, rgb(21 126 217 / .32), transparent 70%); }
+  .hx-grid { display: grid; gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+  .hx-brand { display: grid; place-items: center; padding: clamp(2rem, 4vw, 3.5rem); border-radius: 1.5rem; border: 1px solid rgb(75 173 221 / .3); background: rgb(21 126 217 / .08); }
+  .hx-brand :global(img) { height: auto; width: min(100%, 20rem); }
+
+  .duo-photo { aspect-ratio: 4 / 5; width: 100%; max-width: 28rem; margin-inline: auto; }
+  .duo-photo :global(img) { object-position: 50% 20%; }
+
+  .closing-inner { text-align: center; display: grid; justify-items: center; gap: 1.5rem; }
+  .closing-logo { height: clamp(9rem, 20vw, 14rem); width: auto; }
+  .signoff { font-size: .78rem; font-weight: 600; letter-spacing: .2em; text-transform: none; color: var(--color-gold); margin-top: .5rem; }
+  @media (min-width: 64rem) {
+    .social { grid-template-columns: 1.1fr .9fr; }
+    .hx-grid { grid-template-columns: .8fr 1.2fr; }
+  }
+</style>

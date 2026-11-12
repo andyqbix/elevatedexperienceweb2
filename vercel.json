@@ -1,0 +1,20 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "trailingSlash": true,
+  "redirects": [
+    { "source": "/hx/", "destination": "https://hive.elevatedexperience.vip/", "permanent": true },
+    { "source": "/corporate-event-from-burnout-to-brilliance/", "destination": "/experiences/", "permanent": true },
+    { "source": "/partners/", "destination": "/coachsulting/", "permanent": true },
+    { "source": "/2026/:path*", "destination": "/resources/", "permanent": false }
+  ],
+  "headers": [
+    { "source": "/video/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }] },
+    { "source": "/_astro/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
+    { "source": "/(.*)", "headers": [
+      { "key": "X-Content-Type-Options", "value": "nosniff" },
+      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+      { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
+    ] }
+  ]
+}

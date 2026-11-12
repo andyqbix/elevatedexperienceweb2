@@ -1,0 +1,362 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import Icon from '@/components/Icon.astro';
+import LogoStrip from '@/components/LogoStrip.astro';
+import { home as c } from '@/content/home';
+import { rich } from '@/lib/text';
+import duo from '@/assets/photos/duo-studio-b.jpg';
+import imgKeynote from '@/assets/photos/stage-duo-close.jpg';
+import imgMasterclass from '@/assets/photos/masterclass-03.jpg';
+import imgCoach from '@/assets/photos/duo-networking.jpg';
+import dx from '@/assets/brand/dx-colour.png';
+import ex from '@/assets/brand/ex-colour.png';
+import cx from '@/assets/brand/cx-colour.png';
+import flame from '@/assets/brand/ee-flame.png';
+
+const marks = { dx, ex, cx } as const;
+const accents = { dx: 'accent-blue', ex: 'accent-silver', cx: 'accent-gold' } as const;
+const cues = { dx: 'digital', ex: 'people', cx: 'customer' } as const;
+const serviceImg = { keynotes: imgKeynote, masterclasses: imgMasterclass, coachsulting: imgCoach } as const;
+const serviceAlt = {
+  keynotes: 'Andy Jarvis and Claire Boscq CSP presenting together on a conference stage',
+  masterclasses: 'Claire and Andy facilitating an Executive Masterclass in Jersey',
+  coachsulting: 'Claire and Andy in conversation with business leaders at an event',
+} as const;
+---
+<Base title={c.meta.title} description={c.meta.description}>
+  <!-- HERO | VIDEO BANNER -->
+  <section class="hero">
+    <div class="atmos atmos-gold"></div>
+    <div class="wrap hero-inner">
+      <p class="eyebrow no-rule hero-id">{c.hero.identifier}</p>
+      <h1 class="hero-title">{c.hero.heading}</h1>
+      <p class="hero-sub">{c.hero.sub}</p>
+      <div class="hero-frame" data-hero-frame>
+        <video class="hero-video" data-bg autoplay muted loop playsinline preload="metadata" poster="/video/home-hero-poster.jpg" aria-hidden="true" tabindex="-1">
+          <source src="/video/home-hero-mobile.mp4" type="video/mp4" media="(max-width: 700px)" />
+          <source src="/video/home-hero.mp4" type="video/mp4" />
+        </video>
+        <button type="button" class="hero-toggle" data-hero-toggle aria-pressed="false">
+          <Icon name="pause" class="i-pause" /><Icon name="play" class="i-play" />
+          <span class="sr-only" data-hero-toggle-label>Pause video</span>
+        </button>
+      </div>
+      <a href="#problem" class="scroll-cue" aria-label="Scroll to the real issue">
+        <span></span><Icon name="arrow-down" />
+      </a>
+    </div>
+  </section>
+
+  <!-- SECTION 1 | THE PROBLEM -->
+  <section id="problem" class="section bg-charcoal">
+    <div class="atmos"></div>
+    <div class="wrap relative">
+      <div class="intro-grid">
+        <div class="reveal">
+          <p class="eyebrow">{c.problem.eyebrow}</p>
+          <h2 class="display-md mt-6">{c.problem.heading}</h2>
+        </div>
+        <div class="prose-ee reveal" style="--d:120ms">
+          {c.problem.body.map((p) => <p set:html={rich(p)} />)}
+        </div>
+      </div>
+
+      <p class="eyebrow no-rule label-center reveal">{c.problem.statsLabel}</p>
+      <div class="stats">
+        {c.problem.stats.map((s, i) => (
+          <article class={`card card-hover accent-top stat ${accents[s.key as keyof typeof accents]} reveal`} style={`--d:${i * 120}ms`}>
+            <header class="stat-head">
+              <p class="stat-tag">{s.tag}</p>
+              <span class="stat-cue"><Icon name={cues[s.key as keyof typeof cues]} /></span>
+            </header>
+            <p class="stat-figure" aria-label={`${s.figure}%`}><span data-count={s.figure}>{s.figure}</span><span class="pct">%</span></p>
+            <h3 class="stat-title">{s.title}</h3>
+            <p class="stat-text" set:html={rich(s.text)} />
+            <footer class="stat-foot">
+              <Image src={marks[s.key as keyof typeof marks]} alt="" height={40} class="stat-mark" />
+              <cite>{s.source}</cite>
+            </footer>
+          </article>
+        ))}
+      </div>
+
+      <div class="connection reveal">
+        <p class="eyebrow no-rule">{c.problem.connectionLabel}</p>
+        {c.problem.connection.map((p, i) => <p class={i === 0 ? 'kicker' : 'lede'} set:html={rich(p)} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="quote-band">
+    <div class="wrap-narrow">
+      <figure class="reveal">
+        <blockquote class="display-lg"><span class="q">“</span>{c.problem.quote}<span class="q">”</span></blockquote>
+        <figcaption>{c.problem.quoteBy}</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- SECTION 2 | WHY US? THE POWER DUO -->
+  <section class="section on-light">
+    <div class="wrap split">
+      <div class="split-media">
+        <div class="photo photo-frame reveal-img duo-photo">
+          <Image src={duo} alt="Claire Boscq CSP and Andy Jarvis, the Power Duo" widths={[480, 800, 1200]} sizes="(min-width: 64rem) 42vw, 92vw" />
+        </div>
+        <div class="energy energy-gold" aria-hidden="true"></div>
+        <div class="energy energy-silver" aria-hidden="true"></div>
+      </div>
+      <div class="split-copy">
+        <p class="eyebrow reveal">{c.whyUs.eyebrow}</p>
+        <h2 class="display-md mt-6 reveal">{c.whyUs.heading}</h2>
+        <p class="kicker promise reveal">{c.whyUs.promise}</p>
+        <p class="cred reveal">{c.whyUs.credibility}</p>
+        <div class="prose-ee reveal">
+          {c.whyUs.body.map((p) => <p set:html={rich(p)} />)}
+        </div>
+        <p class="closing reveal">{c.whyUs.closing}</p>
+        <a class="btn btn-primary reveal" href={c.whyUs.cta.href}>{c.whyUs.cta.label} <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 | THE SOLUTION -->
+  <section class="section bg-ink shine">
+    <div class="atmos atmos-gold"></div>
+    <div class="wrap relative">
+      <div class="shine-head">
+        <p class="eyebrow reveal">{c.solution.eyebrow}</p>
+        <h2 class="display-lg mt-6 reveal">{c.solution.heading}</h2>
+      </div>
+      <ol class="stages reveal" aria-label="The six stages of the SHINE Blueprint">
+        {c.solution.stages.map((s, i) => (
+          <li style={`--i:${i}`}><span class="n">{String(i + 1).padStart(2, '0')}</span><span class="t">{s}</span></li>
+        ))}
+      </ol>
+      <div class="shine-body">
+        <div class="prose-ee reveal">
+          {c.solution.body.slice(0, 2).map((p) => <p set:html={rich(p)} />)}
+        </div>
+        <div class="prose-ee reveal" style="--d:120ms">
+          {c.solution.body.slice(2).map((p) => <p set:html={rich(p)} />)}
+          <p class="pt-4"><a class="btn btn-gold" href={c.solution.cta.href}>{c.solution.cta.label} <Icon name="arrow" /></a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 | THE DELIVERY -->
+  <section class="section on-light">
+    <div class="wrap">
+      <div class="delivery-head">
+        <div class="reveal">
+          <p class="eyebrow">{c.delivery.eyebrow}</p>
+          <h2 class="display-md mt-6">{c.delivery.heading}</h2>
+        </div>
+        <p class="lede reveal" style="--d:120ms">{c.delivery.intro}</p>
+      </div>
+      <p class="eyebrow no-rule label-center reveal">{c.delivery.label}</p>
+      <div class="services">
+        {c.delivery.services.map((s, i) => (
+          <article class="card card-hover service reveal" style={`--d:${i * 120}ms`}>
+            <div class="photo photo-zoom service-photo">
+              <Image src={serviceImg[s.key as keyof typeof serviceImg]} alt={serviceAlt[s.key as keyof typeof serviceAlt]} widths={[400, 700, 1000]} sizes="(min-width: 64rem) 30vw, 92vw" />
+            </div>
+            <div class="service-body">
+              <p class="service-n">{String(i + 1).padStart(2, '0')}</p>
+              <h3 class="display-sm">{s.title}</h3>
+              <p class="service-text">{s.text}</p>
+              <p class="service-outcome">{s.outcome}</p>
+              <a class="btn btn-ghost" href={s.href}>{s.cta} <Icon name="arrow" /></a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 | THE OUTCOME -->
+  <section class="section bg-ink outcome">
+    <div class="wrap outcome-grid">
+      <div>
+        <p class="eyebrow reveal">{c.outcome.eyebrow}</p>
+        <h2 class="display-lg mt-6 reveal">{c.outcome.heading}</h2>
+        <div class="prose-ee mt-8 reveal">
+          {c.outcome.body.map((p) => <p set:html={rich(p)} />)}
+        </div>
+        <p class="closing-light reveal">{c.outcome.closing}</p>
+      </div>
+      <div class="flow reveal" aria-hidden="true">
+        <svg viewBox="0 0 520 520" fill="none">
+          <defs>
+            <linearGradient id="g-blue" x1="0" x2="1"><stop offset="0" stop-color="#06408a" /><stop offset=".5" stop-color="#4baddd" /><stop offset="1" stop-color="#99ceea" /></linearGradient>
+            <linearGradient id="g-silver" x1="0" x2="1"><stop offset="0" stop-color="#6c7076" /><stop offset=".5" stop-color="#e2e3e6" /><stop offset="1" stop-color="#9ba0a7" /></linearGradient>
+            <linearGradient id="g-gold" x1="0" x2="1"><stop offset="0" stop-color="#8d6618" /><stop offset=".5" stop-color="#f8ecb3" /><stop offset="1" stop-color="#b69748" /></linearGradient>
+            <radialGradient id="g-core"><stop offset="0" stop-color="#cb6c52" stop-opacity=".5" /><stop offset="1" stop-color="#cb6c52" stop-opacity="0" /></radialGradient>
+          </defs>
+          <circle cx="260" cy="270" r="150" fill="url(#g-core)" />
+          <circle cx="260" cy="270" r="118" stroke="#cb6c52" stroke-opacity=".35" />
+          <circle cx="260" cy="270" r="182" stroke="#fff" stroke-opacity=".07" />
+          <path class="line l1" d="M260 62 C 140 120, 150 220, 260 270" stroke="url(#g-gold)" stroke-width="2.5" pathLength="1" />
+          <path class="line l2" d="M82 400 C 120 280, 200 250, 260 270" stroke="url(#g-blue)" stroke-width="2.5" pathLength="1" />
+          <path class="line l3" d="M438 400 C 420 270, 330 240, 260 270" stroke="url(#g-silver)" stroke-width="2.5" pathLength="1" />
+        </svg>
+        <span class="node n-cx"><Image src={cx} alt="" height={52} /></span>
+        <span class="node n-dx"><Image src={dx} alt="" height={52} /></span>
+        <span class="node n-ex"><Image src={ex} alt="" height={52} /></span>
+        <span class="core"><Image src={flame} alt="" height={150} /></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6 | THE PROOF -->
+  <section class="section-tight bg-charcoal">
+    <div class="wrap">
+      <p class="eyebrow no-rule label-center reveal">{c.proof.eyebrow}</p>
+    </div>
+    <LogoStrip />
+  </section>
+
+  <!-- SECTION 7 | THE ACTION -->
+  <section class="section on-copper action">
+    <div class="wrap-narrow center">
+      <p class="eyebrow no-rule reveal">{c.action.eyebrow}</p>
+      <h2 class="display-lg mt-6 reveal">{c.action.heading}</h2>
+      <p class="lede mt-6 reveal">{c.action.text}</p>
+      <p class="mt-10 reveal"><a class="btn btn-primary" href={c.action.cta.href} target="_blank" rel="noopener noreferrer">{c.action.cta.label} <Icon name="external" /></a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .relative { position: relative; }
+  .center { text-align: center; }
+  .label-center { display: flex; justify-content: center; text-align: center; margin-bottom: 2rem; }
+
+  /* Hero: headline above, the approved video shown clearly in its own frame below */
+  .hero { position: relative; overflow: hidden; background: radial-gradient(120% 80% at 50% 0%, #1d1512 0%, var(--color-ink) 60%); }
+  .hero-inner { position: relative; display: grid; justify-items: center; text-align: center; padding-top: calc(var(--header-h) + clamp(1.5rem, 4vh, 3rem)); padding-bottom: 1.5rem; }
+  .hero-id { animation: rise 1s var(--ease-flow) both .1s; }
+  .hero-title { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.1rem, 5.1vw, 4.4rem); line-height: .98; letter-spacing: -.02em; max-width: 27ch; margin-top: 1.1rem; animation: rise 1.1s var(--ease-flow) both .2s; }
+  .hero-sub { max-width: 46ch; margin-top: 1rem; font-size: clamp(1.05rem, 1.6vw, 1.35rem); line-height: 1.4; color: rgb(255 255 255 / .86); animation: rise 1.1s var(--ease-flow) both .35s; }
+  .hero-frame { position: relative; width: min(100%, 70rem, max(30rem, calc((100svh - 27.5rem) * 16 / 9))); aspect-ratio: 16 / 9; margin-top: clamp(1.5rem, 3.5vh, 2.5rem); border-radius: 1.25rem; overflow: hidden; background: #000; box-shadow: 0 0 0 1px rgb(221 198 134 / .28), 0 50px 100px -40px rgb(203 108 82 / .55), 0 30px 60px -30px #000; animation: rise 1.2s var(--ease-flow) both .5s; }
+  .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero-toggle { position: absolute; right: .75rem; bottom: .75rem; width: 2.75rem; height: 2.75rem; border-radius: 50%; display: grid; place-items: center; color: #fff; background: rgb(11 12 15 / .55); border: 1px solid rgb(255 255 255 / .3); cursor: pointer; opacity: .75; transition: opacity .3s, border-color .3s; }
+  .hero-toggle:hover, .hero-toggle:focus-visible { opacity: 1; border-color: var(--color-gold); }
+  .hero-toggle :global(svg) { width: 1rem; height: 1rem; }
+  .hero-toggle :global(.i-play), .hero-toggle[aria-pressed="true"] :global(.i-pause) { display: none; }
+  .hero-toggle[aria-pressed="true"] :global(.i-play) { display: block; }
+  .scroll-cue { display: grid; justify-items: center; gap: .3rem; color: var(--color-gold); padding: .5rem; margin-top: 1rem; }
+  .scroll-cue span { width: 1px; height: 1.5rem; background: linear-gradient(180deg, transparent, var(--color-gold)); }
+  .scroll-cue :global(svg) { width: 1.1rem; height: 1.1rem; animation: nudge 2.4s var(--ease-flow) infinite; }
+  @media (max-width: 40rem) { .hero-frame { width: 100%; border-radius: .9rem; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(28px); } }
+  @keyframes nudge { 50% { transform: translateY(5px); } }
+
+  /* Problem */
+  .intro-grid { display: grid; gap: 2.5rem; margin-bottom: clamp(3.5rem, 7vw, 6rem); }
+  .stats { display: grid; gap: 1.5rem; }
+  .stat { padding: clamp(1.75rem, 3vw, 2.5rem); display: flex; flex-direction: column; }
+  .stat-head { display: flex; align-items: center; justify-content: space-between; }
+  .stat-tag { font-size: .72rem; font-weight: 700; letter-spacing: .24em; color: var(--accent-solid); }
+  .stat-cue { width: 2.75rem; height: 2.75rem; border-radius: 50%; display: grid; place-items: center; color: var(--accent-solid); border: 1px solid color-mix(in srgb, var(--accent-solid) 40%, transparent); }
+  .stat-cue :global(svg) { width: 1.25rem; height: 1.25rem; }
+  .stat-figure { font-family: var(--font-display); font-weight: 800; font-size: clamp(5rem, 9vw, 7.5rem); line-height: .9; letter-spacing: -.04em; margin: 1.5rem 0 1rem; background: var(--accent); -webkit-background-clip: text; background-clip: text; color: transparent; font-variant-numeric: tabular-nums; }
+  .stat-figure .pct { font-size: .5em; margin-left: .05em; }
+  .stat-title { font-size: 1.45rem; line-height: 1.15; font-weight: 600; }
+  .stat-text { margin-top: .9rem; color: rgb(255 255 255 / .74); font-size: .98rem; line-height: 1.6; flex: 1; }
+  .stat-foot { margin-top: 1.75rem; padding-top: 1.1rem; border-top: 1px solid rgb(255 255 255 / .1); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .stat-mark { height: 1.6rem; width: auto; opacity: .9; }
+  .stat-foot cite { font-size: .8rem; font-style: italic; color: rgb(255 255 255 / .6); }
+  .connection { max-width: 46rem; margin: clamp(3.5rem, 7vw, 6rem) auto 0; text-align: center; display: grid; gap: 1.1rem; justify-items: center; }
+
+  .quote-band { background: linear-gradient(180deg, #17191d, #0b0c0f); padding-block: clamp(4rem, 9vw, 8rem); text-align: center; border-top: 1px solid rgb(255 255 255 / .05); }
+  .quote-band blockquote { font-weight: 700; }
+  .quote-band .q { color: var(--color-copper); }
+  .quote-band figcaption { margin-top: 2rem; font-size: .78rem; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--color-gold); }
+
+  /* Why us */
+  .split { display: grid; gap: clamp(2.5rem, 6vw, 5.5rem); align-items: center; }
+  .split-media { position: relative; }
+  .duo-photo { aspect-ratio: 4 / 5; }
+  .duo-photo :global(img) { object-position: 50% 20%; }
+  .energy { position: absolute; border-radius: 50%; z-index: -1; filter: blur(2px); }
+  .split-media { isolation: isolate; }
+  .energy-gold { width: 46%; aspect-ratio: 1; left: -7%; top: -5%; background: conic-gradient(from 200deg, #f8ecb3, #b69748, #cb6c52, #f8ecb3); opacity: .5; }
+  .energy-silver { width: 38%; aspect-ratio: 1; right: -6%; bottom: -5%; background: conic-gradient(from 20deg, #e2e3e6, #9ba0a7, #157ed9, #e2e3e6); opacity: .45; }
+  .promise { margin-top: 1.5rem; color: var(--color-copper-deep); }
+  .cred { margin: .9rem 0 1.75rem; font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #5d6067; line-height: 1.6; }
+  .closing { margin: 2rem 0; padding-left: 1.25rem; border-left: 3px solid var(--color-copper); font-family: var(--font-display); font-weight: 700; font-size: 1.35rem; line-height: 1.25; }
+
+  /* SHINE */
+  .shine-head { max-width: 56rem; }
+  .stages { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; margin: clamp(2.5rem, 5vw, 4rem) 0; position: relative; }
+  .stages li { position: relative; padding: 1.1rem 1rem 1rem; border: 1px solid rgb(221 198 134 / .22); border-radius: 1rem; background: linear-gradient(180deg, rgb(221 198 134 / .07), transparent); display: grid; gap: .35rem; transition: border-color .4s, transform .5s var(--ease-flow), background-color .4s; }
+  .stages li:hover { border-color: var(--color-gold); transform: translateY(-4px); }
+  .stages .n { font-size: .7rem; font-weight: 700; letter-spacing: .2em; color: var(--color-copper-soft); }
+  .stages .t { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; letter-spacing: .06em; }
+  .stages li:last-child { background: var(--grad-gold); border-color: transparent; color: #1c1608; }
+  .stages li:last-child .n { color: #52261d; }
+  .shine-body { display: grid; gap: 2rem; }
+
+  /* Delivery */
+  .delivery-head { display: grid; gap: 2rem; margin-bottom: clamp(3rem, 6vw, 5rem); align-items: end; }
+  .services { display: grid; gap: 1.5rem; }
+  .service { overflow: hidden; display: flex; flex-direction: column; }
+  .service-photo { border-radius: 0; aspect-ratio: 16 / 10; }
+  .service-body { padding: clamp(1.5rem, 2.6vw, 2.25rem); display: flex; flex-direction: column; flex: 1; }
+  .service-n { font-size: .72rem; font-weight: 700; letter-spacing: .24em; color: var(--color-copper-deep); margin-bottom: .6rem; }
+  .service-text { margin-top: .9rem; color: #474a50; font-size: .98rem; line-height: 1.6; flex: 1; }
+  .service-outcome { margin: 1.4rem 0 1.5rem; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; color: var(--color-copper-deep); }
+  .service .btn { align-self: flex-start; }
+
+  /* Outcome */
+  .outcome-grid { display: grid; gap: 3rem; align-items: center; }
+  .closing-light { margin-top: 2rem; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.3rem, 2.2vw, 1.75rem); line-height: 1.2; background: var(--grad-gold); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .flow { position: relative; width: min(100%, 30rem); aspect-ratio: 1; margin-inline: auto; }
+  .flow svg { width: 100%; height: 100%; }
+  .line { stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2s var(--ease-flow); }
+  .flow.in .line { stroke-dashoffset: 0; }
+  .flow.in .l2 { transition-delay: .25s; } .flow.in .l3 { transition-delay: .5s; }
+  :global(html:not(.js)) .line { stroke-dashoffset: 0; }
+  .node, .core { position: absolute; display: grid; place-items: center; transform: translate(-50%, -50%); }
+  .node { width: 5.5rem; height: 5.5rem; border-radius: 50%; background: #17191d; border: 1px solid rgb(255 255 255 / .12); box-shadow: 0 20px 40px -20px #000; }
+  .node :global(img) { height: 1.9rem; width: auto; }
+  .n-cx { left: 50%; top: 12%; } .n-dx { left: 16%; top: 77%; } .n-ex { left: 84%; top: 77%; }
+  .core { left: 50%; top: 52%; }
+  .core :global(img) { height: clamp(6rem, 14vw, 8.5rem); width: auto; filter: drop-shadow(0 10px 40px rgb(203 108 82 / .45)); }
+
+  .action :global(.eyebrow) { color: var(--color-gold-pale); }
+
+  @media (prefers-reduced-motion: reduce) { .line { stroke-dashoffset: 0; } }
+  @media (min-width: 48rem) {
+    .stats { grid-template-columns: repeat(3, 1fr); }
+    .stages { grid-template-columns: repeat(3, 1fr); }
+    .shine-body { grid-template-columns: 1fr 1fr; gap: 4rem; }
+  }
+  @media (min-width: 64rem) {
+    .intro-grid { grid-template-columns: 1.1fr 1fr; gap: 5rem; align-items: end; }
+    .split { grid-template-columns: .85fr 1fr; }
+    .stages { grid-template-columns: repeat(6, 1fr); gap: 0; }
+    .stages li { border-radius: 0; border-right-width: 0; padding: 1.5rem 1.25rem; }
+    .stages li:first-child { border-radius: 1rem 0 0 1rem; }
+    .stages li:last-child { border-radius: 0 1rem 1rem 0; border-right-width: 1px; }
+    .stages li:not(:last-child)::after { content: ""; position: absolute; right: -.45rem; top: 50%; width: .8rem; height: .8rem; border-top: 1px solid var(--color-gold); border-right: 1px solid var(--color-gold); transform: translateY(-50%) rotate(45deg); background: var(--color-ink); z-index: 1; }
+    .delivery-head { grid-template-columns: 1fr 1fr; gap: 5rem; }
+    .services { grid-template-columns: repeat(3, 1fr); }
+    .outcome-grid { grid-template-columns: 1.15fr 1fr; gap: 5rem; }
+  }
+</style>
+
+<script>
+  const frame = document.querySelector<HTMLElement>('[data-hero-frame]');
+  if (frame) {
+    const video = frame.querySelector('video')!;
+    const btn = frame.querySelector<HTMLButtonElement>('[data-hero-toggle]')!;
+    const label = btn.querySelector<HTMLElement>('[data-hero-toggle-label]')!;
+    const sync = () => { btn.setAttribute('aria-pressed', String(video.paused)); label.textContent = video.paused ? 'Play video' : 'Pause video'; };
+    btn.addEventListener('click', () => { if (video.paused) { delete video.dataset.userPaused; video.play().catch(() => {}); } else { video.dataset.userPaused = '1'; video.pause(); } });
+    video.addEventListener('play', sync); video.addEventListener('pause', sync); sync();
+  }
+</script>

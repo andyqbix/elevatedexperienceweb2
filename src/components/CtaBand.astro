@@ -1,0 +1,35 @@
+---
+// Closing call to action used at the foot of each page.
+import Icon from '@/components/Icon.astro';
+import { rich } from '@/lib/text';
+interface Btn { label: string; href: string; external?: boolean; style?: 'primary' | 'ghost' }
+interface Props { eyebrow: string; heading: string; body?: string[]; closing?: string; buttons: Btn[]; tone?: 'copper' | 'dark' }
+const { eyebrow, heading, body = [], closing, buttons, tone = 'copper' } = Astro.props;
+---
+<section class:list={['section', 'cta-band', tone === 'copper' ? 'on-copper' : 'bg-ink']}>
+  {tone === 'dark' && <div class="atmos atmos-gold"></div>}
+  <div class="wrap-narrow inner">
+    <p class="eyebrow no-rule reveal">{eyebrow}</p>
+    <h2 class="display-lg reveal">{heading}</h2>
+    {body.map((p) => <p class="text reveal" set:html={rich(p)} />)}
+    {closing && <p class="closing reveal">{closing}</p>}
+    <div class="buttons reveal">
+      {buttons.map((b) => (
+        <a class:list={['btn', b.style === 'ghost' ? 'btn-ghost' : 'btn-primary']} href={b.href} target={b.external ? '_blank' : undefined} rel={b.external ? 'noopener noreferrer' : undefined}>
+          {b.label} <Icon name={b.external ? 'external' : 'arrow'} />
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .inner { position: relative; text-align: center; display: grid; justify-items: center; gap: 1.5rem; }
+  .on-copper .eyebrow { color: var(--color-gold-pale); }
+  .text { max-width: 60ch; color: rgb(255 255 255 / .88); }
+  .closing { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.3rem, 2.2vw, 1.7rem); line-height: 1.2; max-width: 34ch; }
+  .bg-ink .closing { background: var(--grad-gold); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 1rem; }
+  .on-copper :global(.btn-ghost) { border-color: rgb(255 255 255 / .55); }
+  .on-copper :global(.btn-ghost:hover) { border-color: #fff; background: rgb(255 255 255 / .1); }
+</style>

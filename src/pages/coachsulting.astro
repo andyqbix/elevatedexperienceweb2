@@ -1,0 +1,340 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import { coachsulting as c } from '@/content/coachsulting';
+import { rich } from '@/lib/text';
+import heroImg from '@/assets/photos/duo-networking.jpg';
+import whyImg from '@/assets/photos/duo-venue.jpg';
+import dx from '@/assets/brand/dx-colour.png';
+import ex from '@/assets/brand/ex-colour.png';
+import cx from '@/assets/brand/cx-colour.png';
+import flame from '@/assets/brand/ee-flame.png';
+
+const accentClass: Record<string, string> = { copper: 'accent-copper', blue: 'accent-blue', gold: 'accent-gold' };
+const btnClass: Record<string, string> = { copper: 'btn-primary', blue: 'btn-blue', gold: 'btn-gold' };
+const impactMark: Record<string, any> = { dx, ex, cx };
+const impactAccent: Record<string, string> = { board: 'accent-copper', dx: 'accent-blue', ex: 'accent-silver', cx: 'accent-gold', growth: 'accent-copper' };
+const caps = c.ecosystem.capabilities;
+const offers = [
+  { '@type': 'Offer', name: 'The Two-Day eXperience Audit', price: '4998', priceCurrency: 'USD' },
+  { '@type': 'Offer', name: 'The Full eXperience Transformation', price: '29998', priceCurrency: 'USD' },
+  { '@type': 'Offer', name: 'The 12-Month eXperience Partnership', description: 'Bespoke investment, priced following the Two-Day eXperience Audit.' },
+];
+---
+<Base title={c.meta.title} description={c.meta.description} breadcrumb="Coachsulting" service={{ name: 'Coachsulting', type: 'Corporate coaching and strategic advisory', description: c.meta.description, offers }}>
+  <!-- SECTION 1 | HERO -->
+  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.heading} image={heroImg} alt="Claire Boscq CSP and Andy Jarvis in conversation with business leaders" position="45% 25%" mobileFit>
+    <p class="hero-line gold">{c.hero.line}</p>
+    {c.hero.body.map((p) => <p class="hero-text">{p}</p>)}
+    <p class="hero-line hero-close">{c.hero.closing}</p>
+    <div class="hero-cta"><a class="btn btn-primary" href={c.hero.cta.href}>{c.hero.cta.label} <Icon name="arrow-down" /></a></div>
+  </PageHero>
+
+  <!-- SECTION 2 | WHY COACHSULTING? -->
+  <section class="section on-light">
+    <div class="wrap">
+      <div class="split-2 wide-left why-top">
+        <div>
+          <p class="eyebrow reveal">{c.why.eyebrow}</p>
+          <h2 class="display-md mt-6 reveal">{c.why.heading}</h2>
+          <p class="sub reveal">{c.why.sub}</p>
+          <div class="prose-ee reveal">{c.why.body.map((p) => <p set:html={rich(p)} />)}</div>
+        </div>
+        <div class="photo photo-frame reveal-img why-photo">
+          <Image src={whyImg} alt="Claire Boscq CSP and Andy Jarvis together at a business venue" widths={[480, 800, 1200]} sizes="(min-width: 64rem) 36vw, 92vw" />
+        </div>
+      </div>
+      <p class="label center-label reveal">{c.why.areasLabel}</p>
+      <div class="grid-2">
+        {c.why.areas.map((a, i) => (
+          <article class="card card-hover area reveal" style={`--d:${(i % 2) * 120}ms`}>
+            <span class="icon-ring"><Icon name={a.icon} /></span>
+            <div><h3>{a.title}</h3><p>{a.text}</p></div>
+          </article>
+        ))}
+      </div>
+      <div class="difference reveal">
+        <p class="label">{c.why.differenceLabel}</p>
+        <p class="display-md diff-text">{c.why.difference.replace(/'/g, '’')}</p>
+        <p class="statement statement-gold">{c.why.closing}</p>
+        <a class="link-arrow" href={c.why.cta.href}>{c.why.cta.label} <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 | HOW WE WORK -->
+  <section class="section bg-ink">
+    <div class="atmos"></div>
+    <div class="wrap rel">
+      <div class="head reveal">
+        <p class="eyebrow">{c.how.eyebrow}</p>
+        <h2 class="display-lg mt-6">{c.how.heading.replace(/'/g, '’')}</h2>
+        <div class="prose-ee">{c.how.body.map((p) => <p set:html={rich(p)} />)}</div>
+      </div>
+      <p class="label tools-label reveal">{c.how.toolsLabel}</p>
+      <ol class="tools">
+        {c.how.tools.map((t, i) => (
+          <li class="card card-hover tool reveal" style={`--d:${(i % 3) * 100}ms`}>
+            <div class="tool-head"><span class="icon-ring"><Icon name={t.icon} /></span><span class="tool-n">{i + 1}</span></div>
+            <h3>{t.title}</h3>
+            {t.text.map((p) => <p set:html={rich(p)} />)}
+          </li>
+        ))}
+        <li class="glass tool insight reveal">
+          <p class="label">{c.how.insightLabel}</p>
+          {c.how.insight.map((p, i) => <p class={i === 0 ? 'insight-lead' : undefined}>{p}</p>)}
+          <p class="statement statement-gold">{c.how.closing}</p>
+        </li>
+      </ol>
+      <div class="btn-row how-btns reveal">
+        <a class="btn btn-gold" href={c.how.primary.href}>{c.how.primary.label} <Icon name="arrow" /></a>
+        <a class="btn btn-ghost" href={c.how.secondary.href} target="_blank" rel="noopener noreferrer">{c.how.secondary.label} <Icon name="external" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 | OUR COACHSULTING SERVICES -->
+  <section class="section bg-charcoal" id="services">
+    <div class="wrap">
+      <div class="head head-center reveal">
+        <p class="eyebrow no-rule">{c.services.eyebrow}</p>
+        <h2 class="display-lg mt-6">{c.services.heading}</h2>
+        <div class="prose-ee">{c.services.body.map((p) => <p set:html={rich(p)} />)}</div>
+      </div>
+
+      <div class="services">
+        {c.services.panels.map((s) => (
+          <article class={`glass accent-top ${accentClass[s.accent]} svc reveal`} id={s.key}>
+            <header class="svc-head">
+              <p class="label">{s.label}</p>
+              <h3 class="display-sm svc-name">{s.name}</h3>
+              <p class:list={['price', s.price.startsWith('$') ? '' : 'price-sm']}>{s.price}</p>
+              {s.priceNote && <p class="svc-note">{s.priceNote}</p>}
+              <div class="svc-lines">{s.lines.map((l) => <p>{l}</p>)}</div>
+              <div class="svc-out">
+                <p class="label">THE OUTCOME</p>
+                <p class="out">{s.outcome.replace(/'/g, '’')}</p>
+                <p class="out-text">{s.outcomeText}</p>
+              </div>
+              <a class={`btn ${btnClass[s.accent]} btn-block`} href={s.cta.href}>{s.cta.label} <Icon name="arrow" /></a>
+            </header>
+            <div class="svc-body">
+              <details class="expand" open>
+                <summary><h4 class="label">{s.whyLabel}</h4><span class="chev"><Icon name="plus" /></span></summary>
+                <div class="expand-body prose-ee">{s.why.map((p) => <p set:html={rich(p)} />)}</div>
+              </details>
+              <details class="expand" open data-mobile-collapse>
+                <summary><h4 class="label">{s.howLabel}</h4><span class="chev"><Icon name="plus" /></span></summary>
+                <div class="expand-body prose-ee">{s.how.map((p) => <p set:html={rich(p)} />)}</div>
+              </details>
+              <details class="expand" open data-mobile-collapse>
+                <summary><h4 class="label">{s.whatLabel}</h4><span class="chev"><Icon name="plus" /></span></summary>
+                <div class="expand-body">
+                  <ul class="tick-list">{s.what.map((t) => <li>{t}</li>)}</ul>
+                  {s.whatAfter && <p class="fine mt-4">{s.whatAfter}</p>}
+                </div>
+              </details>
+              <details class="expand" open data-mobile-collapse>
+                <summary><h4 class="label">{s.whoLabel}</h4><span class="chev"><Icon name="plus" /></span></summary>
+                <div class="expand-body">
+                  <p class="who-intro">{s.whoIntro}</p>
+                  <ul class="dot-list mt-4">{s.who.map((t) => <li set:html={rich(t)} />)}</ul>
+                </div>
+              </details>
+              <details class="expand scope">
+                <summary><h4 class="label">{s.scopeLabel}</h4><span class="chev"><Icon name="plus" /></span></summary>
+                <div class="expand-body fine">{s.scope.map((p) => <p set:html={rich(p)} />)}</div>
+              </details>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 | THE ECOSYSTEM -->
+  <section class="section bg-ink eco-section">
+    <div class="atmos atmos-gold"></div>
+    <div class="wrap rel">
+      <div class="head reveal">
+        <p class="eyebrow">{c.ecosystem.eyebrow}</p>
+        <p class="label mt-6">{c.ecosystem.label}</p>
+        <h2 class="display-lg mt-3">{c.ecosystem.heading}</h2>
+        <div class="prose-ee">{c.ecosystem.body.map((p) => <p set:html={rich(p)} />)}</div>
+      </div>
+
+      <p class="label center-label eco-label reveal">{c.ecosystem.capabilitiesLabel}</p>
+      <div class="eco reveal">
+        <svg class="eco-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          {[17, 50, 83].map((y) => (<>
+            <path d={`M50 50 C 42 50, 40 ${y}, 31 ${y}`} />
+            <path d={`M50 50 C 58 50, 60 ${y}, 69 ${y}`} />
+          </>))}
+        </svg>
+        <ul class="eco-col">
+          {caps.slice(0, 3).map((k) => (
+            <li class="card eco-node"><span class="icon-ring"><Icon name={k.icon} /></span><div><h3>{k.title}</h3><p>{k.text}</p></div></li>
+          ))}
+        </ul>
+        <div class="eco-hub" aria-hidden="true">
+          <span class="ring r1"></span><span class="ring r2"></span>
+          <Image src={flame} alt="" height={200} />
+        </div>
+        <ul class="eco-col">
+          {caps.slice(3).map((k) => (
+            <li class="card eco-node"><span class="icon-ring"><Icon name={k.icon} /></span><div><h3>{k.title}</h3><p>{k.text}</p></div></li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="collective reveal">
+        <p class="label">{c.ecosystem.collectiveLabel}</p>
+        {c.ecosystem.collective.map((p, i) => <p class={i === 0 ? 'kicker' : 'lede'}>{p}</p>)}
+        <p class="statement statement-gold">{c.ecosystem.closing}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6 | BUSINESS IMPACT -->
+  <section class="section on-light">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">{c.impact.eyebrow}</p>
+        <h2 class="display-lg mt-6">{c.impact.heading}</h2>
+        <div class="prose-ee">{c.impact.body.map((p) => <p set:html={rich(p)} />)}</div>
+      </div>
+      <div class="impact">
+        {c.impact.areas.map((a, i) => (
+          <article class={`card card-hover accent-top ${impactAccent[a.key]} imp imp-${a.key} reveal`} style={`--d:${i * 90}ms`}>
+            {impactMark[a.key]
+              ? <Image src={impactMark[a.key]} alt="" height={56} class="imp-mark" />
+              : <span class="icon-ring"><Icon name={a.key === 'board' ? 'board' : 'growth'} /></span>}
+            <h3>{a.title}</h3>
+            <p>{a.text}</p>
+          </article>
+        ))}
+      </div>
+      <p class="statement statement-gold impact-close reveal">{c.impact.closing}</p>
+    </div>
+  </section>
+
+  <!-- SECTION 7 | FINAL CALL TO ACTION -->
+  <section class="section on-copper">
+    <div class="wrap-narrow cta">
+      <p class="eyebrow no-rule reveal">{c.cta.eyebrow.replace(/'/g, '’')}</p>
+      <h2 class="display-lg reveal">{c.cta.heading}</h2>
+      {c.cta.body.map((p) => <p class="cta-text reveal" set:html={rich(p)} />)}
+      <p class="statement reveal">{c.cta.closing}</p>
+      <div class="btn-row cta-btns reveal">
+        <a class="btn btn-primary" href={c.cta.primary.href}>{c.cta.primary.label} <Icon name="arrow" /></a>
+        <a class="btn btn-ghost" href={c.cta.secondary.href} target="_blank" rel="noopener noreferrer">{c.cta.secondary.label.replace(/'/g, '’')} <Icon name="external" /></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .rel { position: relative; }
+  .hero-close { margin-top: 1.25rem !important; font-size: clamp(1.1rem, 1.7vw, 1.4rem) !important; }
+  .sub { margin: 1rem 0 1.75rem; font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #5d6067; line-height: 1.6; }
+  .why-photo { aspect-ratio: 4 / 5; width: 100%; max-width: 28rem; margin-inline: auto; }
+  .why-photo :global(img) { object-position: 50% 80%; transform-origin: 50% 75%; }
+  .center-label { text-align: center; margin: clamp(3rem, 6vw, 5rem) 0 2rem; }
+  .area { display: flex; gap: 1.25rem; padding: clamp(1.5rem, 2.6vw, 2.25rem); align-items: flex-start; }
+  .area h3 { font-size: 1.3rem; line-height: 1.15; }
+  .area p { margin-top: .6rem; color: #474a50; font-size: .98rem; line-height: 1.6; }
+  .difference { margin-top: clamp(3rem, 6vw, 5rem); padding: clamp(2rem, 4vw, 3.5rem); border-radius: 1.5rem; background: var(--color-charcoal); color: #fff; display: grid; gap: 1.25rem; justify-items: start; }
+  .difference .label { color: var(--color-gold); }
+  .difference .statement-gold { background: var(--grad-gold); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .difference :global(.link-arrow) { color: var(--color-gold); border-color: rgb(221 198 134 / .35); }
+  .diff-text { max-width: 26ch; }
+
+  .tools-label { margin: clamp(3rem, 6vw, 5rem) 0 1.75rem; }
+  .tools { display: grid; gap: 1.25rem; }
+  .tool { padding: clamp(1.4rem, 2.4vw, 2rem); display: flex; flex-direction: column; gap: .8rem; }
+  .tool-head { display: flex; align-items: center; justify-content: space-between; }
+  .tool-n { font-family: var(--font-display); font-weight: 800; font-size: 2.2rem; line-height: 1; color: rgb(255 255 255 / .14); }
+  .tool h3 { font-size: 1.2rem; line-height: 1.2; letter-spacing: .01em; }
+  .tool p { color: rgb(255 255 255 / .76); font-size: .95rem; line-height: 1.6; }
+  .tool p :global(strong) { color: var(--color-gold); font-weight: 600; }
+  .insight { background: linear-gradient(150deg, rgb(203 108 82 / .22), rgb(221 198 134 / .06)); border-color: rgb(221 198 134 / .35); justify-content: center; }
+  .insight .insight-lead { font-family: var(--font-display); font-weight: 700; font-size: 1.35rem; line-height: 1.2; color: #fff; }
+  .insight .statement { font-size: 1.25rem; color: transparent; }
+  .how-btns { margin-top: 2.5rem; }
+
+  .services { display: grid; gap: 2rem; margin-top: clamp(3rem, 6vw, 5rem); }
+  .svc { display: grid; }
+  .svc-head { padding: clamp(1.6rem, 3vw, 2.75rem); display: flex; flex-direction: column; gap: .9rem; background: linear-gradient(170deg, color-mix(in srgb, var(--accent-solid) 14%, transparent), transparent 70%); }
+  .svc-name { font-size: clamp(1.7rem, 2.6vw, 2.3rem); }
+  .svc-note { font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: none; color: rgb(255 255 255 / .78); }
+  .svc-lines { display: grid; gap: .35rem; font-weight: 600; color: #fff; line-height: 1.4; }
+  .svc-out { margin-top: .75rem; padding-top: 1.25rem; border-top: 1px solid color-mix(in srgb, var(--accent-solid) 35%, transparent); display: grid; gap: .6rem; }
+  .out { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.25rem, 1.9vw, 1.5rem); line-height: 1.15; }
+  .out-text { font-size: .95rem; line-height: 1.55; color: rgb(255 255 255 / .76); }
+  .svc-head .btn { margin-top: .75rem; }
+  .svc-body { padding: .5rem clamp(1.6rem, 3vw, 2.75rem) clamp(1rem, 2vw, 1.5rem); min-width: 0; }
+  .svc-body details:first-child { border-top: 0; }
+  .svc h4.label { font-family: var(--font-sans); }
+  .svc-body :global(.prose-ee), .svc-body :global(.tick-list), .svc-body :global(.dot-list) { font-size: .98rem; max-width: none; color: rgb(255 255 255 / .84); }
+  .who-intro { font-weight: 600; }
+  .fine { font-size: .88rem; line-height: 1.6; color: rgb(255 255 255 / .66); }
+  .fine :global(p + p) { margin-top: .6em; }
+  .scope h4.label { color: rgb(255 255 255 / .6); }
+
+  .eco-label { margin-top: clamp(3rem, 6vw, 5rem); }
+  .eco { position: relative; display: grid; gap: 1.25rem; }
+  .eco-lines { display: none; }
+  .eco-col { display: grid; gap: 1.25rem; }
+  .eco-node { display: flex; gap: 1rem; align-items: flex-start; padding: 1.25rem 1.4rem; background: var(--color-charcoal); }
+  .eco-node h3 { font-size: 1.05rem; line-height: 1.2; letter-spacing: .02em; }
+  .eco-node p { margin-top: .4rem; font-size: .9rem; line-height: 1.5; color: rgb(255 255 255 / .72); }
+  .eco-hub { position: relative; display: grid; place-items: center; width: 11rem; height: 11rem; margin: 1rem auto; order: -1; }
+  .eco-hub :global(img) { position: relative; height: 6.5rem; width: auto; filter: drop-shadow(0 10px 40px rgb(203 108 82 / .5)); }
+  .ring { position: absolute; border-radius: 50%; border: 1px solid rgb(221 198 134 / .3); }
+  .r1 { inset: 0; background: radial-gradient(circle, rgb(203 108 82 / .28), transparent 70%); }
+  .r2 { inset: -1.5rem; border-color: rgb(255 255 255 / .08); animation: breathe 6s var(--ease-flow) infinite; }
+  @keyframes breathe { 50% { transform: scale(1.06); opacity: .5; } }
+  .collective { max-width: 50rem; margin: clamp(3rem, 6vw, 5rem) auto 0; text-align: center; display: grid; gap: 1.25rem; justify-items: center; }
+
+  .impact { display: grid; gap: 1.25rem; margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .imp { padding: clamp(1.5rem, 2.4vw, 2rem); display: grid; gap: .9rem; align-content: start; }
+  .imp-mark { height: 2.25rem; width: auto; justify-self: start; }
+  .imp h3 { font-size: 1.3rem; line-height: 1.15; }
+  .imp p { color: #474a50; font-size: .97rem; line-height: 1.6; }
+  .imp-board { background: var(--color-charcoal) !important; color: #fff; }
+  .imp-board p { color: rgb(255 255 255 / .78); }
+  .imp-board .icon-ring { --accent-solid: var(--color-gold); }
+  .impact-close { margin-top: clamp(2.5rem, 5vw, 4rem); text-align: center; }
+
+  .cta { text-align: center; display: grid; justify-items: center; gap: 1.4rem; }
+  .cta .eyebrow { color: var(--color-gold-pale); }
+  .cta-text { max-width: 60ch; color: rgb(255 255 255 / .9); }
+  .cta-btns { justify-content: center; margin-top: .75rem; }
+  .cta :global(.btn-ghost) { border-color: rgb(255 255 255 / .55); }
+
+  @media (min-width: 48rem) {
+    .tools { grid-template-columns: repeat(2, 1fr); }
+    .impact { grid-template-columns: repeat(2, 1fr); }
+    .imp-board { grid-column: 1 / -1; }
+  }
+  @media (min-width: 64rem) {
+    .tools { grid-template-columns: repeat(4, 1fr); }
+    .svc { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+    .svc-head { border-right: 1px solid rgb(255 255 255 / .08); }
+    .eco { grid-template-columns: 1fr 15rem 1fr; align-items: center; gap: 0; }
+    .eco-lines { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+    .eco-lines path { fill: none; stroke: var(--color-gold); stroke-opacity: .45; stroke-width: 1; vector-effect: non-scaling-stroke; stroke-dasharray: 4 6; }
+    .eco-col { position: relative; gap: 1.5rem; }
+    .eco-hub { order: 0; margin: 0 auto; }
+    .impact { grid-template-columns: repeat(4, 1fr); }
+    .imp-board { display: grid; grid-template-columns: auto 1fr 1.4fr; align-items: center; gap: 2rem; }
+  }
+</style>
+
+<script>
+  if (window.matchMedia('(max-width: 47.99rem)').matches) {
+    document.querySelectorAll<HTMLDetailsElement>('details[data-mobile-collapse]').forEach((d) => { d.open = false; });
+  }
+</script>

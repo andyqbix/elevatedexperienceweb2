@@ -1,0 +1,65 @@
+---
+// Client logo carousel: slow, single-colour, pausable. Falls back to a static grid with reduced motion.
+import { Image } from 'astro:assets';
+import Icon from '@/components/Icon.astro';
+import { clients } from '@/data/clients';
+interface Props { label?: string }
+const { label = 'Organisations we have worked with' } = Astro.props;
+const half = Math.ceil(clients.length / 2);
+const rows = [clients.slice(0, half), clients.slice(half)];
+---
+<div class="strip" data-strip>
+  <div class="rows" role="list" aria-label={label}>
+    {rows.map((row, r) => (
+      <div class="row" style={`--dur:${row.length * 4.5}s; --dir:${r % 2 ? 'reverse' : 'normal'}`}>
+        <div class="track">
+          {[0, 1].map((copy) => row.map((c) => (
+            <div class="item" role={copy === 0 ? 'listitem' : undefined} aria-hidden={copy === 1 ? 'true' : undefined}>
+              <Image src={c.image!} alt={copy === 0 ? c.name : ''} height={64} densities={[1, 2]} loading="lazy" />
+            </div>
+          )))}
+        </div>
+      </div>
+    ))}
+  </div>
+  <button type="button" class="toggle" data-strip-toggle aria-pressed="false">
+    <Icon name="pause" class="i-pause" /><Icon name="play" class="i-play" />
+    <span data-strip-label>Pause logos</span>
+  </button>
+</div>
+
+<style>
+  .strip { position: relative; }
+  .rows { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
+  .row { overflow: hidden; }
+  .track { display: flex; width: max-content; animation: marquee var(--dur) linear infinite; animation-direction: var(--dir); }
+  .strip.paused .track, .strip:hover .track, .strip:focus-within .track { animation-play-state: paused; }
+  .item { flex: none; display: grid; place-items: center; height: 4rem; padding-inline: clamp(1.4rem, 2.6vw, 2.75rem); }
+  .item :global(img) { height: 2.6rem; width: auto; max-width: 10.5rem; object-fit: contain; opacity: .62; transition: opacity .4s; }
+  .item:hover :global(img) { opacity: 1; }
+  :global(.on-light) .item :global(img) { filter: brightness(0); opacity: .55; }
+  .toggle { margin: 1.75rem auto 0; display: flex; align-items: center; gap: .5rem; font-size: .68rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: rgb(255 255 255 / .5); padding: .5rem .9rem; border-radius: 999px; cursor: pointer; transition: color .3s; }
+  .toggle:hover { color: var(--color-gold); }
+  .toggle :global(svg) { width: .9rem; height: .9rem; }
+  .toggle :global(.i-play), .paused .toggle :global(.i-pause) { display: none; }
+  .paused .toggle :global(.i-play) { display: block; }
+  :global(.on-light) .toggle { color: #5d6067; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .rows { -webkit-mask-image: none; mask-image: none; }
+    .track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; }
+    .item[aria-hidden="true"], .toggle { display: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-strip]').forEach((strip) => {
+    const btn = strip.querySelector<HTMLButtonElement>('[data-strip-toggle]')!;
+    const label = strip.querySelector<HTMLElement>('[data-strip-label]')!;
+    btn.addEventListener('click', () => {
+      const paused = strip.classList.toggle('paused');
+      btn.setAttribute('aria-pressed', String(paused));
+      label.textContent = paused ? 'Play logos' : 'Pause logos';
+    });
+  });
+</script>

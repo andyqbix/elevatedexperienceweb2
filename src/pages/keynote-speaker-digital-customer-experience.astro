@@ -1,0 +1,216 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import LogoStrip from '@/components/LogoStrip.astro';
+import Testimonials from '@/components/Testimonials.astro';
+import VideoCard from '@/components/VideoCard.astro';
+import Icon from '@/components/Icon.astro';
+import { keynote as c } from '@/content/keynote';
+import { testimonials } from '@/data/testimonials';
+import { keynoteVideos } from '@/data/videos';
+import { rich, plain } from '@/lib/text';
+import ideaImg from '@/assets/photos/stage-duo-audience.jpg';
+import expImg from '@/assets/photos/stage-duo-dtc.jpg';
+
+const o = c.options;
+const offers = [
+  { '@type': 'Offer', name: 'The Signature Keynote', price: '12888', priceCurrency: 'USD', description: o.signature.text },
+];
+---
+<Base title={c.meta.title} description={c.meta.description} breadcrumb="Keynote" service={{ name: 'Signature Keynote: The Gaps Killing Your Business Growth', type: 'Keynote speaking', description: c.meta.description, offers }}>
+  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.heading} video={{ src: '/video/keynote-hero.mp4', poster: '/video/keynote-hero-poster.jpg' }} position="50% 30%">
+    <p class="hero-line gold">{c.hero.line}</p>
+    <p class="hero-text">{c.hero.text}</p>
+    <div class="hero-cta"><a class="btn btn-primary" href={c.hero.cta.href}>{c.hero.cta.label} <Icon name="arrow" /></a></div>
+  </PageHero>
+
+  <!-- THE BIG IDEA -->
+  <section class="section on-light">
+    <div class="wrap split-2 wide-left">
+      <div>
+        <p class="eyebrow reveal">{c.bigIdea.eyebrow}</p>
+        <h2 class="display-md mt-6 reveal">{c.bigIdea.heading}</h2>
+        <div class="prose-ee mt-8 reveal">
+          {c.bigIdea.body.map((p) => <p set:html={rich(p)} />)}
+        </div>
+        <p class="statement statement-gold mt-8 reveal">{c.bigIdea.closing}</p>
+      </div>
+      <div class="photo photo-frame reveal-img tall">
+        <Image src={ideaImg} alt="Andy Jarvis and Claire Boscq CSP speaking together on stage" widths={[480, 800, 1200]} sizes="(min-width: 64rem) 38vw, 92vw" />
+      </div>
+    </div>
+  </section>
+
+  <!-- THE EXPERIENCE -->
+  <section class="section bg-ink">
+    <div class="atmos"></div>
+    <div class="wrap split-2 wide-right rel">
+      <div class="photo photo-frame reveal-img tall order-last-m">
+        <Image src={expImg} alt="Claire Boscq CSP and Andy Jarvis energising a conference audience" widths={[480, 800, 1200]} sizes="(min-width: 64rem) 38vw, 92vw" />
+      </div>
+      <div>
+        <p class="eyebrow reveal">{c.experience.eyebrow}</p>
+        <h2 class="display-md mt-6 reveal">{c.experience.heading}</h2>
+        <div class="prose-ee mt-8 reveal">
+          {c.experience.body.map((p) => <p set:html={rich(p)} />)}
+        </div>
+        <p class="statement statement-gold mt-8 reveal">{c.experience.closing}</p>
+        <p class="mt-8 reveal"><a class="link-arrow" href={c.experience.cta.href}>{c.experience.cta.label} <Icon name="arrow" /></a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE TAKEAWAYS -->
+  <section class="section bg-charcoal">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">{c.takeaways.eyebrow}</p>
+        <p class="label mt-6">{c.takeaways.label}</p>
+        <h2 class="display-md mt-3">{c.takeaways.heading}</h2>
+        <p class="lede">{c.takeaways.intro}</p>
+        <p class="statement statement-gold mt-6">{c.takeaways.closing}</p>
+      </div>
+      <div class="grid-3 take">
+        {c.takeaways.cards.map((t, i) => (
+          <article class="card card-hover accent-top accent-gold tk reveal" style={`--d:${i * 120}ms`}>
+            <p class="tk-n">{t.n}</p>
+            <h3 class="display-sm">{t.title}</h3>
+            <p class="tk-lead">{t.lead}</p>
+            <p class="tk-text">{t.text}</p>
+            <p class="tk-react"><em>“{plain(t.reaction)}”</em></p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- THE OPTIONS -->
+  <section class="section bg-ink" id="options">
+    <div class="atmos atmos-gold"></div>
+    <div class="wrap rel">
+      <div class="head head-center reveal">
+        <p class="eyebrow no-rule">{o.eyebrow}</p>
+        <h2 class="display-lg mt-6">{o.heading}</h2>
+        <div class="prose-ee">{o.body.map((p) => <p set:html={rich(p)} />)}</div>
+      </div>
+
+      <div class="offers">
+        <article class="glass accent-top accent-copper offer reveal">
+          <p class="label">{o.signature.label}</p>
+          <h3 class="display-sm">{o.signature.title}</h3>
+          <p class="price">{o.signature.price}</p>
+          <p class="price-note">{o.signature.priceNote}</p>
+          <p class="offer-lead">{o.signature.lead}</p>
+          <p class="offer-text">{o.signature.text}</p>
+          <p class="list-label">{o.signature.includedLabel}</p>
+          <ul class="tick-list">{o.signature.included.map((t) => <li>{t}</li>)}</ul>
+          <p class="offer-close">{o.signature.closing}</p>
+          <a class="btn btn-primary btn-block" href={o.signature.cta.href}>{o.signature.cta.label} <Icon name="arrow" /></a>
+        </article>
+
+        <article class="glass accent-top accent-silver offer reveal" style="--d:120ms">
+          <p class="label">{o.executive.label}</p>
+          <h3 class="display-sm">{o.executive.title}</h3>
+          <p class="price price-sm">{o.executive.price}</p>
+          <p class="offer-lead">{o.executive.lead}</p>
+          <p class="offer-text">{o.executive.text}</p>
+          <ul class="topics" aria-label="Topics">{o.executive.topics.map((t) => <li>{t}</li>)}</ul>
+          <p class="offer-close">{o.executive.closing}</p>
+          <a class="btn btn-ghost btn-block" href={o.executive.cta.href}>{o.executive.cta.label} <Icon name="arrow" /></a>
+        </article>
+
+        <article class="glass accent-top accent-gold offer feature reveal" style="--d:240ms">
+          <p class="label">{o.partnership.label}</p>
+          <h3 class="display-sm">{o.partnership.title}</h3>
+          <p class="price price-sm">{o.partnership.price}</p>
+          <p class="price-note">{o.partnership.priceNote}</p>
+          <p class="offer-lead">{o.partnership.lead}</p>
+          {o.partnership.text.map((p) => <p class="offer-text">{plain(p)}</p>)}
+          <p class="list-label">{o.partnership.includedLabel}</p>
+          <ul class="tick-list">{o.partnership.included.map((t) => <li>{t}</li>)}</ul>
+          <p class="list-label">{o.partnership.providesLabel}</p>
+          <ul class="dot-list">{o.partnership.provides.map((t) => <li set:html={rich(t)} />)}</ul>
+          <p class="offer-close">{o.partnership.closing}</p>
+          <a class="btn btn-gold btn-block" href={o.partnership.cta.href}>{o.partnership.cta.label} <Icon name="arrow" /></a>
+        </article>
+      </div>
+      <p class="philosophy reveal" set:html={rich(o.philosophy)} />
+    </div>
+  </section>
+
+  <!-- SEE US IN ACTION -->
+  <section class="section bg-charcoal" id="watch">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">{c.action.eyebrow}</p>
+        <h2 class="display-lg mt-6">{c.action.heading}</h2>
+        <div class="prose-ee">{c.action.body.map((p) => <p set:html={rich(p)} />)}</div>
+        <p class="statement statement-gold mt-6">{c.action.closing}</p>
+      </div>
+      <div class="videos">
+        <div class="v-main reveal"><VideoCard video={keynoteVideos[0]} featured /></div>
+        <div class="v-side">
+          {keynoteVideos.slice(1).map((v, i) => <div class="reveal" style={`--d:${(i + 1) * 100}ms`}><VideoCard video={v} /></div>)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials and clients -->
+  <section class="section bg-ink proof">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2 class="display-md">{c.proof.heading}</h2>
+        <p class="lede">{c.proof.text}</p>
+      </div>
+    </div>
+    <div class="tm-wrap reveal"><Testimonials items={testimonials} label="Testimonials about Claire Boscq CSP and Andy Jarvis" /></div>
+    <div class="wrap logos-head">
+      <hr class="rule-metal" />
+      <h2 class="label reveal">{c.proof.logosHeading}</h2>
+    </div>
+    <LogoStrip />
+  </section>
+
+  <CtaBand eyebrow={c.cta.eyebrow} heading={c.cta.heading} body={c.cta.body} closing={c.cta.closing} buttons={[{ label: c.cta.button.label, href: c.cta.button.href }]} />
+</Base>
+
+<style>
+  .rel { position: relative; }
+  .tall { aspect-ratio: 4 / 5; width: 100%; max-width: 32rem; margin-inline: auto; }
+  .take { margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .tk { padding: clamp(1.6rem, 2.6vw, 2.25rem); display: flex; flex-direction: column; gap: .8rem; }
+  .tk-n { font-family: var(--font-display); font-weight: 800; font-size: 2.6rem; line-height: 1; background: var(--grad-gold); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .tk-lead { font-weight: 600; color: var(--color-gold); }
+  .tk-text { color: rgb(255 255 255 / .78); font-size: .98rem; line-height: 1.6; flex: 1; }
+  .tk-react { margin-top: .6rem; padding-top: 1.1rem; border-top: 1px solid rgb(255 255 255 / .1); color: rgb(255 255 255 / .9); font-size: 1.05rem; line-height: 1.45; }
+  .offers { display: grid; gap: 1.5rem; margin-top: clamp(3rem, 6vw, 5rem); align-items: stretch; }
+  .offer { padding: clamp(1.6rem, 2.6vw, 2.4rem); display: flex; flex-direction: column; gap: .9rem; }
+  .offer .display-sm { font-size: clamp(1.5rem, 2.1vw, 1.9rem); }
+  .price-note { font-size: .74rem; font-weight: 700; letter-spacing: .14em; line-height: 1.5; color: rgb(255 255 255 / .75); }
+  .offer-lead { font-weight: 600; color: #fff; margin-top: .4rem; }
+  .offer-text { color: rgb(255 255 255 / .78); font-size: .97rem; line-height: 1.6; }
+  .list-label { font-weight: 700; font-size: .9rem; margin-top: .6rem; }
+  .offer :global(.tick-list), .offer :global(.dot-list) { font-size: .95rem; color: rgb(255 255 255 / .86); }
+  .topics { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .4rem; }
+  .topics li { font-size: .82rem; font-weight: 600; padding: .4rem .85rem; border-radius: 999px; border: 1px solid rgb(189 194 205 / .4); color: var(--color-silver-light); }
+  .offer-close { margin-top: auto; padding-top: 1rem; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; line-height: 1.2; }
+  .offer .btn { margin-top: .5rem; }
+  .feature { background: linear-gradient(160deg, rgb(221 198 134 / .16), rgb(203 108 82 / .06) 55%, rgb(255 255 255 / .02)); border-color: rgb(221 198 134 / .4); }
+  .philosophy { margin-top: clamp(2.5rem, 5vw, 4rem); text-align: center; font-family: var(--font-display); font-size: clamp(1.25rem, 2vw, 1.6rem); font-weight: 600; }
+  .philosophy :global(strong) { color: var(--color-gold); }
+  .videos { display: grid; gap: 2rem; margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .v-side { display: grid; gap: 2rem; }
+  .proof { padding-bottom: clamp(3.5rem, 7vw, 6rem); }
+  .tm-wrap { margin-top: clamp(2rem, 4vw, 3rem); }
+  .logos-head { margin-top: clamp(3rem, 6vw, 5rem); margin-bottom: 2rem; text-align: center; display: grid; gap: 2.5rem; }
+  .logos-head .label { font-family: var(--font-sans); }
+  @media (min-width: 40rem) { .v-side { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
+  @media (min-width: 64rem) {
+    .offers { grid-template-columns: repeat(3, 1fr); }
+    .order-last-m { order: 0; }
+  }
+  @media (max-width: 63.99rem) { .order-last-m { order: 2; } }
+</style>

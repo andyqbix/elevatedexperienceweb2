@@ -1,0 +1,65 @@
+---
+import { Image } from 'astro:assets';
+import logo from '@/assets/brand/ee-logo-full.png';
+import Icon from '@/components/Icon.astro';
+import { site, nav, social, links } from '@/data/site';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <hr class="rule-metal" />
+  <div class="wrap grid">
+    <div class="id">
+      <a href="/" aria-label="Elevated eXperience home"><Image src={logo} alt="Elevated eXperience" width={260} class="logo" /></a>
+    </div>
+    <div class="col">
+      <p class="h">Contact</p>
+      <p class="name">{site.legalName}</p>
+      <ul class="contact">
+        <li><span>Email</span> <a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li><span>WhatsApp</span> <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer">{site.phoneDisplay}</a></li>
+        <li><span>Phone</span> <a href={site.phoneHref}>{site.phoneDisplay}</a></li>
+      </ul>
+      <address>{site.address}</address>
+    </div>
+    <nav class="col" aria-label="Footer">
+      <p class="h">Explore</p>
+      <ul class="links">
+        {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+      </ul>
+    </nav>
+    <div class="col">
+      <p class="h">Follow</p>
+      <ul class="social">
+        {social.map((s) => (
+          <li><a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={`Elevated eXperience on ${s.name}`}><Icon name={s.icon} /></a></li>
+        ))}
+      </ul>
+      <a class="link-arrow" href={links.bookCall} target="_blank" rel="noopener noreferrer">Book a call <Icon name="arrow" /></a>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <p>Copyright © {year} {site.legalName}</p>
+    <p>From Friction to Flow.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: #08090b; color: rgb(255 255 255 / .72); font-size: .92rem; }
+  .grid { display: grid; gap: 2.75rem; padding-block: clamp(3rem, 6vw, 5rem); grid-template-columns: 1fr; }
+  .logo { width: 8.5rem; height: auto; }
+  .h { font-size: .7rem; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: var(--color-gold); margin-bottom: 1.1rem; }
+  .name { color: #fff; font-weight: 600; margin-bottom: .6rem; }
+  .contact { display: grid; gap: .35rem; margin-bottom: 1rem; }
+  .contact span { display: inline-block; min-width: 5.5rem; color: rgb(255 255 255 / .5); }
+  address { font-style: normal; max-width: 18rem; line-height: 1.6; }
+  a { color: inherit; text-decoration: none; transition: color .3s; }
+  .col a:not(.link-arrow):hover { color: var(--color-gold); }
+  .links { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem 1.5rem; }
+  .social { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.5rem; }
+  .social a { width: 2.75rem; height: 2.75rem; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgb(221 198 134 / .3); color: var(--color-gold); transition: background-color .3s, color .3s, transform .4s var(--ease-flow), border-color .3s; }
+  .social a:hover { background: var(--color-gold); color: var(--color-ink) !important; transform: translateY(-3px); border-color: var(--color-gold); }
+  .social :global(svg) { width: 1.1rem; height: 1.1rem; }
+  .legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 2rem; padding-block: 1.4rem; border-top: 1px solid rgb(255 255 255 / .08); font-size: .78rem; color: rgb(255 255 255 / .5); }
+  @media (min-width: 40rem) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 64rem) { .grid { grid-template-columns: .8fr 1.3fr 1.2fr 1fr; } }
+</style>

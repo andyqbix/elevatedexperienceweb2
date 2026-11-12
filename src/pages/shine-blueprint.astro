@@ -1,0 +1,150 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Journey from '@/components/Journey.astro';
+import Icon from '@/components/Icon.astro';
+import { shine as c } from '@/content/shine';
+import { rich } from '@/lib/text';
+import heroImg from '@/assets/photos/stage-duo-flipchart.jpg';
+import valuesImg from '@/assets/photos/duo-studio-a.jpg';
+import dx from '@/assets/brand/dx-colour.png';
+import ex from '@/assets/brand/ex-colour.png';
+import cx from '@/assets/brand/cx-colour.png';
+import flame from '@/assets/brand/ee-flame.png';
+
+const marks: Record<string, any> = { dx, ex, cx, growth: flame };
+const accents: Record<string, string> = { dx: 'accent-blue', ex: 'accent-silver', cx: 'accent-gold', growth: 'accent-copper' };
+---
+<Base title={c.meta.title} description={c.meta.description} breadcrumb="SHINE Blueprint">
+  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.heading} image={heroImg} alt="Andy Jarvis and Claire Boscq CSP working at a flipchart on stage" position="50% 30%" mobileFit>
+    <p class="hero-text">{c.hero.text}</p>
+  </PageHero>
+
+  <!-- A clear path -->
+  <section class="section on-light">
+    <div class="wrap path">
+      <h2 class="display-md reveal">{c.path.heading}</h2>
+      <div class="prose-ee reveal" style="--d:120ms">
+        {c.path.body.map((p) => <p set:html={rich(p)} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- The six connected stages -->
+  <section class="section bg-ink" id="stages">
+    <div class="atmos atmos-gold"></div>
+    <div class="wrap rel">
+      <p class="lede intro reveal" set:html={rich(c.journey.intro)} />
+      <div class="reveal j-wrap">
+        <Journey id="shine" steps={c.journey.stages} label="The six stages of the SHINE Blueprint" />
+      </div>
+      <p class="statement after reveal">{c.journey.after}</p>
+    </div>
+  </section>
+
+  <!-- Built on values -->
+  <section class="section on-light">
+    <div class="wrap split-2 wide-left">
+      <div>
+        <h2 class="display-md reveal">{c.values.heading}</h2>
+        <div class="prose-ee mt-8 reveal">
+          {c.values.body.map((p) => <p set:html={rich(p)} />)}
+        </div>
+        <p class="statement statement-gold mt-8 reveal">{c.values.closing}</p>
+        <p class="mt-8 reveal"><a class="btn btn-primary" href={c.values.cta.href}>{c.values.cta.label} <Icon name="arrow" /></a></p>
+      </div>
+      <div class="photo photo-frame reveal-img values-photo">
+        <Image src={valuesImg} alt="Andy Jarvis and Claire Boscq CSP, the Power Duo" widths={[480, 800, 1200]} sizes="(min-width: 64rem) 38vw, 92vw" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Challenges and who it is for -->
+  <section class="section bg-charcoal">
+    <div class="atmos"></div>
+    <div class="wrap rel who">
+      <div class="glass who-card reveal">
+        <h2 class="display-sm">{c.challenges.heading}</h2>
+        <ul class="q-list">
+          {c.challenges.items.map((t) => <li><span class="q" aria-hidden="true">?</span><span>{t}</span></li>)}
+        </ul>
+        <p class="muted">{c.challenges.after}</p>
+      </div>
+      <div class="who-copy">
+        <h2 class="display-md reveal">{c.leaders.heading}</h2>
+        <p class="lede mt-6 reveal">{c.leaders.intro}</p>
+        <p class="label mt-8 reveal">{c.leaders.label}</p>
+        <ul class="tick-list accent-gold mt-4 reveal">
+          {c.leaders.items.map((t) => <li set:html={rich(t)} />)}
+        </ul>
+        <p class="prose-ee mt-8 reveal">{c.leaders.after}</p>
+        <p class="statement statement-gold mt-6 reveal">{c.leaders.closing}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- The business impact -->
+  <section class="section bg-ink">
+    <div class="wrap">
+      <div class="head reveal">
+        <p class="eyebrow">{c.impact.eyebrow}</p>
+        <h2 class="display-lg mt-6">{c.impact.heading}</h2>
+        <p class="lede">{c.impact.intro}</p>
+      </div>
+      <div class="grid-4 impact">
+        {c.impact.areas.map((a, i) => (
+          <article class={`card card-hover accent-top ${accents[a.key]} area reveal`} style={`--d:${i * 100}ms`}>
+            <Image src={marks[a.key]} alt="" height={56} class="area-mark" />
+            <h3>{a.title}</h3>
+            <p>{a.text}</p>
+          </article>
+        ))}
+      </div>
+      <p class="statement statement-gold center mt-12 reveal">{c.impact.closing}</p>
+    </div>
+  </section>
+
+  <!-- Call to action -->
+  <section class="section on-copper">
+    <div class="wrap-narrow cta">
+      <p class="eyebrow no-rule reveal">{c.cta.eyebrow}</p>
+      <h2 class="display-lg reveal">{c.cta.heading}</h2>
+      {c.cta.body.map((p, i) => <p class:list={[i === 0 ? 'kicker' : 'cta-text', 'reveal']}>{p}</p>)}
+      <p class="reveal"><a class="btn btn-primary" href={c.cta.primary.href} target="_blank" rel="noopener noreferrer">{c.cta.primary.label} <Icon name="external" /></a></p>
+      <p class="cta-text or reveal">{c.cta.or}</p>
+      <p class="reveal"><a class="btn btn-ghost" href={c.cta.secondary.href}>{c.cta.secondary.label} <Icon name="arrow" /></a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .rel { position: relative; }
+  .center { text-align: center; }
+  .path { display: grid; gap: 2rem; }
+  .intro { max-width: 60rem; }
+  .j-wrap { margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .after { max-width: 46rem; margin-top: clamp(2.5rem, 5vw, 4rem); padding-left: 1.25rem; border-left: 3px solid var(--color-copper); }
+  .values-photo { aspect-ratio: 4 / 5; max-width: 30rem; margin-inline: auto; width: 100%; }
+  .values-photo :global(img) { object-position: 50% 15%; }
+  .who { display: grid; gap: clamp(2.5rem, 5vw, 5rem); align-items: start; }
+  .who-card { padding: clamp(1.75rem, 3.5vw, 3rem); display: grid; gap: 1.75rem; }
+  .q-list { display: grid; gap: 1rem; }
+  .q-list li { display: flex; gap: 1rem; align-items: flex-start; line-height: 1.45; font-weight: 500; }
+  .q { flex: none; width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; color: var(--color-copper-soft); border: 1px solid rgb(203 108 82 / .5); }
+  .impact { margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .area { padding: clamp(1.5rem, 2.4vw, 2rem); display: grid; gap: .9rem; align-content: start; }
+  .area-mark { height: 2.25rem; width: auto; justify-self: start; }
+  .area h3 { font-size: 1.35rem; line-height: 1.15; }
+  .area p { color: rgb(255 255 255 / .76); font-size: .98rem; line-height: 1.6; }
+  .cta { text-align: center; display: grid; justify-items: center; gap: 1.4rem; }
+  .cta .eyebrow { color: var(--color-gold-pale); }
+  .cta-text { max-width: 58ch; color: rgb(255 255 255 / .9); }
+  .or { margin-top: 1rem; }
+  .cta :global(.btn-ghost) { border-color: rgb(255 255 255 / .55); }
+  @media (min-width: 64rem) {
+    .path { grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+    .who { grid-template-columns: .9fr 1.1fr; }
+    .who-card { position: sticky; top: calc(var(--header-h) + 1.5rem); }
+  }
+</style>

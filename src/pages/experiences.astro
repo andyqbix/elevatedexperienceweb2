@@ -1,0 +1,101 @@
+---
+import { Image } from 'astro:assets';
+import Base from '@/layouts/Base.astro';
+import PageHero from '@/components/PageHero.astro';
+import Icon from '@/components/Icon.astro';
+import { experiences as c } from '@/content/experiences';
+import { rich } from '@/lib/text';
+import heroImg from '@/assets/photos/stage-duo-room.jpg';
+import designImg from '@/assets/photos/stage-duo-screen.jpg';
+import hxLogo from '@/assets/brand/hx-hive-experience-full.png';
+
+const accents: Record<string, string> = { humanx: 'accent-gold', digitalx: 'accent-blue', customerx: 'accent-copper', communityx: 'accent-silver' };
+---
+<Base title={c.meta.title} description={c.meta.description} breadcrumb="eXperiences" service={{ name: 'The eXecutive eXperience', type: 'Bespoke executive programme', description: c.meta.description }}>
+  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.heading} image={heroImg} alt="Claire Boscq CSP and Andy Jarvis presenting to a full conference room" position="50% 40%" size="compact" mobileFit>
+    <p class="hero-text">{c.hero.text}</p>
+  </PageHero>
+
+  <!-- The signature experiences -->
+  <section class="section bg-charcoal">
+    <div class="atmos"></div>
+    <div class="wrap rel">
+      <div class="xs">
+        {c.items.map((x, i) => (
+          <article class={`card card-hover accent-top ${accents[x.key]} x reveal`} style={`--d:${(i % 2) * 120}ms`}>
+            <p class="x-n">{String(i + 1).padStart(2, '0')}</p>
+            <h2 class="x-name">{x.name.slice(0, -1)}<span class="x-x">X</span></h2>
+            <p class="x-lead">{x.lead}</p>
+            <p class="x-text">{x.text}</p>
+            {x.link && (
+              <a class="link-arrow x-link" href={x.link.href} target="_blank" rel="noopener noreferrer">{x.link.label}<span class="sr-only"> (opens on Hive eXperience in a new tab)</span> <Icon name="external" /></a>
+            )}
+          </article>
+        ))}
+        <article class="glass x x-yours reveal">
+          <div>
+            <p class="x-n">+</p>
+            <h2 class="x-name">{c.yours.name}</h2>
+            <p class="x-lead">{c.yours.lead}</p>
+          </div>
+          <div class="prose-ee">{c.yours.body.map((p) => <p set:html={rich(p)} />)}</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Design your day -->
+  <section class="section on-light">
+    <div class="wrap split-2 wide-left">
+      <div>
+        <h2 class="display-md reveal">{c.design.heading}</h2>
+        <p class="lede mt-8 reveal">{c.design.text}</p>
+        <p class="statement statement-gold mt-8 reveal">{c.design.closing}</p>
+        <p class="note mt-6 reveal">{c.design.note}</p>
+        <p class="mt-8 reveal"><a class="btn btn-primary" href={c.design.cta.href} target="_blank" rel="noopener noreferrer">{c.design.cta.label} <Icon name="external" /></a></p>
+      </div>
+      <div class="photo photo-frame reveal-img design-photo">
+        <Image src={designImg} alt="The Power Duo on stage in front of a seated audience" widths={[480, 800, 1200]} sizes="(min-width: 64rem) 38vw, 92vw" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience it live -->
+  <section class="section bg-ink live">
+    <div class="live-glow" aria-hidden="true"></div>
+    <div class="wrap-narrow rel live-inner">
+      <Image src={hxLogo} alt="HX, Hive eXperience" height={120} class="hx-logo reveal" />
+      <p class="eyebrow eyebrow-blue no-rule reveal">{c.live.eyebrow}</p>
+      <h2 class="display-md reveal"><a class="live-link" href={c.live.href} target="_blank" rel="noopener noreferrer">{c.live.heading}<span class="sr-only"> (opens in a new tab)</span> <Icon name="external" /></a></h2>
+      <p class="lede reveal">{c.live.text}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .rel { position: relative; }
+  .xs { display: grid; gap: 1.5rem; }
+  .x { padding: clamp(1.75rem, 3vw, 2.75rem); display: flex; flex-direction: column; gap: .9rem; }
+  .x-n { font-size: .72rem; font-weight: 700; letter-spacing: .24em; color: var(--accent-solid, var(--color-gold)); }
+  .x-name { font-size: clamp(2.2rem, 4vw, 3.25rem); font-weight: 800; letter-spacing: -.02em; }
+  .x-x { background: var(--accent); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .x-lead { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; line-height: 1.2; color: var(--accent-solid, var(--color-gold)); }
+  .x-text { color: rgb(255 255 255 / .8); flex: 1; }
+  .x-link { align-self: flex-start; margin-top: .75rem; }
+  .x-yours { gap: 1.5rem; background: linear-gradient(135deg, rgb(203 108 82 / .2), rgb(221 198 134 / .06) 60%, rgb(255 255 255 / .02)); border-color: rgb(221 198 134 / .35); }
+  .x-yours > div:first-child { display: grid; gap: .9rem; }
+  .note { font-size: .9rem; font-weight: 600; letter-spacing: .04em; color: #5d6067; }
+  .design-photo { aspect-ratio: 1; width: 100%; max-width: 32rem; margin-inline: auto; }
+  .live { overflow: hidden; }
+  .live-glow { position: absolute; inset: 0; background: radial-gradient(60% 70% at 50% 100%, rgb(21 126 217 / .28), transparent 70%); }
+  .live-inner { text-align: center; display: grid; justify-items: center; gap: 1.5rem; }
+  .hx-logo { height: clamp(4.5rem, 9vw, 7rem); width: auto; }
+  .live-link { display: inline; text-decoration: underline; text-decoration-color: rgb(75 173 221 / .5); text-decoration-thickness: 2px; text-underline-offset: .18em; transition: text-decoration-color .3s, color .3s; }
+  .live-link:hover { text-decoration-color: var(--color-blue-sky); color: var(--color-blue-ice); }
+  .live-link :global(svg) { display: inline-block; width: .55em; height: .55em; vertical-align: .1em; color: var(--color-blue-sky); }
+  @media (min-width: 48rem) {
+    .xs { grid-template-columns: repeat(2, 1fr); }
+    .x-yours { grid-column: 1 / -1; flex-direction: row; align-items: center; gap: 4rem; }
+    .x-yours > div { flex: 1; }
+  }
+</style>
