@@ -1,0 +1,98 @@
+---
+// "Watch showreel" button that opens the showreel in a modal player with sound on.
+// The video only downloads once the modal is opened. Without JavaScript the link opens the MP4 directly.
+import Icon from '@/components/Icon.astro';
+interface Props {
+  src: string;
+  poster: string;
+  label?: string;
+  eyebrow?: string;
+  title?: string;
+}
+const { src, poster, label = 'Watch showreel', eyebrow = 'Showreel', title = 'The Power Duo in action' } = Astro.props;
+const id = 'showreel-' + Math.random().toString(36).slice(2, 8);
+---
+<a class="btn btn-ghost reel-btn" href={src} data-reel-open={id} aria-haspopup="dialog">
+  <span class="reel-disc" aria-hidden="true"><Icon name="play" /></span>
+  {label}
+</a>
+
+<dialog class="reel" id={id} aria-labelledby={`${id}-title`}>
+  <div class="reel-inner">
+    <header class="reel-head">
+      <div>
+        <p class="label reel-eyebrow">{eyebrow}</p>
+        <h2 class="reel-title" id={`${id}-title`}>{title}</h2>
+      </div>
+      <button type="button" class="reel-x" data-reel-close aria-label="Close showreel"><Icon name="close" /></button>
+    </header>
+    <div class="reel-frame">
+      <video data-reel-video controls playsinline preload="none" poster={poster} data-src={src}></video>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .reel-btn { padding-left: .7rem; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); background: rgb(11 12 15 / .35); }
+  .reel-disc { width: 2.1rem; height: 2.1rem; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--grad-gold); color: #1c1608; box-shadow: 0 0 0 4px rgb(221 198 134 / .16); transition: transform .45s var(--ease-flow), box-shadow .45s var(--ease-flow); }
+  .reel-disc :global(svg) { width: .85rem; height: .85rem; fill: currentColor; margin-left: .12rem; }
+  .reel-btn:hover .reel-disc, .reel-btn:focus-visible .reel-disc { transform: scale(1.08); box-shadow: 0 0 0 7px rgb(221 198 134 / .2); }
+
+  .reel { margin: auto; padding: 0; width: min(76rem, calc(100% - 2rem)); max-height: calc(100svh - 2rem); border: 0; background: transparent; color: #fff; overflow: visible; }
+  .reel::backdrop { background: radial-gradient(ellipse at 50% 40%, rgb(38 33 24 / .82), rgb(6 7 9 / .94) 70%); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  .reel[open] { animation: reel-in .55s var(--ease-flow) both; }
+  .reel[open]::backdrop { animation: reel-fade .4s ease both; }
+  .reel-inner { position: relative; padding: clamp(1rem, 2.4vw, 1.75rem); border-radius: 1.5rem; border: 1px solid rgb(221 198 134 / .28); background: linear-gradient(160deg, #24211b, #15171b 55%, #101114); box-shadow: 0 50px 120px -30px #000, inset 0 1px 0 rgb(255 255 255 / .06); }
+  /* Gold hairline across the top edge, as on the site's accent cards */
+  .reel-inner::before { content: ""; position: absolute; top: -1px; left: 12%; right: 12%; height: 1px; background: linear-gradient(90deg, transparent, var(--color-gold), transparent); }
+  .reel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: .25rem .25rem clamp(.9rem, 2vw, 1.25rem); }
+  .reel-eyebrow { color: var(--color-gold); }
+  .reel-title { margin-top: .4rem; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.25rem, 2.6vw, 1.8rem); line-height: 1.1; }
+  .reel-x { flex: none; width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1px solid rgb(255 255 255 / .25); display: grid; place-items: center; color: #fff; cursor: pointer; transition: border-color .3s, color .3s, transform .45s var(--ease-flow); }
+  .reel-x :global(svg) { width: 1.1rem; height: 1.1rem; }
+  .reel-x:hover, .reel-x:focus-visible { border-color: var(--color-gold); color: var(--color-gold); transform: rotate(90deg); }
+  .reel-frame { position: relative; aspect-ratio: 16 / 9; max-height: calc(100svh - 10rem); margin-inline: auto; border-radius: 1rem; overflow: hidden; background: #000; box-shadow: 0 0 0 1px rgb(255 255 255 / .1); }
+  .reel-frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; }
+  @keyframes reel-in { from { opacity: 0; transform: translateY(24px) scale(.97); } }
+  @keyframes reel-fade { from { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .reel[open], .reel[open]::backdrop { animation: none; } }
+  @media (max-width: 40rem) { .reel { width: calc(100% - 1rem); } .reel-inner { border-radius: 1.1rem; } .reel-frame { border-radius: .7rem; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('[data-reel-open]').forEach((link) => {
+    const dlg = document.getElementById(link.dataset.reelOpen!) as HTMLDialogElement | null;
+    if (!dlg || typeof dlg.showModal !== 'function') return; // no dialog support: the link opens the MP4
+    const video = dlg.querySelector<HTMLVideoElement>('[data-reel-video]')!;
+    let resumeBg: HTMLVideoElement[] = [];
+
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!video.src) video.src = video.dataset.src!;
+      // Pause background loops and any other playing video while the showreel plays
+      resumeBg = [];
+      document.querySelectorAll<HTMLVideoElement>('video').forEach((v) => {
+        if (v === video || v.paused) return;
+        if (v.hasAttribute('data-bg') && !v.dataset.userPaused) resumeBg.push(v);
+        v.pause();
+      });
+      dlg.showModal();
+      video.currentTime = 0;
+      video.muted = false;
+      video.volume = 1;
+      // Opened by a click, so browsers allow sound. If one still refuses, fall back to muted playback.
+      video.play().catch(() => { video.muted = true; video.play().catch(() => {}); });
+    });
+
+    const close = () => dlg.close();
+    dlg.querySelectorAll('[data-reel-close]').forEach((b) => b.addEventListener('click', close));
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
+    dlg.addEventListener('close', () => {
+      video.pause();
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      resumeBg.forEach((v) => v.play().catch(() => {}));
+      resumeBg = [];
+      link.focus({ preventScroll: true });
+    });
+  });
+</script>

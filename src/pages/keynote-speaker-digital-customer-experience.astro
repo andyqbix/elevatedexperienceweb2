@@ -6,6 +6,7 @@ import CtaBand from '@/components/CtaBand.astro';
 import LogoStrip from '@/components/LogoStrip.astro';
 import Testimonials from '@/components/Testimonials.astro';
 import VideoCard from '@/components/VideoCard.astro';
+import ShowreelButton from '@/components/ShowreelButton.astro';
 import Icon from '@/components/Icon.astro';
 import { keynote as c } from '@/content/keynote';
 import { testimonials } from '@/data/testimonials';
@@ -29,7 +30,10 @@ const theme = {
   <PageHero eyebrow={c.hero.eyebrow} title={c.hero.heading} video={{ src: '/video/keynote-hero.mp4', poster: '/video/keynote-hero-poster.jpg' }} position="50% 30%">
     <p class="hero-line gold">{c.hero.line}</p>
     <p class="hero-text">{c.hero.text}</p>
-    <div class="hero-cta"><a class="btn btn-primary" href={c.hero.cta.href}>{c.hero.cta.label} <Icon name="arrow" /></a></div>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href={c.hero.cta.href}>{c.hero.cta.label} <Icon name="arrow" /></a>
+      <ShowreelButton src="/video/showreel.mp4" poster="/video/showreel-poster.jpg" label={c.hero.showreel.label} eyebrow={c.hero.showreel.eyebrow} title={c.hero.showreel.title} />
+    </div>
   </PageHero>
 
   <!-- THE BIG IDEA -->

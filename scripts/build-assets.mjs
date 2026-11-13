@@ -218,6 +218,11 @@ if (doVideo) {
   ff(['-ss', '10', '-i', V('cem-africa-2026-keynote-clip.mp4'), '-frames:v', '1', '-vf', 'scale=1600:-2', '-q:v', '4', `${OUT_VIDEO}/keynote-hero-poster.jpg`]);
   ff(['-i', V('cem-africa-2026-keynote-clip.mp4'), '-vf', 'scale=1280:-2,fps=30', ...h264(28), ...aac, `${OUT_VIDEO}/keynote-cem-africa.mp4`]);
 
+  // Showreel: the homepage hero cut with sound and text overlays, played in the keynote page's modal.
+  // Full HD so the overlay text stays crisp at large sizes.
+  ff(['-i', V('showreel.mp4'), '-vf', 'scale=1920:-2,fps=30', ...h264(25), '-c:a', 'aac', '-b:a', '160k', '-ac', '2', `${OUT_VIDEO}/showreel.mp4`]);
+  ff(['-ss', '1.5', '-i', V('showreel.mp4'), '-frames:v', '1', '-vf', 'scale=1600:-2', '-q:v', '3', `${OUT_VIDEO}/showreel-poster.jpg`]);
+
   // Claire introducing Andy on stage
   ff(['-i', V('claire-intro-closeup.mov'), '-vf', 'scale=1280:-2', ...h264(26), ...aac, `${OUT_VIDEO}/claire-introduces-andy.mp4`]);
   ff(['-ss', '2', '-i', V('claire-intro-closeup.mov'), '-frames:v', '1', '-vf', 'scale=1600:-2', '-q:v', '4', `${OUT_VIDEO}/claire-introduces-andy-poster.jpg`]);

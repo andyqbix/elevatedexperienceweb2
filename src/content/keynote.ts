@@ -19,6 +19,7 @@ export const keynote = typeset({
     line: 'When Digital, Employee and Customer Finally Connect and Truly SHINE.',
     text: 'Two dynamic speakers. Six decades of expertise. One powerful message that challenges perspectives, energises audiences and inspires meaningful action.',
     cta: { label: 'ENQUIRE ABOUT THE POWER DUO', href: links.contact },
+    showreel: { label: 'WATCH SHOWREEL', eyebrow: 'SHOWREEL', title: 'The Power Duo in action' },
   },
   bigIdea: {
     eyebrow: 'THE BIG IDEA',
