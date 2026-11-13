@@ -11,13 +11,19 @@ import { keynote as c } from '@/content/keynote';
 import { testimonials } from '@/data/testimonials';
 import { keynoteVideos } from '@/data/videos';
 import { rich, plain } from '@/lib/text';
-import ideaImg from '@/assets/photos/stage-duo-audience.jpg';
+import ideaImg from '@/assets/photos/stage-qbix-conference.jpg';
 import expImg from '@/assets/photos/stage-duo-dtc.jpg';
 
 const o = c.options;
 const offers = [
-  { '@type': 'Offer', name: 'The Signature Keynote', price: '12888', priceCurrency: 'USD', description: o.signature.text },
+  { '@type': 'Offer', name: 'The Signature Keynote', price: '12888', priceCurrency: 'USD', description: o.cards[0].text },
 ];
+// Card themes: blue, grey/silver and gold. Every button is filled in its card's colour.
+const theme = {
+  signature: { accent: 'accent-blue', btn: 'btn-blue' },
+  executive: { accent: 'accent-silver', btn: 'btn-silver' },
+  partnership: { accent: 'accent-gold', btn: 'btn-gold' },
+} as const;
 ---
 <Base title={c.meta.title} description={c.meta.description} breadcrumb="Keynote" service={{ name: 'Signature Keynote: The Gaps Killing Your Business Growth', type: 'Keynote speaking', description: c.meta.description, offers }}>
   <PageHero eyebrow={c.hero.eyebrow} title={c.hero.heading} video={{ src: '/video/keynote-hero.mp4', poster: '/video/keynote-hero-poster.jpg' }} position="50% 30%">
@@ -37,8 +43,8 @@ const offers = [
         </div>
         <p class="statement statement-gold mt-8 reveal">{c.bigIdea.closing}</p>
       </div>
-      <div class="photo photo-frame reveal-img tall">
-        <Image src={ideaImg} alt="Andy Jarvis and Claire Boscq CSP speaking together on stage" widths={[480, 800, 1200]} sizes="(min-width: 64rem) 38vw, 92vw" />
+      <div class="photo photo-frame reveal-img idea-photo">
+        <Image src={ideaImg} alt="Claire Boscq CSP introducing Andy Jarvis, CEO of QBIX, to a full room at the QBIX Digital Transformation Conference" widths={[600, 900, 1200, 1600, 2400]} sizes="(min-width: 64rem) 38vw, 92vw" quality={85} />
       </div>
     </div>
   </section>
@@ -96,56 +102,43 @@ const offers = [
         <div class="prose-ee">{o.body.map((p) => <p set:html={rich(p)} />)}</div>
       </div>
 
-      <div class="offers">
-        <article class="glass accent-top accent-blue offer signature reveal">
-          <p class="label">{o.signature.label}</p>
-          <h3 class="display-sm">{o.signature.title}</h3>
-          <div class="offer-price"><p class="price price-sm">{o.signature.price}</p><p class="price-note">{o.signature.priceNote}</p></div>
-          <div class="offer-body">
-            <p class="offer-lead">{o.signature.lead}</p>
-            <p class="offer-text">{o.signature.text}</p>
-            <p class="list-label">{o.signature.includedLabel}</p>
-            <ul class="tick-list">{o.signature.included.map((t) => <li>{t}</li>)}</ul>
-          </div>
-          <div class="offer-foot">
-            <p class="offer-close">{o.signature.closing}</p>
-            <a class="btn btn-blue btn-block" href={o.signature.cta.href}>{o.signature.cta.label} <Icon name="arrow" /></a>
-          </div>
-        </article>
-
-        <article class="glass accent-top accent-silver offer reveal" style="--d:120ms">
-          <p class="label">{o.executive.label}</p>
-          <h3 class="display-sm">{o.executive.title}</h3>
-          <div class="offer-price"><p class="price price-sm">{o.executive.price}</p></div>
-          <div class="offer-body">
-            <p class="offer-lead">{o.executive.lead}</p>
-            <p class="offer-text">{o.executive.text}</p>
-            <ul class="topics" aria-label="Topics">{o.executive.topics.map((t) => <li>{t}</li>)}</ul>
-          </div>
-          <div class="offer-foot">
-            <p class="offer-close">{o.executive.closing}</p>
-            <a class="btn btn-ghost btn-block" href={o.executive.cta.href}>{o.executive.cta.label} <Icon name="arrow" /></a>
-          </div>
-        </article>
-
-        <article class="glass accent-top accent-gold offer feature reveal" style="--d:240ms">
-          <p class="label">{o.partnership.label}</p>
-          <h3 class="display-sm">{o.partnership.title}</h3>
-          <div class="offer-price"><p class="price price-sm">{o.partnership.price}</p><p class="price-note">{o.partnership.priceNote}</p></div>
-          <div class="offer-body">
-            <p class="offer-lead">{o.partnership.lead}</p>
-            {o.partnership.text.map((p) => <p class="offer-text">{plain(p)}</p>)}
-            <p class="list-label">{o.partnership.includedLabel}</p>
-            <ul class="tick-list">{o.partnership.included.map((t) => <li>{t}</li>)}</ul>
-            <p class="list-label">{o.partnership.providesLabel}</p>
-            <ul class="dot-list">{o.partnership.provides.map((t) => <li set:html={rich(t)} />)}</ul>
-          </div>
-          <div class="offer-foot">
-            <p class="offer-close">{o.partnership.closing}</p>
-            <a class="btn btn-gold btn-block" href={o.partnership.cta.href}>{o.partnership.cta.label} <Icon name="arrow" /></a>
-          </div>
-        </article>
+      <!-- Eight shared slots per card, aligned across the three cards with CSS subgrid -->
+      <div class="pricing">
+        {o.cards.map((card, i) => (
+          <article class={`glass accent-top ${theme[card.key as keyof typeof theme].accent} card-${card.key} pcard reveal`} style={`--d:${i * 120}ms`}>
+            <p class="label p-eyebrow">{card.eyebrow}</p>
+            <h3 class="p-title">{card.title}</h3>
+            <p class="p-value">{card.value}</p>
+            <p class="p-value-label">{card.valueLabel}</p>
+            <p class="p-lead">{card.lead}</p>
+            <p class="p-text">{card.text}</p>
+            <div class="p-included">
+              <p class="list-label">{o.includedLabel}</p>
+              <ul class="tick-list">{card.included.map((t) => <li>{t}</li>)}</ul>
+            </div>
+            <div class="p-foot">
+              <p class="p-close">{card.closing}</p>
+              <a class={`btn ${theme[card.key as keyof typeof theme].btn} btn-block p-btn`} href={card.cta.href}>{card.cta.label} <Icon name="arrow" /></a>
+              {card.termsLink && (
+                <a class="p-terms" href={o.terms.cta.href} data-terms-open aria-haspopup="dialog">{card.termsLink}</a>
+              )}
+            </div>
+          </article>
+        ))}
       </div>
+
+      <dialog class="terms" id="partnership-terms" aria-labelledby="terms-title">
+        <div class="terms-inner accent-top accent-gold">
+          <p class="label">{o.cards[2].eyebrow}</p>
+          <h3 class="terms-title" id="terms-title">{o.terms.heading}</h3>
+          <ul class="dot-list">{o.terms.items.map((t) => <li>{t}</li>)}</ul>
+          <div class="terms-actions">
+            <a class="btn btn-gold" href={o.terms.cta.href}>{o.terms.cta.label} <Icon name="arrow" /></a>
+            <button type="button" class="terms-close" data-terms-close>{o.terms.close}</button>
+          </div>
+          <button type="button" class="terms-x" data-terms-close aria-label="Close partnership terms"><Icon name="plus" /></button>
+        </div>
+      </dialog>
       <p class="philosophy reveal" set:html={rich(o.philosophy)} />
     </div>
   </section>
@@ -187,8 +180,21 @@ const offers = [
   <CtaBand eyebrow={c.cta.eyebrow} heading={c.cta.heading} body={c.cta.body} closing={c.cta.closing} buttons={[{ label: c.cta.button.label, href: c.cta.button.href }]} />
 </Base>
 
+<script>
+  // Partnership terms open in a modal; without JavaScript the link goes to the enquiry page instead
+  const dlg = document.getElementById('partnership-terms') as HTMLDialogElement | null;
+  if (dlg && typeof dlg.showModal === 'function') {
+    document.querySelectorAll<HTMLAnchorElement>('[data-terms-open]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); dlg.showModal(); }));
+    dlg.querySelectorAll('[data-terms-close]').forEach((b) => b.addEventListener('click', () => dlg.close()));
+    dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+  }
+</script>
+
 <style>
   .rel { position: relative; }
+  /* QBIX conference: square crop keeps the screen, Claire and the QBIX lectern in view */
+  .idea-photo { aspect-ratio: 1; width: 100%; max-width: 34rem; margin-inline: auto; }
+  .idea-photo :global(img) { object-position: 26% 50%; }
   .tall { aspect-ratio: 4 / 5; width: 100%; max-width: 32rem; margin-inline: auto; }
   .take { margin-top: clamp(2.5rem, 5vw, 4rem); }
   .tk { padding: clamp(1.6rem, 2.6vw, 2.25rem); display: flex; flex-direction: column; gap: .8rem; }
@@ -196,23 +202,45 @@ const offers = [
   .tk-lead { font-weight: 600; color: var(--color-gold); }
   .tk-text { color: rgb(255 255 255 / .78); font-size: .98rem; line-height: 1.6; flex: 1; }
   .tk-react { margin-top: .6rem; padding-top: 1.1rem; border-top: 1px solid rgb(255 255 255 / .1); color: rgb(255 255 255 / .9); font-size: 1.05rem; line-height: 1.45; }
-  .offers { display: grid; gap: 1.5rem; margin-top: clamp(3rem, 6vw, 5rem); align-items: stretch; }
-  /* The three cards share rows (subgrid on desktop): label, title, price, body and footer line up across cards */
-  .offer { padding: clamp(1.6rem, 2.6vw, 2.4rem); display: grid; grid-template-rows: auto auto auto 1fr auto; gap: .9rem; }
-  .offer-price { display: grid; gap: .5rem; align-content: start; }
-  .offer-body { display: flex; flex-direction: column; gap: .9rem; }
-  .offer-foot { display: grid; gap: 1rem; align-content: end; }
-  .signature { background: linear-gradient(160deg, rgb(21 126 217 / .16), rgb(6 64 138 / .06) 55%, rgb(255 255 255 / .02)); border-color: rgb(75 173 221 / .4); }
-  .offer .display-sm { font-size: clamp(1.5rem, 2.1vw, 1.9rem); }
-  .price-note { font-size: .74rem; font-weight: 700; letter-spacing: .14em; line-height: 1.5; color: rgb(255 255 255 / .75); }
-  .offer-lead { font-weight: 600; color: #fff; margin-top: .4rem; }
-  .offer-text { color: rgb(255 255 255 / .78); font-size: .97rem; line-height: 1.6; }
-  .list-label { font-weight: 700; font-size: .9rem; margin-top: .6rem; }
-  .offer :global(.tick-list), .offer :global(.dot-list) { font-size: .95rem; color: rgb(255 255 255 / .86); }
-  .topics { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .4rem; }
-  .topics li { font-size: .82rem; font-weight: 600; padding: .4rem .85rem; border-radius: 999px; border: 1px solid rgb(189 194 205 / .4); color: var(--color-silver-light); }
-  .offer-close { padding-top: 1rem; border-top: 1px solid rgb(255 255 255 / .1); font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; line-height: 1.2; }
-  .feature { background: linear-gradient(160deg, rgb(221 198 134 / .16), rgb(203 108 82 / .06) 55%, rgb(255 255 255 / .02)); border-color: rgb(221 198 134 / .4); }
+  /* Pricing: eight shared slots per card. On wide screens each card is a subgrid spanning eight rows of the
+     parent grid, so eyebrow, headline, value, label, subheading, intro, ticks and footer line up across cards. */
+  /* The grid (not the cards) is the size container: containment on a card would switch its subgrid off. --cw is one card's width. */
+  .pricing { container-type: inline-size; --cw: 100cqi; display: grid; grid-template-columns: 1fr; gap: 1.25rem; align-items: stretch; margin: clamp(3rem, 6vw, 5rem) auto 0; max-width: 38rem; }
+  .pcard { display: grid; grid-template-columns: minmax(0, 1fr); grid-row: span 8; grid-template-rows: subgrid; row-gap: .85rem; padding: clamp(1.25rem, 2vw, 2.25rem); }
+  .pcard > * { min-width: 0; }
+  .card-signature { background: linear-gradient(160deg, rgb(21 126 217 / .16), rgb(6 64 138 / .06) 55%, rgb(255 255 255 / .02)); border-color: rgb(75 173 221 / .4); }
+  .card-executive { border-color: rgb(189 194 205 / .3); }
+  .card-partnership { background: linear-gradient(160deg, rgb(221 198 134 / .16), rgb(203 108 82 / .06) 55%, rgb(255 255 255 / .02)); border-color: rgb(221 198 134 / .4); }
+  .p-eyebrow { font-size: clamp(.62rem, calc(var(--cw) * .034), .74rem); letter-spacing: .16em; line-height: 1.4; }
+  .p-title { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.3rem, calc(var(--cw) * .071), 1.9rem); line-height: 1.08; text-wrap: balance; }
+  /* Big value: identical size on all three cards (same card width), always one line */
+  .p-value { margin-top: .6rem; font-family: var(--font-display); font-weight: 800; font-size: clamp(1.9rem, calc(var(--cw) * .104), 3rem); line-height: 1; letter-spacing: -.02em; white-space: nowrap; background: var(--accent); -webkit-background-clip: text; background-clip: text; color: transparent; padding-block: .08em; }
+  .card-signature .p-value { background-image: linear-gradient(100deg, #4baddd, #99ceea 50%, #157ed9); }
+  .p-value-label { font-size: clamp(.56rem, calc(var(--cw) * .0292), .76rem); font-weight: 700; letter-spacing: .02em; text-transform: uppercase; line-height: 1.4; white-space: nowrap; color: rgb(255 255 255 / .75); }
+  .p-lead { margin-top: .6rem; padding-top: 1.1rem; border-top: 1px solid rgb(255 255 255 / .1); font-weight: 700; color: #fff; line-height: 1.4; }
+  .p-text { color: rgb(255 255 255 / .78); font-size: .97rem; line-height: 1.6; }
+  .p-included { display: grid; gap: .9rem; align-content: start; margin-top: .4rem; }
+  .list-label { font-weight: 700; font-size: .9rem; }
+  .pcard :global(.tick-list) { font-size: .95rem; color: rgb(255 255 255 / .86); }
+  .p-foot { display: grid; gap: 1rem; align-content: start; margin-top: .6rem; padding-top: 1.1rem; border-top: 1px solid rgb(255 255 255 / .1); }
+  .p-close { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; line-height: 1.25; }
+  /* Same size, padding, font and arrow on all three buttons */
+  .p-btn { min-height: 3.5rem; padding: .9rem 1rem; gap: .6rem; font-size: clamp(.64rem, calc(var(--cw) * .031), .76rem); letter-spacing: .1em; white-space: nowrap; }
+  .p-terms { justify-self: center; margin-top: -.25rem; font-size: .85rem; font-weight: 600; color: var(--color-gold); text-decoration: underline; text-decoration-color: rgb(221 198 134 / .45); text-underline-offset: .25em; }
+  .p-terms:hover { text-decoration-color: var(--color-gold); }
+
+  /* Partnership terms modal */
+  .terms { margin: auto; padding: 0; width: min(36rem, calc(100% - 2rem)); border: 0; border-radius: 1.25rem; background: transparent; color: #fff; }
+  .terms::backdrop { background: rgb(11 12 15 / .72); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .terms-inner { position: relative; padding: clamp(1.75rem, 4vw, 2.5rem); border-radius: 1.25rem; border: 1px solid rgb(221 198 134 / .35); background: linear-gradient(160deg, #26231c, #17191d 60%); box-shadow: 0 40px 90px -30px #000; }
+  .terms-title { margin: .75rem 0 1.25rem; font-size: clamp(1.5rem, 3vw, 1.9rem); }
+  .terms :global(.dot-list) { color: rgb(255 255 255 / .86); font-size: .98rem; }
+  .terms-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; margin-top: 1.75rem; }
+  .terms-close { font-size: .8rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: rgb(255 255 255 / .7); cursor: pointer; padding: .5rem 0; }
+  .terms-close:hover { color: #fff; }
+  .terms-x { position: absolute; top: 1rem; right: 1rem; width: 2.25rem; height: 2.25rem; border-radius: 50%; border: 1px solid rgb(255 255 255 / .25); display: grid; place-items: center; color: #fff; cursor: pointer; transform: rotate(45deg); }
+  .terms-x :global(svg) { width: 1rem; height: 1rem; }
+  .terms-x:hover { border-color: var(--color-gold); color: var(--color-gold); }
   .philosophy { margin-top: clamp(2.5rem, 5vw, 4rem); text-align: center; font-family: var(--font-display); font-size: clamp(1.25rem, 2vw, 1.6rem); font-weight: 600; background: var(--grad-copper); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .philosophy :global(strong) { font-weight: 800; }
   .videos { display: grid; gap: 2rem; margin-top: clamp(2.5rem, 5vw, 4rem); }
@@ -223,9 +251,14 @@ const offers = [
   .logos-head .label { font-family: var(--font-sans); }
   @media (min-width: 40rem) { .v-side { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
   @media (min-width: 64rem) {
-    .offers { grid-template-columns: repeat(3, 1fr); }
-    .offer { grid-row: span 5; grid-template-rows: subgrid; }
     .order-last-m { order: 0; }
+  }
+  /* Three across from tablet landscape up. Between 64rem and 72rem the label sits near 9px and the
+     buttons tighten; if anything still cannot fit, it wraps rather than spilling out of the card. */
+  @media (min-width: 64rem) { .pricing { grid-template-columns: repeat(3, 1fr); max-width: none; --cw: calc((100cqi - 2.5rem) / 3); } }
+  @media (min-width: 64rem) and (max-width: 71.99rem) {
+    .p-value-label, .p-btn { white-space: normal; }
+    .p-btn { padding-inline: .75rem; letter-spacing: .08em; }
   }
   @media (max-width: 63.99rem) { .order-last-m { order: 2; } }
 </style>

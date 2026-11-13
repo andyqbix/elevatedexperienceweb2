@@ -15,7 +15,7 @@ import imgCoach from '@/assets/photos/duo-networking.jpg';
 import dx from '@/assets/brand/dx-colour.png';
 import ex from '@/assets/brand/ex-colour.png';
 import cx from '@/assets/brand/cx-colour.png';
-import flame from '@/assets/brand/ee-flame.png';
+import pyramid from '@/assets/photos/flow-pyramid.jpg';
 
 const marks = { dx, ex, cx } as const;
 const accents = { dx: 'accent-blue', ex: 'accent-silver', cx: 'accent-gold' } as const;
@@ -114,16 +114,13 @@ const serviceAlt = {
         <h2 class="display-lg mt-6 reveal">{c.solution.heading}</h2>
       </div>
       <div class="stages reveal">
-        <Journey id="home-shine" steps={shineStages} label="The six stages of the SHINE Blueprint" />
+        <Journey id="home-shine" steps={shineStages} label="The six stages of the SHINE Blueprint" href={`${c.solution.cta.href}#stages`} />
       </div>
-      <div class="shine-body">
-        <div class="prose-ee reveal">
-          {c.solution.body.slice(0, 2).map((p) => <p set:html={rich(p)} />)}
+      <div class="shine-body reveal">
+        <div class="prose-ee">
+          {c.solution.short.map((p) => <p set:html={rich(p)} />)}
         </div>
-        <div class="prose-ee reveal" style="--d:120ms">
-          {c.solution.body.slice(2).map((p) => <p set:html={rich(p)} />)}
-          <p class="pt-4"><a class="btn btn-gold" href={c.solution.cta.href}>{c.solution.cta.label} <Icon name="arrow" /></a></p>
-        </div>
+        <a class="btn btn-gold" href={c.solution.cta.href}>{c.solution.cta.label} <Icon name="arrow" /></a>
       </div>
     </div>
   </section>
@@ -169,25 +166,8 @@ const serviceAlt = {
         </div>
         <p class="closing-light reveal">{c.outcome.closing}</p>
       </div>
-      <div class="flow reveal" aria-hidden="true">
-        <svg viewBox="0 0 520 520" fill="none">
-          <defs>
-            <linearGradient id="g-blue" x1="0" x2="1"><stop offset="0" stop-color="#06408a" /><stop offset=".5" stop-color="#4baddd" /><stop offset="1" stop-color="#99ceea" /></linearGradient>
-            <linearGradient id="g-silver" x1="0" x2="1"><stop offset="0" stop-color="#6c7076" /><stop offset=".5" stop-color="#e2e3e6" /><stop offset="1" stop-color="#9ba0a7" /></linearGradient>
-            <linearGradient id="g-gold" x1="0" x2="1"><stop offset="0" stop-color="#8d6618" /><stop offset=".5" stop-color="#f8ecb3" /><stop offset="1" stop-color="#b69748" /></linearGradient>
-            <radialGradient id="g-core"><stop offset="0" stop-color="#cb6c52" stop-opacity=".5" /><stop offset="1" stop-color="#cb6c52" stop-opacity="0" /></radialGradient>
-          </defs>
-          <circle cx="260" cy="270" r="150" fill="url(#g-core)" />
-          <circle cx="260" cy="270" r="118" stroke="#cb6c52" stroke-opacity=".35" />
-          <circle cx="260" cy="270" r="182" stroke="#fff" stroke-opacity=".07" />
-          <path class="line l1" d="M260 62 C 140 120, 150 220, 260 270" stroke="url(#g-gold)" stroke-width="2.5" pathLength="1" />
-          <path class="line l2" d="M82 400 C 120 280, 200 250, 260 270" stroke="url(#g-blue)" stroke-width="2.5" pathLength="1" />
-          <path class="line l3" d="M438 400 C 420 270, 330 240, 260 270" stroke="url(#g-silver)" stroke-width="2.5" pathLength="1" />
-        </svg>
-        <span class="node n-cx"><Image src={cx} alt="" height={52} /></span>
-        <span class="node n-dx"><Image src={dx} alt="" height={52} /></span>
-        <span class="node n-ex"><Image src={ex} alt="" height={52} /></span>
-        <span class="core"><Image src={flame} alt="" height={150} /></span>
+      <div class="pyramid reveal">
+        <Image src={pyramid} alt="The Flow Pyramid: Customer eXperience at the top, Digital eXperience and Employee eXperience at the base, with copper, blue and silver light flowing together at the centre" widths={[480, 800, 1200, 1536]} sizes="(min-width: 64rem) 40vw, 92vw" />
       </div>
     </div>
   </section>
@@ -254,7 +234,8 @@ const serviceAlt = {
   /* SHINE */
   .shine-head { max-width: 56rem; }
   .stages { margin: clamp(2.5rem, 5vw, 4rem) 0; }
-  .shine-body { display: grid; gap: 2rem; }
+  .shine-body { display: grid; gap: 2rem; justify-items: start; }
+  .shine-body .prose-ee { max-width: 46rem; }
 
   /* Delivery */
   .delivery-head { display: grid; gap: 2rem; margin-bottom: clamp(3rem, 6vw, 5rem); align-items: end; }
@@ -270,25 +251,15 @@ const serviceAlt = {
   /* Outcome */
   .outcome-grid { display: grid; gap: 3rem; align-items: center; }
   .closing-light { margin-top: 2rem; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.3rem, 2.2vw, 1.75rem); line-height: 1.2; background: var(--grad-gold); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .flow { position: relative; width: min(100%, 30rem); aspect-ratio: 1; margin-inline: auto; }
-  .flow svg { width: 100%; height: 100%; }
-  .line { stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2s var(--ease-flow); }
-  .flow.in .line { stroke-dashoffset: 0; }
-  .flow.in .l2 { transition-delay: .25s; } .flow.in .l3 { transition-delay: .5s; }
-  :global(html:not(.js)) .line { stroke-dashoffset: 0; }
-  .node, .core { position: absolute; display: grid; place-items: center; transform: translate(-50%, -50%); }
-  .node { width: 5.5rem; height: 5.5rem; border-radius: 50%; background: #17191d; border: 1px solid rgb(255 255 255 / .12); box-shadow: 0 20px 40px -20px #000; }
-  .node :global(img) { height: 1.9rem; width: auto; }
-  .n-cx { left: 50%; top: 12%; } .n-dx { left: 16%; top: 77%; } .n-ex { left: 84%; top: 77%; }
-  .core { left: 50%; top: 52%; }
-  .core :global(img) { height: clamp(6rem, 14vw, 8.5rem); width: auto; filter: drop-shadow(0 10px 40px rgb(203 108 82 / .45)); }
+  /* Flow Pyramid: the artwork's black background melts into the section with a soft edge fade */
+  .pyramid { width: min(100%, 34rem); margin-inline: auto; }
+  .pyramid :global(img) { width: 100%; height: auto; display: block; --fade: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent), linear-gradient(180deg, transparent, #000 5%, #000 95%, transparent); -webkit-mask-image: var(--fade); mask-image: var(--fade); -webkit-mask-composite: source-in; mask-composite: intersect; }
 
   .action :global(.eyebrow) { color: var(--color-gold-pale); }
 
-  @media (prefers-reduced-motion: reduce) { .line { stroke-dashoffset: 0; } }
   @media (min-width: 48rem) {
     .stats { grid-template-columns: repeat(3, 1fr); }
-    .shine-body { grid-template-columns: 1fr 1fr; gap: 4rem; }
+    .shine-body { grid-template-columns: 1fr auto; gap: 4rem; align-items: end; }
   }
   @media (min-width: 64rem) {
     .intro-grid { grid-template-columns: 1.1fr 1fr; gap: 5rem; align-items: end; }

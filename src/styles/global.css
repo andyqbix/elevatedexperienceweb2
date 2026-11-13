@@ -138,6 +138,8 @@ strong { font-weight: 650; }
 .btn-gold:hover { box-shadow: 0 16px 36px -12px rgb(221 198 134 / .75), inset 0 1px 0 rgb(255 255 255 / .5); }
 .btn-blue { --btn-bg: linear-gradient(100deg, #06408a 0%, #0f6fc4 45%, #1272c8 60%, #0f6fc4 78%, #06408a 100%); text-shadow: 0 1px 1px rgb(6 64 138 / .6); box-shadow: 0 10px 30px -12px rgb(21 126 217 / .7), inset 0 1px 0 rgb(255 255 255 / .25); }
 .btn-blue:hover { box-shadow: 0 16px 36px -12px rgb(21 126 217 / .85), inset 0 1px 0 rgb(255 255 255 / .3); }
+.btn-silver { --btn-bg: var(--grad-silver); background: var(--btn-bg); background-size: 200% 100%; background-position: 0% 50%; color: #17191d; box-shadow: 0 10px 30px -12px rgb(189 194 205 / .5), inset 0 1px 0 rgb(255 255 255 / .5); }
+.btn-silver:hover { background-position: 100% 50%; transform: translateY(-2px); box-shadow: 0 16px 36px -12px rgb(189 194 205 / .65), inset 0 1px 0 rgb(255 255 255 / .6); }
 .btn-ghost { border: 1px solid rgb(221 198 134 / .55); color: #fff; background: rgb(255 255 255 / .02); }
 .btn-ghost:hover { border-color: var(--color-gold); background: rgb(221 198 134 / .1); transform: translateY(-2px); }
 .on-light .btn-ghost { border-color: rgb(136 65 49 / .5); color: var(--color-charcoal); }

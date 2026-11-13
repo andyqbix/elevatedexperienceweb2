@@ -42,6 +42,7 @@ const photos = [
   ['duo-venue-phone.jpg', 'duo-venue'],
   ['claire-audience-gala.jpg', 'claire-audience'],
   ['claire-usb-stage.jpg', 'stage-claire-usb'],
+  ['flow-pyramid.png', 'flow-pyramid'],
 ];
 
 for (const [file, name, crop] of photos) {
@@ -61,6 +62,16 @@ for (const [file, name, crop] of photos) {
     .jpeg({ quality: 86, mozjpeg: true })
     .toFile(path.join(OUT_PHOTOS, `${name}.jpg`));
   console.log('photo', name);
+}
+
+/* ---------- Low resolution originals, enlarged with a gentle sharpen so they stay crisp on large screens ---------- */
+for (const [file, name, width] of [['qbix-conference-stage.png', 'stage-qbix-conference', 2400]]) {
+  await sharp(path.join(SRC, 'photos', file))
+    .resize({ width, kernel: 'lanczos3' })
+    .sharpen({ sigma: 0.8, m1: 0.6, m2: 1.2 })
+    .jpeg({ quality: 88, mozjpeg: true })
+    .toFile(path.join(OUT_PHOTOS, `${name}.jpg`));
+  console.log('photo (enlarged)', name);
 }
 
 /* ---------- Studio cut-outs (background removed locally, kept transparent so the duo sits on the page) ---------- */
@@ -130,7 +141,7 @@ export const clients = [
   ['7 (2).png', 'customer-fest-show', 'The Customer Fest Show'],
   ['CX west Africa.jpg', 'cx-west-africa-summit', 'CX West Africa Summit'],
   ['franchise_asia_opt-150x150.png', 'franchise-asia', 'Franchise Asia Philippines'],
-  ['top30-leadership-2021.png', 'global-gurus', 'Global Gurus'],
+  ['global-gurus-top30-cx.png', 'global-gurus', 'Global Gurus'],
 ];
 
 async function monoLogo(file, slug) {

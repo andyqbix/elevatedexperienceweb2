@@ -56,6 +56,11 @@ export const home = typeset({
       "That's why we created the SHINE Blueprint, our approach to identifying the gaps, aligning people, culture, processes and technology, and transforming friction into seamless flow.",
       'When every part of your organisation works together, your people thrive, your customers feel valued and your business is positioned to grow.',
     ],
+    // Shortened home page version (approved): title, stage strip, this text and the button
+    short: [
+      'At Elevated eXperience, we believe Digital, Employee and Customer eXperience are not three separate challenges. They are one connected system.',
+      "That's why we created the SHINE Blueprint, our approach to identifying the gaps, aligning people, culture, processes and technology, and transforming friction into seamless flow.",
+    ],
     stages: ['VISION', 'DISCOVERY', 'STRATEGY', 'ROADMAP', 'DELIVERY', 'SHINE'],
     cta: { label: 'DISCOVER THE SHINE BLUEPRINT', href: links.shine },
   },
