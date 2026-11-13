@@ -97,43 +97,53 @@ const offers = [
       </div>
 
       <div class="offers">
-        <article class="glass accent-top accent-copper offer reveal">
+        <article class="glass accent-top accent-blue offer signature reveal">
           <p class="label">{o.signature.label}</p>
           <h3 class="display-sm">{o.signature.title}</h3>
-          <p class="price">{o.signature.price}</p>
-          <p class="price-note">{o.signature.priceNote}</p>
-          <p class="offer-lead">{o.signature.lead}</p>
-          <p class="offer-text">{o.signature.text}</p>
-          <p class="list-label">{o.signature.includedLabel}</p>
-          <ul class="tick-list">{o.signature.included.map((t) => <li>{t}</li>)}</ul>
-          <p class="offer-close">{o.signature.closing}</p>
-          <a class="btn btn-primary btn-block" href={o.signature.cta.href}>{o.signature.cta.label} <Icon name="arrow" /></a>
+          <div class="offer-price"><p class="price price-sm">{o.signature.price}</p><p class="price-note">{o.signature.priceNote}</p></div>
+          <div class="offer-body">
+            <p class="offer-lead">{o.signature.lead}</p>
+            <p class="offer-text">{o.signature.text}</p>
+            <p class="list-label">{o.signature.includedLabel}</p>
+            <ul class="tick-list">{o.signature.included.map((t) => <li>{t}</li>)}</ul>
+          </div>
+          <div class="offer-foot">
+            <p class="offer-close">{o.signature.closing}</p>
+            <a class="btn btn-blue btn-block" href={o.signature.cta.href}>{o.signature.cta.label} <Icon name="arrow" /></a>
+          </div>
         </article>
 
         <article class="glass accent-top accent-silver offer reveal" style="--d:120ms">
           <p class="label">{o.executive.label}</p>
           <h3 class="display-sm">{o.executive.title}</h3>
-          <p class="price price-sm">{o.executive.price}</p>
-          <p class="offer-lead">{o.executive.lead}</p>
-          <p class="offer-text">{o.executive.text}</p>
-          <ul class="topics" aria-label="Topics">{o.executive.topics.map((t) => <li>{t}</li>)}</ul>
-          <p class="offer-close">{o.executive.closing}</p>
-          <a class="btn btn-ghost btn-block" href={o.executive.cta.href}>{o.executive.cta.label} <Icon name="arrow" /></a>
+          <div class="offer-price"><p class="price price-sm">{o.executive.price}</p></div>
+          <div class="offer-body">
+            <p class="offer-lead">{o.executive.lead}</p>
+            <p class="offer-text">{o.executive.text}</p>
+            <ul class="topics" aria-label="Topics">{o.executive.topics.map((t) => <li>{t}</li>)}</ul>
+          </div>
+          <div class="offer-foot">
+            <p class="offer-close">{o.executive.closing}</p>
+            <a class="btn btn-ghost btn-block" href={o.executive.cta.href}>{o.executive.cta.label} <Icon name="arrow" /></a>
+          </div>
         </article>
 
         <article class="glass accent-top accent-gold offer feature reveal" style="--d:240ms">
           <p class="label">{o.partnership.label}</p>
           <h3 class="display-sm">{o.partnership.title}</h3>
-          <p class="price price-sm">{o.partnership.price}</p>
-          <p class="price-note">{o.partnership.priceNote}</p>
-          <p class="offer-lead">{o.partnership.lead}</p>
-          {o.partnership.text.map((p) => <p class="offer-text">{plain(p)}</p>)}
-          <p class="list-label">{o.partnership.includedLabel}</p>
-          <ul class="tick-list">{o.partnership.included.map((t) => <li>{t}</li>)}</ul>
-          <p class="list-label">{o.partnership.providesLabel}</p>
-          <ul class="dot-list">{o.partnership.provides.map((t) => <li set:html={rich(t)} />)}</ul>
-          <p class="offer-close">{o.partnership.closing}</p>
-          <a class="btn btn-gold btn-block" href={o.partnership.cta.href}>{o.partnership.cta.label} <Icon name="arrow" /></a>
+          <div class="offer-price"><p class="price price-sm">{o.partnership.price}</p><p class="price-note">{o.partnership.priceNote}</p></div>
+          <div class="offer-body">
+            <p class="offer-lead">{o.partnership.lead}</p>
+            {o.partnership.text.map((p) => <p class="offer-text">{plain(p)}</p>)}
+            <p class="list-label">{o.partnership.includedLabel}</p>
+            <ul class="tick-list">{o.partnership.included.map((t) => <li>{t}</li>)}</ul>
+            <p class="list-label">{o.partnership.providesLabel}</p>
+            <ul class="dot-list">{o.partnership.provides.map((t) => <li set:html={rich(t)} />)}</ul>
+          </div>
+          <div class="offer-foot">
+            <p class="offer-close">{o.partnership.closing}</p>
+            <a class="btn btn-gold btn-block" href={o.partnership.cta.href}>{o.partnership.cta.label} <Icon name="arrow" /></a>
+          </div>
         </article>
       </div>
       <p class="philosophy reveal" set:html={rich(o.philosophy)} />
@@ -187,7 +197,12 @@ const offers = [
   .tk-text { color: rgb(255 255 255 / .78); font-size: .98rem; line-height: 1.6; flex: 1; }
   .tk-react { margin-top: .6rem; padding-top: 1.1rem; border-top: 1px solid rgb(255 255 255 / .1); color: rgb(255 255 255 / .9); font-size: 1.05rem; line-height: 1.45; }
   .offers { display: grid; gap: 1.5rem; margin-top: clamp(3rem, 6vw, 5rem); align-items: stretch; }
-  .offer { padding: clamp(1.6rem, 2.6vw, 2.4rem); display: flex; flex-direction: column; gap: .9rem; }
+  /* The three cards share rows (subgrid on desktop): label, title, price, body and footer line up across cards */
+  .offer { padding: clamp(1.6rem, 2.6vw, 2.4rem); display: grid; grid-template-rows: auto auto auto 1fr auto; gap: .9rem; }
+  .offer-price { display: grid; gap: .5rem; align-content: start; }
+  .offer-body { display: flex; flex-direction: column; gap: .9rem; }
+  .offer-foot { display: grid; gap: 1rem; align-content: end; }
+  .signature { background: linear-gradient(160deg, rgb(21 126 217 / .16), rgb(6 64 138 / .06) 55%, rgb(255 255 255 / .02)); border-color: rgb(75 173 221 / .4); }
   .offer .display-sm { font-size: clamp(1.5rem, 2.1vw, 1.9rem); }
   .price-note { font-size: .74rem; font-weight: 700; letter-spacing: .14em; line-height: 1.5; color: rgb(255 255 255 / .75); }
   .offer-lead { font-weight: 600; color: #fff; margin-top: .4rem; }
@@ -196,11 +211,10 @@ const offers = [
   .offer :global(.tick-list), .offer :global(.dot-list) { font-size: .95rem; color: rgb(255 255 255 / .86); }
   .topics { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .4rem; }
   .topics li { font-size: .82rem; font-weight: 600; padding: .4rem .85rem; border-radius: 999px; border: 1px solid rgb(189 194 205 / .4); color: var(--color-silver-light); }
-  .offer-close { margin-top: auto; padding-top: 1rem; font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; line-height: 1.2; }
-  .offer .btn { margin-top: .5rem; }
+  .offer-close { padding-top: 1rem; border-top: 1px solid rgb(255 255 255 / .1); font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; line-height: 1.2; }
   .feature { background: linear-gradient(160deg, rgb(221 198 134 / .16), rgb(203 108 82 / .06) 55%, rgb(255 255 255 / .02)); border-color: rgb(221 198 134 / .4); }
-  .philosophy { margin-top: clamp(2.5rem, 5vw, 4rem); text-align: center; font-family: var(--font-display); font-size: clamp(1.25rem, 2vw, 1.6rem); font-weight: 600; }
-  .philosophy :global(strong) { color: var(--color-gold); }
+  .philosophy { margin-top: clamp(2.5rem, 5vw, 4rem); text-align: center; font-family: var(--font-display); font-size: clamp(1.25rem, 2vw, 1.6rem); font-weight: 600; background: var(--grad-copper); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .philosophy :global(strong) { font-weight: 800; }
   .videos { display: grid; gap: 2rem; margin-top: clamp(2.5rem, 5vw, 4rem); }
   .v-side { display: grid; gap: 2rem; }
   .proof { padding-bottom: clamp(3.5rem, 7vw, 6rem); }
@@ -210,6 +224,7 @@ const offers = [
   @media (min-width: 40rem) { .v-side { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } }
   @media (min-width: 64rem) {
     .offers { grid-template-columns: repeat(3, 1fr); }
+    .offer { grid-row: span 5; grid-template-rows: subgrid; }
     .order-last-m { order: 0; }
   }
   @media (max-width: 63.99rem) { .order-last-m { order: 2; } }

@@ -1,5 +1,7 @@
 ---
 // Accessible testimonial carousel: native horizontal scrolling with snap, plus previous / next buttons.
+// Advances on its own every few seconds; pauses on hover, keyboard focus, an opened quote, or the pause button,
+// and does not move at all for visitors who prefer reduced motion.
 // Quotes are shown word for word; long ones open in full with "Read more".
 import Icon from '@/components/Icon.astro';
 import { rich } from '@/lib/text';
@@ -34,6 +36,7 @@ const isLong = (q: string[]) => q.join(' ').length > 360;
   <div class="ctl">
     <button type="button" class="nav" data-prev aria-label="Previous testimonials"><Icon name="arrow" class="flip" /></button>
     <button type="button" class="nav" data-next aria-label="Next testimonials"><Icon name="arrow" /></button>
+    <button type="button" class="nav play" data-auto aria-pressed="false" hidden><Icon name="pause" class="i-pause" /><Icon name="play" class="i-play" /><span class="sr-only" data-auto-label>Pause automatic scrolling</span></button>
   </div>
 </div>
 
@@ -64,6 +67,11 @@ const isLong = (q: string[]) => q.join(' ').length > 360;
   .nav:disabled { opacity: .3; cursor: default; }
   .nav :global(svg) { width: 1.1rem; height: 1.1rem; }
   .nav :global(.flip) { transform: scaleX(-1); }
+  .play { border-color: rgb(255 255 255 / .25); color: rgb(255 255 255 / .75); }
+  .play :global(svg) { width: .9rem; height: .9rem; }
+  .play :global(.i-play), .play[aria-pressed="true"] :global(.i-pause) { display: none; }
+  .play[aria-pressed="true"] :global(.i-play) { display: block; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   @media (min-width: 82rem) { .rail { scroll-padding-inline: calc((100vw - 82rem) / 2 + var(--gutter)); padding-inline: calc((100vw - 82rem) / 2 + var(--gutter)); } }
 </style>
 
@@ -80,6 +88,32 @@ const isLong = (q: string[]) => q.join(' ').length > 360;
     prev.addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
     next.addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
     rail.addEventListener('scroll', update, { passive: true });
+
+    // Automatic scrolling
+    const auto = root.querySelector<HTMLButtonElement>('[data-auto]')!;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let stopped = false, hovering = false, focused = false, visible = false;
+    const tick = () => {
+      if (stopped || hovering || focused || !visible || root.querySelector('.tcard.open [data-more]')) return;
+      const atEnd = rail.scrollLeft + rail.clientWidth > rail.scrollWidth - 8;
+      rail.scrollTo({ left: atEnd ? 0 : rail.scrollLeft + step(), behavior: 'smooth' });
+    };
+    if (!reduced && rail.scrollWidth > rail.clientWidth + 8) {
+      auto.hidden = false;
+      setInterval(tick, 6000);
+      root.addEventListener('mouseenter', () => (hovering = true));
+      root.addEventListener('mouseleave', () => (hovering = false));
+      rail.addEventListener('focusin', () => (focused = true));
+      rail.addEventListener('focusout', () => (focused = false));
+      rail.addEventListener('touchstart', () => (hovering = true), { passive: true });
+      rail.addEventListener('touchend', () => setTimeout(() => (hovering = false), 4000), { passive: true });
+      new IntersectionObserver(([e]) => (visible = e.isIntersecting), { threshold: 0.3 }).observe(rail);
+      auto.addEventListener('click', () => {
+        stopped = !stopped;
+        auto.setAttribute('aria-pressed', String(stopped));
+        auto.querySelector('[data-auto-label]')!.textContent = stopped ? 'Start automatic scrolling' : 'Pause automatic scrolling';
+      });
+    }
     window.addEventListener('resize', update);
     update();
     root.querySelectorAll<HTMLElement>('[data-tcard]').forEach((card) => {

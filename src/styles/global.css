@@ -222,3 +222,8 @@ details.expand > .expand-body { padding-bottom: 1.5rem; }
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
   .js .reveal, .js .reveal-img > * { opacity: 1; transform: none; clip-path: none; }
 }
+
+/* SHINE in headings and eyebrows: gold gradient (wrapped by src/middleware.ts) */
+.shine-word { background: var(--grad-gold); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 800; }
+.on-light .shine-word { background: linear-gradient(100deg, #6e4c0c 0%, #9a7524 40%, #b69748 55%, #7a5410 100%); -webkit-background-clip: text; background-clip: text; }
+.statement-copper { background: var(--grad-copper); -webkit-background-clip: text; background-clip: text; color: transparent; }

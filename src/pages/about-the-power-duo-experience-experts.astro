@@ -7,7 +7,7 @@ import Icon from '@/components/Icon.astro';
 import { powerDuo as c } from '@/content/power-duo';
 import { rich } from '@/lib/text';
 import heroImg from '@/assets/photos/stage-duo-close.jpg';
-import duoStudio from '@/assets/photos/duo-studio-a.jpg';
+import duoStudio from '@/assets/photos/duo-studio-a-cutout.png';
 import clairePhoto from '@/assets/photos/claire-portrait-csp.jpg';
 import andyPhoto from '@/assets/photos/andy-portrait.jpg';
 import logo from '@/assets/brand/ee-logo-full.png';
@@ -41,11 +41,7 @@ const swatches = [
         </div>
       </div>
       <div class="two-media">
-        <div class="photo photo-frame reveal-img two-photo">
-          <Image src={duoStudio} alt="Andy Jarvis and Claire Boscq CSP side by side" widths={[480, 800, 1200]} sizes="(min-width: 64rem) 40vw, 92vw" />
-        </div>
-        <div class="energy energy-gold" aria-hidden="true"></div>
-        <div class="energy energy-silver" aria-hidden="true"></div>
+        <Image src={duoStudio} alt="Andy Jarvis and Claire Boscq CSP side by side" widths={[480, 800, 1193]} sizes="(min-width: 64rem) 40vw, 92vw" format="webp" class="cutout reveal" />
       </div>
     </div>
     <div class="wrap-narrow statement reveal">
@@ -183,12 +179,8 @@ const swatches = [
   /* Power of two */
   .two { display: grid; gap: clamp(2.5rem, 6vw, 5.5rem); align-items: center; }
   .sub { margin: 1.25rem 0 1.75rem; font-size: .8rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-copper-deep); line-height: 1.6; }
-  .two-media { position: relative; isolation: isolate; }
-  .two-photo { aspect-ratio: 4 / 5; }
-  .two-photo :global(img) { object-position: 50% 15%; }
-  .energy { position: absolute; border-radius: 50%; z-index: -1; filter: blur(2px); }
-  .energy-gold { width: 46%; aspect-ratio: 1; right: -7%; top: -5%; background: conic-gradient(from 200deg, #f8ecb3, #b69748, #cb6c52, #f8ecb3); opacity: .5; }
-  .energy-silver { width: 38%; aspect-ratio: 1; left: -6%; bottom: -5%; background: conic-gradient(from 20deg, #e2e3e6, #9ba0a7, #157ed9, #e2e3e6); opacity: .45; }
+  .two-media { display: flex; justify-content: center; }
+  .cutout { width: 100%; max-width: 32rem; height: auto; --fade: linear-gradient(180deg, #000 80%, transparent), linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); -webkit-mask-image: var(--fade); mask-image: var(--fade); -webkit-mask-composite: source-in; mask-composite: intersect; }
   .statement { margin-top: clamp(3.5rem, 7vw, 6rem); text-align: center; display: grid; gap: 2rem; justify-items: center; }
   .statement hr { width: 100%; }
   .statement :global(strong) { font-weight: inherit; }

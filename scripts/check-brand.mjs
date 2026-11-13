@@ -33,7 +33,8 @@ const strip = (html) => html.replace(/<script[\s\S]*?<\/script>/g, '').replace(/
 for (const file of pages) {
   const rel = '/' + path.relative(dist, file).replace(/\\/g, '/');
   const raw = fs.readFileSync(file, 'utf8');
-  const html = strip(raw);
+  // The HX events feed is written on Hive, not part of the approved copy, so it is excluded
+  const html = strip(raw).replace(/<ul class="ev-grid[\s\S]*?<\/ul>/g, '');
   // Quoted material is checked separately from our own copy
   const own = html.replace(/<figure class="glass tcard[\s\S]*?<\/figure>/g, '').replace(/<figure class="vcard[\s\S]*?<\/figure>/g, '');
   const text = own.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&');

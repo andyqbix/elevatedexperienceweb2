@@ -95,13 +95,13 @@ const accents: Record<string, string> = { dx: 'accent-blue', ex: 'accent-silver'
       <div class="grid-4 impact">
         {c.impact.areas.map((a, i) => (
           <article class={`card card-hover accent-top ${accents[a.key]} area reveal`} style={`--d:${i * 100}ms`}>
-            <Image src={marks[a.key]} alt="" height={56} class="area-mark" />
+            <span class="area-mark"><Image src={marks[a.key]} alt="" height={96} /></span>
             <h3>{a.title}</h3>
             <p>{a.text}</p>
           </article>
         ))}
       </div>
-      <p class="statement statement-gold center mt-12 reveal">{c.impact.closing}</p>
+      <p class="statement statement-copper center mt-12 reveal">{c.impact.closing}</p>
     </div>
   </section>
 
@@ -133,8 +133,11 @@ const accents: Record<string, string> = { dx: 'accent-blue', ex: 'accent-silver'
   .q-list li { display: flex; gap: 1rem; align-items: flex-start; line-height: 1.45; font-weight: 500; }
   .q { flex: none; width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; color: var(--color-copper-soft); border: 1px solid rgb(203 108 82 / .5); }
   .impact { margin-top: clamp(2.5rem, 5vw, 4rem); }
-  .area { padding: clamp(1.5rem, 2.4vw, 2rem); display: grid; gap: .9rem; align-content: start; }
-  .area-mark { height: 2.25rem; width: auto; justify-self: start; }
+  /* Cards share rows (subgrid) so logo, title and text line up across all four */
+  .area { padding: clamp(1.5rem, 2.4vw, 2rem); display: grid; grid-template-rows: subgrid; grid-row: span 3; gap: .9rem; align-content: start; }
+  .impact { grid-auto-rows: auto; row-gap: 1.5rem; }
+  .area-mark { height: 3rem; display: flex; align-items: center; }
+  .area-mark :global(img) { height: 2.4rem; width: auto; }
   .area h3 { font-size: 1.35rem; line-height: 1.15; }
   .area p { color: rgb(255 255 255 / .76); font-size: .98rem; line-height: 1.6; }
   .cta { text-align: center; display: grid; justify-items: center; gap: 1.4rem; }

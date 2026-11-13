@@ -63,6 +63,15 @@ for (const [file, name, crop] of photos) {
   console.log('photo', name);
 }
 
+/* ---------- Studio cut-outs (background removed locally, kept transparent so the duo sits on the page) ---------- */
+// [source file, output name, mirror horizontally]
+for (const [file, name, mirror] of [['duo-studio-154-cutout.png', 'duo-studio-b-cutout', true], ['duo-studio-151-cutout.png', 'duo-studio-a-cutout', false]]) {
+  let img = sharp(path.join(SRC, 'photos', file)).trim({ threshold: 1 });
+  if (mirror) img = img.flop();
+  await img.resize(1600, 1600, { fit: 'inside', withoutEnlargement: true }).png({ compressionLevel: 9 }).toFile(path.join(OUT_PHOTOS, `${name}.png`));
+  console.log('cut-out', name);
+}
+
 /* ---------- Brand marks (copied unaltered, only transparent padding trimmed) ---------- */
 const brand = [
   'ee-logo-full', 'ee-flame', 'ee-x-mark', 'cx-colour', 'ex-colour', 'dx-colour', 'hx-colour',
@@ -72,6 +81,17 @@ const brand = [
 for (const b of brand) {
   await sharp(path.join(SRC, 'brand', `${b}.png`)).trim().png({ compressionLevel: 9 }).toFile(path.join(OUT_BRAND, `${b}.png`));
   console.log('brand', b);
+}
+// Wordmark only (ELEVATED eXperience), cut from the full logo below the flame, unaltered, for the header lockup
+{
+  const src = path.join(SRC, 'brand', 'ee-logo-full.png');
+  const { data, info } = await sharp(src).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const rowEmpty = (y) => { for (let x = 0; x < info.width; x++) if (data[(y * info.width + x) * 4 + 3] > 8) return false; return true; };
+  let y = Math.floor(info.height * 0.6);
+  while (y < info.height && !rowEmpty(y)) y++; // end of flame
+  while (y < info.height && rowEmpty(y)) y++;  // start of wordmark
+  await sharp(src).extract({ left: 0, top: y, width: info.width, height: info.height - y }).trim().png({ compressionLevel: 9 }).toFile(path.join(OUT_BRAND, 'ee-wordmark.png'));
+  console.log('brand ee-wordmark');
 }
 
 /* ---------- Client logos: one colour (white on transparent) ---------- */
