@@ -18,8 +18,10 @@ interface Props {
   contactPage?: boolean;
   aboutPage?: boolean;
   noindex?: boolean;
+  /** Article pages: published details for search engines, AI assistants and social sharing. */
+  article?: { headline: string; image: string; imageAlt: string; datePublished: string; dateModified: string; author?: string; topics?: string[] };
 }
-const { title, description, breadcrumb, service, contactPage, aboutPage, noindex } = Astro.props;
+const { title, description, breadcrumb, service, contactPage, aboutPage, noindex, article } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const og = await getImage({ src: ogImage, width: 1200, height: 630, format: 'jpg' });
 const logo = await getImage({ src: logoImage, width: 512, format: 'png' });
@@ -60,19 +62,30 @@ const graph: Record<string, unknown>[] = [
   { '@type': 'WebSite', '@id': siteId, url: site.url, name: site.name, inLanguage: 'en-GB', publisher: { '@id': orgId } },
   {
     '@type': contactPage ? 'ContactPage' : aboutPage ? 'AboutPage' : 'WebPage', '@id': canonical + '#webpage', url: canonical, name: fullTitle, description,
-    inLanguage: 'en-GB', isPartOf: { '@id': siteId }, about: { '@id': orgId }, primaryImageOfPage: abs(og.src),
+    inLanguage: 'en-GB', isPartOf: { '@id': siteId }, about: { '@id': orgId }, primaryImageOfPage: article ? article.image : abs(og.src),
     ...(breadcrumb ? { breadcrumb: { '@id': canonical + '#breadcrumb' } } : {}),
   },
 ];
 if (breadcrumb) {
+  const trail = article
+    ? [{ name: 'Home', item: abs('/') }, { name: 'Resources', item: abs(links.resources) }, { name: breadcrumb, item: canonical }]
+    : [{ name: 'Home', item: abs('/') }, { name: breadcrumb, item: canonical }];
   graph.push({
     '@type': 'BreadcrumbList', '@id': canonical + '#breadcrumb',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: abs('/') },
-      { '@type': 'ListItem', position: 2, name: breadcrumb, item: canonical },
-    ],
+    itemListElement: trail.map((t, i) => ({ '@type': 'ListItem', position: i + 1, ...t })),
   });
 }
+if (article) {
+  const person = article.author && /claire/i.test(article.author) ? { '@id': claire['@id'] } : article.author && /andy/i.test(article.author) ? { '@id': andy['@id'] } : article.author ? { '@type': 'Person', name: article.author } : { '@id': orgId };
+  graph.push({
+    '@type': 'BlogPosting', '@id': canonical + '#article', headline: article.headline, description, url: canonical,
+    mainEntityOfPage: { '@id': canonical + '#webpage' }, image: article.image, datePublished: article.datePublished, dateModified: article.dateModified,
+    author: person, publisher: { '@id': orgId }, inLanguage: 'en-GB', isPartOf: { '@id': siteId },
+    ...(article.topics?.length ? { keywords: article.topics.join(', '), articleSection: article.topics[0] } : {}),
+  });
+}
+const shareImage = article ? article.image : abs(og.src);
+const shareAlt = article ? article.imageAlt : 'Claire Boscq CSP and Andy Jarvis, the Power Duo behind Elevated eXperience';
 if (service) {
   graph.push({
     '@type': 'Service', '@id': canonical + '#service', name: service.name, serviceType: service.type, description: service.description, url: canonical,
@@ -96,20 +109,22 @@ const robots = noindex ? 'noindex, follow' : 'index, follow, max-image-preview:l
     <link rel="alternate" type="text/plain" href="/llms.txt" title="Site summary for AI assistants" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="theme-color" content="#0b0c0f" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    {article && <meta property="article:published_time" content={article.datePublished} />}
+    {article && <meta property="article:modified_time" content={article.dateModified} />}
     <meta property="og:locale" content="en_GB" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={abs(og.src)} />
+    <meta property="og:image" content={shareImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Claire Boscq CSP and Andy Jarvis, the Power Duo behind Elevated eXperience" />
+    <meta property="og:image:alt" content={shareAlt} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={abs(og.src)} />
+    <meta name="twitter:image" content={shareImage} />
     <script is:inline>document.documentElement.classList.add('js');</script>
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>

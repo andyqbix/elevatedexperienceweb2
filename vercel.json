@@ -6,6 +6,10 @@
     { "source": "/hx/", "destination": "https://hive.elevatedexperience.vip/", "permanent": true },
     { "source": "/corporate-event-from-burnout-to-brilliance/", "destination": "/experiences/", "permanent": true },
     { "source": "/partners/", "destination": "/coachsulting/", "permanent": true },
+    { "source": "/2026/11/09/hx-free-whats-the-catch-there-isnt-one/", "destination": "/resources/hx-free-whats-the-catch-there-isnt-one/", "permanent": true },
+    { "source": "/2026/07/14/social-media-is-broken-lets-fix-it/", "destination": "/resources/social-media-is-broken-let-s-fix-it/", "permanent": true },
+    { "source": "/2026/06/03/how-disconnected-dx-ex-and-cx-affects-business-growth/", "destination": "/resources/how-disconnected-dx-ex-and-cx-affects-business-growth/", "permanent": true },
+    { "source": "/2026/05/26/the-great-divergence-how-we-missed-the-ultimate-experience-and-how-to-reclaim-it/", "destination": "/resources/the-great-divergence-how-we-missed-the-ultimate-experience-and-how-to-reclaim-it/", "permanent": true },
     { "source": "/2026/:path*", "destination": "/resources/", "permanent": false }
   ],
   "headers": [

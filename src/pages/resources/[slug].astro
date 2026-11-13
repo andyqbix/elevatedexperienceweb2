@@ -1,0 +1,151 @@
+---
+// Article page, one per published Sanity article: /resources/<slug>/
+import Base from '@/layouts/Base.astro';
+import Icon from '@/components/Icon.astro';
+import ArticleCard from '@/components/ArticleCard.astro';
+import { resources } from '@/content/resources';
+import { links, site } from '@/data/site';
+import { getPosts, imageUrl, srcset, imageSize, bodyHtml, formatDate, readingTime, postUrl, type Post } from '@/lib/sanity';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props as { post: Post };
+const posts = await getPosts();
+// Related: shares a topic first, then the newest others
+const others = posts.filter((p) => p._id !== post._id);
+const score = (p: Post) => (p.topics || []).filter((t) => post.topics?.includes(t)).length;
+const related = [...others].sort((a, b) => score(b) - score(a) || +new Date(b.publishedAt) - +new Date(a.publishedAt)).slice(0, 3);
+
+const { width, height } = imageSize(post.mainImage);
+const heroH = Math.round((1600 * height) / width);
+const shareImg = imageUrl(post.seo?.ogImage?.asset ? post.seo.ogImage : post.mainImage, { w: 1200, h: 630 });
+const url = new URL(postUrl(post.slug), site.url).href;
+const t = resources.tools;
+// Search title and description from Sanity, unless they are too short to be useful
+const metaTitle = (post.seo?.metaTitle?.length ?? 0) >= 30 ? post.seo!.metaTitle! : post.title;
+const metaDescription = (post.seo?.metaDescription?.length ?? 0) >= 70 ? post.seo!.metaDescription! : post.excerpt;
+---
+<Base
+  title={metaTitle}
+  description={metaDescription}
+  breadcrumb={post.title}
+  article={{ headline: post.title, image: shareImg, imageAlt: post.mainImage?.alt || post.title, datePublished: post.publishedAt, dateModified: post._updatedAt, author: post.author?.name, topics: post.topics }}
+>
+  <article>
+    <header class="a-hero">
+      <div class="atmos atmos-gold"></div>
+      <div class="wrap-narrow a-head">
+        <nav aria-label="Breadcrumb" class="crumbs">
+          <a href={links.resources}><Icon name="arrow" class="flip" /> Resources</a>
+        </nav>
+        {post.topics?.length ? <p class="eyebrow no-rule">{post.topics.join(' · ')}</p> : null}
+        <h1 class="display-lg a-title">{post.title}</h1>
+        <p class="lede a-excerpt">{post.excerpt}</p>
+        <p class="a-meta">
+          {post.author?.name && <span class="by">{post.author.name}</span>}
+          <time datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+          <span>{readingTime(post.body)} min read</span>
+        </p>
+      </div>
+      <figure class="wrap a-cover">
+        <img src={imageUrl(post.mainImage, { w: 1600 })} srcset={srcset(post.mainImage, [640, 960, 1280, 1600, 2000])} sizes="(min-width: 72rem) 68rem, 94vw" width="1600" height={heroH} alt={post.mainImage?.alt || ''} fetchpriority="high" decoding="async" />
+      </figure>
+    </header>
+
+    <div class="a-main on-light">
+      <div class="wrap-narrow">
+        <div class="a-prose" set:html={bodyHtml(post.body)} />
+
+        <footer class="a-foot">
+          <p class="share-label">Share this article</p>
+          <div class="share">
+            <a class="btn btn-ghost" href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`} target="_blank" rel="noopener noreferrer"><Icon name="linkedin" /> LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
+            <button type="button" class="btn btn-ghost" data-copy={url}><Icon name="link" /> <span data-copy-label>Copy link</span></button>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="section bg-charcoal">
+      <div class="wrap">
+        <div class="head reveal">
+          <p class="eyebrow">{resources.featured.eyebrow}</p>
+          <h2 class="display-md mt-6">{resources.featured.heading}</h2>
+        </div>
+        <div class="grid-3 rel-grid">
+          {related.map((p, i) => <div class="reveal" style={`--d:${i * 100}ms`}><ArticleCard post={p} /></div>)}
+        </div>
+        <p class="mt-10 reveal"><a class="link-arrow" href={links.resources}>All resources <Icon name="arrow" /></a></p>
+      </div>
+    </section>
+  )}
+
+  <section class="section on-copper">
+    <div class="wrap-narrow cta">
+      <p class="eyebrow no-rule reveal">{t.eyebrow}</p>
+      <h2 class="display-md reveal">{t.toolName}</h2>
+      <p class="cta-text reveal">{t.toolText}</p>
+      <p class="reveal"><a class="btn btn-primary" href={t.cta.href} target="_blank" rel="noopener noreferrer">{t.cta.label} <Icon name="external" /></a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .a-hero { position: relative; overflow: hidden; background: var(--color-ink); padding-top: calc(var(--header-h) + clamp(2rem, 6vh, 4rem)); }
+  .a-head { position: relative; display: grid; gap: 1.25rem; }
+  .crumbs a { display: inline-flex; align-items: center; gap: .5rem; font-size: .75rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: rgb(255 255 255 / .7); text-decoration: none; padding-block: .5rem; }
+  .crumbs a:hover { color: var(--color-copper-soft); }
+  .crumbs :global(svg) { width: .9rem; height: .9rem; }
+  .crumbs :global(.flip) { transform: scaleX(-1); }
+  .a-title { text-wrap: balance; }
+  .a-excerpt { color: rgb(255 255 255 / .82); }
+  .a-meta { display: flex; flex-wrap: wrap; gap: .4rem 1.1rem; font-size: .85rem; color: rgb(255 255 255 / .65); }
+  .a-meta .by { color: var(--color-gold); font-weight: 600; }
+  .a-cover { position: relative; margin-top: clamp(2rem, 5vw, 3.5rem); margin-bottom: calc(-1 * clamp(3rem, 8vw, 6rem)); z-index: 1; }
+  .a-cover img { width: 100%; max-height: 72svh; height: auto; object-fit: cover; border-radius: 1.25rem; box-shadow: 0 40px 80px -40px rgb(0 0 0 / .8); background: #17191d; }
+  .a-main { padding: calc(clamp(3rem, 8vw, 6rem) + clamp(2.5rem, 5vw, 4rem)) 0 clamp(4rem, 8vw, 6rem); }
+
+  /* Reading styles for the article text */
+  .a-prose { font-size: clamp(1.05rem, 1.3vw, 1.15rem); line-height: 1.75; color: #33363b; }
+  .a-prose :global(p) { margin-top: 1.3em; }
+  .a-prose :global(p:first-child) { margin-top: 0; }
+  .a-prose :global(h2) { margin-top: 2.2em; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 2.8vw, 2.1rem); line-height: 1.15; color: var(--color-charcoal); scroll-margin-top: calc(var(--header-h) + 1rem); }
+  .a-prose :global(h3) { margin-top: 1.8em; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.3rem, 2vw, 1.5rem); line-height: 1.2; color: var(--color-charcoal); }
+  .a-prose :global(h4) { margin-top: 1.6em; font-weight: 700; font-size: 1.1rem; color: var(--color-charcoal); }
+  .a-prose :global(h2 + p), .a-prose :global(h3 + p), .a-prose :global(h4 + p) { margin-top: .7em; }
+  .a-prose :global(strong) { color: var(--color-charcoal); font-weight: 700; }
+  .a-prose :global(a) { color: var(--color-copper-deep); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .2em; }
+  .a-prose :global(a:hover) { text-decoration-thickness: 2px; }
+  .a-prose :global(blockquote) { margin: 2em 0; padding: .4em 0 .4em 1.4em; border-left: 3px solid var(--color-copper); font-family: var(--font-display); font-weight: 600; font-size: 1.3em; line-height: 1.35; color: var(--color-charcoal); }
+  .a-prose :global(ul), .a-prose :global(ol) { margin-top: 1.2em; padding-left: 1.4em; display: grid; gap: .5em; }
+  .a-prose :global(ul) { list-style: disc; }
+  .a-prose :global(ol) { list-style: decimal; }
+  .a-prose :global(li::marker) { color: var(--color-copper); }
+  .a-prose :global(.a-figure) { margin: 2.2em 0; }
+  .a-prose :global(.a-figure img) { width: 100%; height: auto; border-radius: 1rem; }
+  .a-prose :global(figcaption) { margin-top: .6em; font-size: .85rem; color: #5d6067; text-align: center; }
+
+  .a-foot { margin-top: clamp(3rem, 6vw, 4.5rem); padding-top: 2rem; border-top: 1px solid rgb(31 33 38 / .12); display: grid; gap: 1rem; }
+  .share-label { font-size: .72rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--color-copper-deep); }
+  .share { display: flex; flex-wrap: wrap; gap: .75rem; }
+  .share .btn { color: var(--color-charcoal); border-color: rgb(31 33 38 / .25); }
+  .share .btn:hover { border-color: var(--color-copper); }
+  .rel-grid { margin-top: clamp(2rem, 4vw, 3rem); }
+  .cta { text-align: center; display: grid; justify-items: center; gap: 1.3rem; }
+  .cta .eyebrow { color: var(--color-gold-pale); }
+  .cta-text { max-width: 56ch; color: rgb(255 255 255 / .9); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => {
+    b.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(b.dataset.copy!); b.querySelector('[data-copy-label]')!.textContent = 'Link copied'; setTimeout(() => (b.querySelector('[data-copy-label]')!.textContent = 'Copy link'), 2500); } catch { /* clipboard blocked */ }
+    });
+  });
+</script>

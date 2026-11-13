@@ -10,7 +10,14 @@ import flame from '@/assets/brand/ee-flame.png';
 import dx from '@/assets/brand/dx-colour.png';
 import ex from '@/assets/brand/ex-colour.png';
 import cx from '@/assets/brand/cx-colour.png';
-// Featured Insights and Explore the Resources stay hidden until the articles are connected through Sanity.
+import ArticleCard from '@/components/ArticleCard.astro';
+import { getPosts, featuredPosts } from '@/lib/sanity';
+
+// Articles come from Sanity. If there are none, the two article sections are hidden (the brief says to
+// hide a section rather than show an empty heading).
+const posts = await getPosts();
+const featured = featuredPosts(posts);
+const topics = [...new Set(posts.flatMap((p) => p.topics || []))];
 ---
 <Base title={c.meta.title} description={c.meta.description} breadcrumb="Resources">
   <!-- SECTION 1 | HERO -->
@@ -25,6 +32,45 @@ import cx from '@/assets/brand/cx-colour.png';
       <p class="statement r-close">{c.hero.closing}</p>
     </div>
   </section>
+
+  <!-- SECTION 2 | FEATURED INSIGHTS -->
+  {posts.length > 0 && (
+    <section class="section bg-charcoal" id="featured">
+      <div class="atmos"></div>
+      <div class="wrap rel">
+        <div class="head reveal">
+          <p class="eyebrow">{c.featured.eyebrow}</p>
+          <h2 class="display-lg mt-6">{c.featured.heading}</h2>
+        </div>
+        <div class:list={['feat', featured.length === 1 && 'feat-one']}>
+          <div class="feat-main reveal"><ArticleCard post={featured[0]} size="lg" /></div>
+          {featured.slice(1).map((p, i) => <div class="reveal" style={`--d:${(i + 1) * 120}ms`}><ArticleCard post={p} /></div>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- SECTION 3 | EXPLORE THE RESOURCES -->
+  {posts.length > 0 && (
+    <section class="section bg-ink" id="explore">
+      <div class="wrap">
+        <div class="head reveal">
+          <p class="eyebrow">{c.explore.eyebrow}</p>
+          <h2 class="display-lg mt-6">{c.explore.heading}</h2>
+        </div>
+        {topics.length > 1 && (
+          <div class="filters reveal" role="group" aria-label="Filter articles by topic" data-filters hidden>
+            <button type="button" class="chip" aria-pressed="true" data-topic="">All</button>
+            {topics.map((t) => <button type="button" class="chip" aria-pressed="false" data-topic={t}>{t}</button>)}
+          </div>
+        )}
+        <div class="grid-3 all" data-articles>
+          {posts.map((p) => <ArticleCard post={p} headingLevel="h3" />)}
+        </div>
+        <p class="sr-only" aria-live="polite" data-filter-status></p>
+      </div>
+    </section>
+  )}
 
   <!-- SECTION 4 | WATCH & LISTEN -->
   <section class="section bg-charcoal" id="watch">
@@ -73,6 +119,24 @@ import cx from '@/assets/brand/cx-colour.png';
 </Base>
 
 <style>
+  .rel { position: relative; }
+  .feat { display: grid; gap: 1.5rem; margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .filters { display: flex; flex-wrap: wrap; gap: .6rem; margin: clamp(2rem, 4vw, 3rem) 0 2rem; }
+  .chip { min-height: 2.75rem; padding: .5rem 1.1rem; border-radius: 999px; border: 1px solid rgb(255 255 255 / .2); font-size: .8rem; font-weight: 600; letter-spacing: .04em; color: rgb(255 255 255 / .82); cursor: pointer; transition: border-color .3s, background-color .3s, color .3s; }
+  .chip:hover { border-color: var(--color-copper); color: #fff; }
+  .chip[aria-pressed="true"] { background: var(--color-copper); border-color: var(--color-copper); color: #fff; }
+  .all { margin-top: clamp(2rem, 4vw, 3rem); }
+  .filters + .all { margin-top: 0; }
+  .all > :global(.acard[hidden]) { display: none; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (min-width: 64rem) {
+    .feat { grid-template-columns: 1.35fr 1fr; grid-template-rows: auto auto; }
+    .feat-main { grid-row: span 2; }
+    .feat-main :global(.acard) { height: 100%; }
+    .feat-main :global(.a-media) { aspect-ratio: auto; flex: 1; min-height: 18rem; }
+    .feat-main :global(.a-body) { flex: none; }
+    .feat-one { grid-template-columns: 1fr; }
+  }
   .r-hero { position: relative; overflow: hidden; background: var(--color-ink); }
   .motif { position: absolute; right: -6%; top: 50%; height: 120%; width: auto; transform: translateY(-46%); opacity: .13; pointer-events: none; -webkit-mask-image: linear-gradient(270deg, #000 30%, transparent 95%); mask-image: linear-gradient(270deg, #000 30%, transparent 95%); }
   .r-inner { position: relative; padding-top: calc(var(--header-h) + clamp(3rem, 8vh, 6rem)); padding-bottom: clamp(4rem, 9vw, 7rem); }
@@ -95,3 +159,22 @@ import cx from '@/assets/brand/cx-colour.png';
   @media (min-width: 48rem) { .media { grid-template-columns: repeat(2, 1fr); } .m-main { grid-column: 1 / -1; } }
   @media (min-width: 64rem) { .media { grid-template-columns: repeat(6, 1fr); } .media > div { grid-column: span 2; } .media > .m-main { grid-column: span 4; grid-row: span 2; } }
 </style>
+
+<script>
+  // Topic filter for Explore the Resources
+  const bar = document.querySelector<HTMLElement>('[data-filters]');
+  if (bar) {
+    bar.hidden = false;
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-articles] > .acard')];
+    const status = document.querySelector<HTMLElement>('[data-filter-status]')!;
+    bar.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-topic]');
+      if (!btn) return;
+      const topic = btn.dataset.topic!;
+      bar.querySelectorAll('[data-topic]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      let shown = 0;
+      cards.forEach((c) => { const on = !topic || (c.dataset.topics || '').split('|').includes(topic); c.hidden = !on; if (on) shown++; });
+      status.textContent = `Showing ${shown} ${shown === 1 ? 'article' : 'articles'}${topic ? ' about ' + topic : ''}`;
+    });
+  }
+</script>

@@ -28,13 +28,23 @@ const rules = [
 const exempt = (line) => /class="tcard|data-quote|data-title=|class="title"|Play video:|Elevated eXperience Ltd|youtube|sr-only/.test(line);
 
 const problems = [];
+// Articles are written by Claire and Andy in Sanity, not the locked page copy. They are not allowed to fail
+// the check, but anything that breaks the brand rules is listed as a warning for the authors to review.
+const warnings = [];
+const articleParts = [/<article class="acard[\s\S]*?<\/article>/g, /<header class="a-hero[\s\S]*?<\/header>/g, /<div class="a-prose[\s\S]*?(?=<footer class="a-foot)/g];
+const warnArticle = (where, text) => {
+  for (const [re, label] of [...rules, [/—/g, 'Em dash']]) { const hits = text.match(re); if (hits) warnings.push(`${where}: ${label} (${[...new Set(hits)].join(', ')})`); }
+};
 const strip = (html) => html.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<style[\s\S]*?<\/style>/g, '');
 
 for (const file of pages) {
   const rel = '/' + path.relative(dist, file).replace(/\\/g, '/');
   const raw = fs.readFileSync(file, 'utf8');
   // The HX events feed is written on Hive, not part of the approved copy, so it is excluded
-  const html = strip(raw).replace(/<ul class="ev-grid[\s\S]*?<\/ul>/g, '');
+  let html = strip(raw).replace(/<ul class="ev-grid[\s\S]*?<\/ul>/g, '');
+  const isArticle = /^\/resources\/[^/]+\/index\.html$/.test(rel);
+  for (const re of articleParts) html = html.replace(re, (m) => { warnArticle(rel, m.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&')); return ''; });
+  if (isArticle) html = html.replace(/<head>[\s\S]*?<\/head>/, '');
   // Quoted material is checked separately from our own copy
   const own = html.replace(/<figure class="glass tcard[\s\S]*?<\/figure>/g, '').replace(/<figure class="vcard[\s\S]*?<\/figure>/g, '');
   const text = own.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&');
@@ -67,10 +77,14 @@ for (const file of pages) {
   }
 }
 for (const file of texts) {
-  const t = fs.readFileSync(file, 'utf8');
+  const all = fs.readFileSync(file, 'utf8');
+  // Article sections of the AI-search files are the authors' own text (warnings only)
+  const t = all.split(/\n## Article: /)[0].replace(/## Articles\n[\s\S]*?\n\n/, '');
+  if (all !== t) warnArticle('/' + path.basename(file), all.replace(t, ''));
   if (/—/.test(t) || /eXPERIENCE/.test(t)) problems.push(`/${path.basename(file)}: em dash or mixed-case eXPERIENCE`);
 }
 for (const need of ['robots.txt', 'sitemap-index.xml', 'llms.txt', 'llms-full.txt']) if (!fs.existsSync(path.join(dist, need))) problems.push(`Missing /${need}`);
 
+if (warnings.length) console.warn('Article warnings (not blocking; for the authors to review in Sanity):\n' + [...new Set(warnings)].map((w) => ' - ' + w).join('\n') + '\n');
 if (problems.length) { console.error(`${problems.length} issue(s) found:\n` + [...new Set(problems)].map((p) => ' - ' + p).join('\n')); process.exit(1); }
 console.log(`Checked ${pages.length} pages and ${texts.length} text files: no brand, link or metadata issues.`);

@@ -52,6 +52,16 @@ node scripts/pull-articles.mjs  # re-pull published articles from the old WordPr
 
 To add a client logo: put the file in `assets-source/client-logos/`, add it to the list in `scripts/build-assets.mjs`, run `npm run assets`, then add it to `src/data/clients.ts`.
 
+## Articles (Sanity)
+
+Articles are written and published in the Sanity Studio at **https://elevatedexperience.sanity.studio** (project `s2mpqcie`, dataset `production`). Everything else on the site lives in this repository.
+
+- Publishing, editing or deleting an article triggers a Sanity webhook that calls a Vercel deploy hook, so the site rebuilds itself within a minute or two.
+- Each article gets its own page at `/resources/<web-address>/`, appears in Featured Insights (articles marked "Feature this article", otherwise the newest three) and in Explore the Resources (filterable by topic), and is added to the sitemap, `/llms.txt` and `/llms-full.txt`.
+- The studio code (article fields, topics list) is in `studio/`. To change it: `cd studio`, `npm install`, edit `schemaTypes/`, then `npx sanity deploy` (needs `SANITY_AUTH_TOKEN` from `.env`).
+- `studio/scripts/import-articles.mjs` imported the old WordPress articles from `content-holding/articles/` (already done; safe to re-run).
+- Articles are the authors' own words, so `npm run check:copy` lists brand-spelling issues in them as warnings rather than errors.
+
 ## Search and AI search
 
 - Every page has a title, description, canonical address, sharing image and structured data (set in `src/layouts/Base.astro`).
@@ -63,9 +73,8 @@ After go-live: add the site to Google Search Console and Bing Webmaster Tools an
 
 ## Deploying
 
-Vercel builds every push. Branches other than `main` get a private preview address; `main` is production. Nothing goes to the live domain without Andy's or Claire's explicit go-ahead.
+Vercel builds every push. `main` is production (currently served at elevatedexperienceweb2.vercel.app, as the live domain is not yet connected); other branches get a private preview address. The domain elevatedexperience.vip is only connected with Andy's or Claire's explicit go-ahead.
 
 ## Still to do
 
-- Connect Sanity for articles, migrate the four held articles and switch on Featured Insights and Explore the Resources on the Resources page. Old article addresses redirect to Resources until then.
 - Verlag is not licensed for web use; League Spartan stands in for headings (one line in `global.css` to change).

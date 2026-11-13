@@ -11,6 +11,7 @@ import { masterclass } from '@/content/masterclass';
 import { coachsulting } from '@/content/coachsulting';
 import { resources } from '@/content/resources';
 import { contact } from '@/content/contact';
+import { type Post, postUrl, plainText, formatDate } from '@/lib/sanity';
 
 const abs = (p: string) => new URL(p, site.url).href;
 
@@ -45,7 +46,7 @@ function render(value: unknown, out: string[], bullet = false): void {
   }
 }
 
-export function summary(): string {
+export function summary(posts: Post[] = []): string {
   return [
     `# ${site.name}`,
     '',
@@ -56,6 +57,7 @@ export function summary(): string {
     '## Pages',
     ...pages.map((p) => `- [${p.name}](${p.url}): ${p.description}`),
     '',
+    ...(posts.length ? ['## Articles', ...posts.map((p) => `- [${p.title}](${abs(postUrl(p.slug))}): ${p.excerpt}${p.author?.name ? ` By ${p.author.name}.` : ''}`), ''] : []),
     '## Services and published prices (USD)',
     `- Signature Keynote, 'The Gaps Killing Your Business Growth': $12,888 all-inclusive for both speakers. ${abs(links.keynote)}`,
     `- Strategic Event Partnership: complimentary keynote with 12 confirmed, paying Executive Masterclass participants at $998 each. ${abs(links.keynote)}`,
@@ -82,11 +84,14 @@ export function summary(): string {
   ].join('\n');
 }
 
-export function full(): string {
+export function full(posts: Post[] = []): string {
   const out: string[] = [`# ${site.name}: full site content`, '', 'The complete approved copy of every page on elevatedexperience.vip, in page order.', ''];
   for (const p of pages) {
     out.push(`## ${p.name}`, `URL: ${p.url}`, '');
     render(p.content, out);
+  }
+  for (const p of posts) {
+    out.push(`## Article: ${p.title}`, `URL: ${abs(postUrl(p.slug))}`, `Published: ${formatDate(p.publishedAt)}${p.author?.name ? ` by ${p.author.name}` : ''}`, '', p.excerpt, '', plainText(p.body), '');
   }
   return out.join('\n').replace(/\n{3,}/g, '\n\n');
 }
