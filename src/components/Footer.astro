@@ -38,7 +38,7 @@ const year = new Date().getFullYear();
     </div>
   </div>
   <div class="wrap legal">
-    <p>Copyright © {year} {site.legalName}</p>
+    <p>Copyright © {year} {site.legalName} · Registered in Jersey, company no. {site.companyNumber} · <a class="legal-link" href={links.privacy}>Privacy Policy</a></p>
     <p>From Friction to Flow.</p>
   </div>
 </footer>
@@ -60,6 +60,8 @@ const year = new Date().getFullYear();
   .social a:hover { background: var(--color-gold); color: var(--color-ink) !important; transform: translateY(-3px); border-color: var(--color-gold); }
   .social :global(svg) { width: 1.1rem; height: 1.1rem; }
   .legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 2rem; padding-block: 1.4rem; border-top: 1px solid rgb(255 255 255 / .08); font-size: .78rem; color: rgb(255 255 255 / .5); }
+  .legal-link { text-decoration: underline; text-decoration-color: rgb(255 255 255 / .25); text-underline-offset: .2em; }
+  .legal-link:hover { color: var(--color-gold); text-decoration-color: var(--color-gold); }
   @media (min-width: 40rem) { .grid { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 64rem) { .grid { grid-template-columns: .8fr 1.3fr 1.2fr 1fr; } }
 </style>

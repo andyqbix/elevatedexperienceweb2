@@ -8,6 +8,10 @@ export const site = {
   phoneHref: 'tel:+447797828950',
   whatsappHref: 'https://wa.me/447797828950',
   address: 'Holly House, Tower Road, St Helier, Jersey, JE2 3HR',
+  /** Jersey Financial Services Commission company registration number */
+  companyNumber: '120462',
+  /** Jersey Office of the Information Commissioner (data protection) registration number; renews annually */
+  joicNumber: '19141',
 };
 
 export const links = {
@@ -20,6 +24,7 @@ export const links = {
   coachsulting: '/coachsulting/',
   resources: '/resources/',
   contact: '/contact/',
+  privacy: '/privacy-policy/',
   // External, verified destinations supplied in the brief
   diagnostic: 'https://eu.checker-soft.com/4star-je/i_survey-fill.php?SurveyID=610',
   bookCall: 'https://bookings.cloud.microsoft/book/ElevatedExperienceLtd@elevatedexperience.vip/?ismsaljsauthenabled',
