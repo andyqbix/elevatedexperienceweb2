@@ -22,7 +22,6 @@ export const resources = typeset({
     closing: 'Because better business begins with better thinking.',
   },
   // Hidden until Sanity is connected
-  featured: { eyebrow: 'FEATURED INSIGHTS', heading: 'Fresh Perspectives Worth Exploring.' },
   explore: { eyebrow: 'EXPLORE THE RESOURCES', heading: 'Find the Ideas That Matter to You.' },
   watch: {
     eyebrow: 'WATCH. LISTEN. GET INSPIRED.',

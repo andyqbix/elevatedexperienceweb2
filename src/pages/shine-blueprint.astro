@@ -7,7 +7,7 @@ import Icon from '@/components/Icon.astro';
 import { shine as c } from '@/content/shine';
 import { rich } from '@/lib/text';
 import heroImg from '@/assets/photos/stage-duo-flipchart.jpg';
-import valuesImg from '@/assets/photos/duo-studio-a.jpg';
+import valuesImg from '@/assets/photos/duo-studio-a-cutout.png';
 import dx from '@/assets/brand/dx-colour.png';
 import ex from '@/assets/brand/ex-colour.png';
 import cx from '@/assets/brand/cx-colour.png';
@@ -54,8 +54,8 @@ const accents: Record<string, string> = { dx: 'accent-blue', ex: 'accent-silver'
         <p class="statement statement-gold mt-8 reveal">{c.values.closing}</p>
         <p class="mt-8 reveal"><a class="btn btn-primary" href={c.values.cta.href}>{c.values.cta.label} <Icon name="arrow" /></a></p>
       </div>
-      <div class="photo photo-frame reveal-img values-photo">
-        <Image src={valuesImg} alt="Andy Jarvis and Claire Boscq CSP, the Power Duo" widths={[480, 800, 1200]} sizes="(min-width: 64rem) 38vw, 92vw" />
+      <div class="values-photo reveal">
+        <Image src={valuesImg} alt="Andy Jarvis and Claire Boscq CSP, the Power Duo" widths={[480, 800, 1193]} sizes="(min-width: 64rem) 38vw, 92vw" format="webp" />
       </div>
     </div>
   </section>
@@ -125,8 +125,9 @@ const accents: Record<string, string> = { dx: 'accent-blue', ex: 'accent-silver'
   .intro { max-width: 60rem; }
   .j-wrap { margin-top: clamp(2.5rem, 5vw, 4rem); }
   .after { max-width: 46rem; margin-top: clamp(2.5rem, 5vw, 4rem); padding-left: 1.25rem; border-left: 3px solid var(--color-copper); }
-  .values-photo { aspect-ratio: 4 / 5; max-width: 30rem; margin-inline: auto; width: 100%; }
-  .values-photo :global(img) { object-position: 50% 15%; }
+  /* Background removed cut-out sitting straight on the cream, faded out at the bottom and sides */
+  .values-photo { max-width: 30rem; margin-inline: auto; width: 100%; }
+  .values-photo :global(img) { width: 100%; height: auto; display: block; --fade: linear-gradient(180deg, #000 80%, transparent), linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); -webkit-mask-image: var(--fade); mask-image: var(--fade); -webkit-mask-composite: source-in; mask-composite: intersect; }
   .who { display: grid; gap: clamp(2.5rem, 5vw, 5rem); align-items: start; }
   .who-card { padding: clamp(1.75rem, 3.5vw, 3rem); display: grid; gap: 1.75rem; }
   .q-list { display: grid; gap: 1rem; }
