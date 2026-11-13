@@ -56,7 +56,7 @@ const path = Astro.url.pathname;
 
 <style>
   .site-header { position: fixed; inset: 0 0 auto 0; z-index: 50; height: var(--header-h); transition: background-color .45s var(--ease-flow), box-shadow .45s; background: linear-gradient(180deg, rgb(11 12 15 / .72), rgb(11 12 15 / 0)); }
-  .site-header.scrolled, .site-header.open { background: rgb(11 12 15 / .88); -webkit-backdrop-filter: blur(16px) saturate(130%); backdrop-filter: blur(16px) saturate(130%); box-shadow: 0 1px 0 rgb(221 198 134 / .16); }
+  .site-header.scrolled, .site-header.open { background: rgb(11 12 15 / .88); -webkit-backdrop-filter: blur(16px) saturate(130%); backdrop-filter: blur(16px) saturate(130%); box-shadow: 0 1px 0 rgb(203 108 82 / .2); }
   .bar { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; max-width: 96rem; }
   .brand { display: flex; align-items: center; gap: .7rem; flex: none; }
   .brand-word { height: 2.05rem; width: auto; }
@@ -66,7 +66,7 @@ const path = Astro.url.pathname;
   .primary { display: none; }
   .primary ul { display: flex; align-items: center; gap: clamp(1rem, 1.6vw, 2rem); }
   .primary a { display: block; position: relative; font-size: .74rem; font-weight: 600; letter-spacing: .12em; color: rgb(255 255 255 / .82); text-decoration: none; padding-block: .6rem; white-space: nowrap; transition: color .3s; }
-  .primary a::after { content: ""; position: absolute; left: 0; right: 0; bottom: .2rem; height: 1px; background: var(--grad-gold); transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease-flow); }
+  .primary a::after { content: ""; position: absolute; left: 0; right: 0; bottom: .2rem; height: 1px; background: var(--grad-copper); transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease-flow); }
   .primary a:hover, .primary a[aria-current] { color: #fff; }
   .primary a:hover::after, .primary a[aria-current]::after, .primary a.in-section::after { transform: scaleX(1); }
   .primary a.in-section { color: #fff; }
@@ -74,12 +74,12 @@ const path = Astro.url.pathname;
   .has-sub { position: relative; display: flex; align-items: center; gap: .2rem; }
   .sub-btn { margin-left: -.15rem; width: 1.6rem; height: 1.6rem; display: grid; place-items: center; color: rgb(255 255 255 / .7); cursor: pointer; border-radius: 50%; }
   .sub-btn :global(svg) { width: .8rem; height: .8rem; transition: transform .3s var(--ease-flow); }
-  .sub-btn:hover { color: var(--color-gold); }
-  .sub { position: absolute; top: 100%; left: -1rem; min-width: 13rem; padding: .5rem; margin-top: .4rem; display: grid !important; gap: 0 !important; border-radius: .9rem; background: rgb(11 12 15 / .96); border: 1px solid rgb(221 198 134 / .2); box-shadow: 0 20px 40px -20px #000; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .25s, transform .3s var(--ease-flow), visibility .25s; }
+  .sub-btn:hover { color: var(--color-copper-soft); }
+  .sub { position: absolute; top: 100%; left: -1rem; min-width: 13rem; padding: .5rem; margin-top: .4rem; display: grid !important; gap: 0 !important; border-radius: .9rem; background: rgb(11 12 15 / .96); border: 1px solid rgb(203 108 82 / .3); box-shadow: 0 20px 40px -20px #000; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .25s, transform .3s var(--ease-flow), visibility .25s; }
   .sub::before { content: ""; position: absolute; inset: -.8rem 0 auto 0; height: .8rem; }
   .sub a { display: block; padding: .7rem .9rem; border-radius: .6rem; }
   .sub a::after { display: none; }
-  .sub a:hover, .sub a[aria-current] { background: rgb(221 198 134 / .1); color: var(--color-gold); }
+  .sub a:hover, .sub a[aria-current] { background: rgb(203 108 82 / .14); color: var(--color-copper-soft); }
   .has-sub:hover .sub, .has-sub:focus-within .sub, .has-sub.open .sub { opacity: 1; visibility: visible; transform: none; }
   .has-sub:hover .sub-btn :global(svg), .has-sub.open .sub-btn :global(svg) { transform: rotate(180deg); }
   .m-sub { display: grid; padding: 0 0 .9rem 1.25rem; }
@@ -96,7 +96,7 @@ const path = Astro.url.pathname;
   .mobile ul { display: grid; }
   .mobile li { border-bottom: 1px solid rgb(255 255 255 / .08); animation: slide .5s var(--ease-flow) both; animation-delay: calc(var(--i) * 40ms); }
   .mobile li a { display: block; padding: 1.05rem 0; font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; color: #fff; text-decoration: none; }
-  .mobile li a[aria-current] { color: var(--color-gold); }
+  .mobile li a[aria-current] { color: var(--color-copper-soft); }
   .mobile .btn { margin-top: 2rem; width: 100%; }
   @keyframes slide { from { opacity: 0; transform: translateY(12px); } }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

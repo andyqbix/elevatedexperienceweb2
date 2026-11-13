@@ -11,10 +11,11 @@ const { id, steps, label, accent = 'gold', size = 'lg' } = Astro.props;
       <button type="button" role="tab" id={`${id}-tab-${i}`} aria-controls={`${id}-panel-${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} class="stop">
         <span class="n">{/^\d+$/.test(s.label) ? s.label.padStart(2, '0') : s.label}</span>
         <span class="name">{s.name}</span>
+        <span class="cue" aria-hidden="true"></span>
       </button>
     ))}
   </div>
-  <div class="panels">
+  <div class="panels" data-panels>
     {steps.map((s, i) => (
       <div role="tabpanel" id={`${id}-panel-${i}`} aria-labelledby={`${id}-tab-${i}`} class="panel" data-panel>
         <p class="p-label"><span>{/^\d+$/.test(s.label) ? s.label.padStart(2, '0') : s.label}</span>{s.name}</p>
@@ -40,9 +41,19 @@ const { id, steps, label, accent = 'gold', size = 'lg' } = Astro.props;
   .j-gold .stop:last-child { background: var(--j-grad); border-color: transparent; color: var(--j-ink); }
   .j-gold .stop:last-child .n { color: #52261d; }
   /* Selected stage: lit from below with a bar in the accent colour */
-  .stop[aria-selected="true"] { background-color: color-mix(in srgb, var(--j) 16%, transparent); border-color: var(--j); box-shadow: inset 0 -3px 0 var(--j); }
+  .stop[aria-selected="true"] { background-color: color-mix(in srgb, var(--j) 16%, transparent); border-color: var(--j); box-shadow: inset 0 -3px 0 var(--j), 0 0 0 1px var(--j), 0 12px 30px -14px color-mix(in srgb, var(--j) 70%, transparent); z-index: 2; }
+  /* Click cue: a small + on every stage, which becomes a filled dot on the open one */
+  .cue { position: absolute; right: .7rem; top: .7rem; width: 1.1rem; height: 1.1rem; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--j) 55%, transparent); transition: background-color .3s, border-color .3s, transform .4s var(--ease-flow); }
+  .cue::before, .cue::after { content: ""; position: absolute; left: 50%; top: 50%; width: .5rem; height: 1px; background: var(--j); transform: translate(-50%, -50%); transition: opacity .3s; }
+  .cue::after { transform: translate(-50%, -50%) rotate(90deg); }
+  .stop:hover .cue { transform: scale(1.12); border-color: var(--j); }
+  .stop[aria-selected="true"] .cue { background: var(--j); border-color: var(--j); }
+  .stop[aria-selected="true"] .cue::before, .stop[aria-selected="true"] .cue::after { opacity: 0; }
+  .j-gold .stop:last-child .cue { border-color: rgb(28 22 8 / .45); }
+  .j-gold .stop:last-child .cue::before, .j-gold .stop:last-child .cue::after { background: var(--j-ink); }
+  .j-gold .stop:last-child[aria-selected="true"] .cue { background: var(--j-ink); border-color: var(--j-ink); }
   .stop[aria-selected="true"] .n { color: var(--j); }
-  .j-gold .stop:last-child[aria-selected="true"] { box-shadow: inset 0 -3px 0 #7a5410; }
+  .j-gold .stop:last-child[aria-selected="true"] { box-shadow: inset 0 -3px 0 #6e4c0c, 0 0 0 2px var(--color-gold-pale), 0 12px 30px -14px color-mix(in srgb, var(--j) 70%, transparent); }
   .j-gold .stop:last-child[aria-selected="true"] .n { color: #52261d; }
   @container (min-width: 30rem) { .track { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   @container (min-width: 38rem) { .track { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); } }
@@ -54,8 +65,11 @@ const { id, steps, label, accent = 'gold', size = 'lg' } = Astro.props;
     .stop:not(:last-child)::after { content: ""; position: absolute; right: -.4rem; top: 50%; width: .75rem; height: .75rem; border-top: 1px solid var(--j); border-right: 1px solid var(--j); transform: translateY(-50%) rotate(45deg); z-index: 1; pointer-events: none; }
     .stop .name { font-size: clamp(.85rem, 1.9cqi, 1.15rem); }
   }
-  .panels { margin-top: 1.75rem; }
-  .panel { padding: clamp(1.4rem, 3vw, 2.25rem); border-radius: 1.25rem; border: 1px solid color-mix(in srgb, var(--j) 28%, transparent); background: linear-gradient(160deg, color-mix(in srgb, var(--j) 10%, transparent), rgb(255 255 255 / .02)); }
+  /* The open card is tied to its stage: a pointer slides under the selected stage, and the card carries a strong accent border */
+  .panels { position: relative; margin-top: 1.4rem; --x: 50%; }
+  :global(.js) .panels::before { content: ""; position: absolute; top: -.7rem; left: var(--x); width: 1.5rem; height: .75rem; transform: translateX(-50%); background: var(--j); clip-path: polygon(50% 0, 100% 100%, 0 100%); transition: left .45s var(--ease-flow), opacity .25s; z-index: 1; }
+  .panels.no-pointer::before { opacity: 0; }
+  .panel { position: relative; padding: clamp(1.4rem, 3vw, 2.25rem); border-radius: 1.25rem; border: 1.5px solid color-mix(in srgb, var(--j) 65%, transparent); border-top: 3px solid var(--j); background: linear-gradient(160deg, color-mix(in srgb, var(--j) 14%, transparent), rgb(255 255 255 / .02)); box-shadow: 0 24px 60px -30px color-mix(in srgb, var(--j) 45%, transparent); }
   .panel + .panel { margin-top: .75rem; }
   .panel[hidden] { display: none; }
   .p-label { display: flex; align-items: center; gap: .75rem; font-size: .72rem; font-weight: 700; letter-spacing: .22em; color: var(--j); }
@@ -73,10 +87,22 @@ const { id, steps, label, accent = 'gold', size = 'lg' } = Astro.props;
   document.querySelectorAll<HTMLElement>('[data-journey]').forEach((root) => {
     const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
     const panels = [...root.querySelectorAll<HTMLElement>('[data-panel]')];
+    // Slide the pointer above the card to sit under the selected stage
+    const wrap = root.querySelector<HTMLElement>('[data-panels]')!;
+    const place = () => {
+      const t = tabs.find((x) => x.getAttribute('aria-selected') === 'true') ?? tabs[0];
+      const a = t.getBoundingClientRect(), b = wrap.getBoundingClientRect();
+      wrap.style.setProperty('--x', `${a.left + a.width / 2 - b.left}px`);
+      // Only point when the selected stage sits in the row directly above the card
+      const last = tabs[tabs.length - 1].getBoundingClientRect();
+      wrap.classList.toggle('no-pointer', a.bottom < last.top);
+    };
+    window.addEventListener('resize', place);
     const select = (i: number, focus = false) => {
       tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
       panels.forEach((p, k) => { p.hidden = k !== i; p.classList.toggle('show', k === i); });
       if (focus) tabs[i].focus();
+      place();
     };
     tabs.forEach((t, i) => {
       t.addEventListener('click', () => select(i));
