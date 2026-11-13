@@ -4,6 +4,8 @@ import Base from '@/layouts/Base.astro';
 import Icon from '@/components/Icon.astro';
 import LogoStrip from '@/components/LogoStrip.astro';
 import PageHero from '@/components/PageHero.astro';
+import Journey from '@/components/Journey.astro';
+import { shineStages } from '@/content/shine';
 import { home as c } from '@/content/home';
 import { rich } from '@/lib/text';
 import duo from '@/assets/photos/duo-studio-b-cutout.png';
@@ -111,11 +113,9 @@ const serviceAlt = {
         <p class="eyebrow reveal">{c.solution.eyebrow}</p>
         <h2 class="display-lg mt-6 reveal">{c.solution.heading}</h2>
       </div>
-      <ol class="stages reveal" aria-label="The six stages of the SHINE Blueprint">
-        {c.solution.stages.map((s, i) => (
-          <li style={`--i:${i}`}><span class="n">{String(i + 1).padStart(2, '0')}</span><span class="t">{s}</span></li>
-        ))}
-      </ol>
+      <div class="stages reveal">
+        <Journey id="home-shine" steps={shineStages} label="The six stages of the SHINE Blueprint" />
+      </div>
       <div class="shine-body">
         <div class="prose-ee reveal">
           {c.solution.body.slice(0, 2).map((p) => <p set:html={rich(p)} />)}
@@ -253,13 +253,7 @@ const serviceAlt = {
 
   /* SHINE */
   .shine-head { max-width: 56rem; }
-  .stages { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; margin: clamp(2.5rem, 5vw, 4rem) 0; position: relative; }
-  .stages li { position: relative; padding: 1.1rem 1rem 1rem; border: 1px solid rgb(221 198 134 / .22); border-radius: 1rem; background: linear-gradient(180deg, rgb(221 198 134 / .07), transparent); display: grid; gap: .35rem; transition: border-color .4s, transform .5s var(--ease-flow), background-color .4s; }
-  .stages li:hover { border-color: var(--color-gold); transform: translateY(-4px); }
-  .stages .n { font-size: .7rem; font-weight: 700; letter-spacing: .2em; color: var(--color-copper-soft); }
-  .stages .t { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; letter-spacing: .06em; }
-  .stages li:last-child { background: var(--grad-gold); border-color: transparent; color: #1c1608; }
-  .stages li:last-child .n { color: #52261d; }
+  .stages { margin: clamp(2.5rem, 5vw, 4rem) 0; }
   .shine-body { display: grid; gap: 2rem; }
 
   /* Delivery */
@@ -294,17 +288,11 @@ const serviceAlt = {
   @media (prefers-reduced-motion: reduce) { .line { stroke-dashoffset: 0; } }
   @media (min-width: 48rem) {
     .stats { grid-template-columns: repeat(3, 1fr); }
-    .stages { grid-template-columns: repeat(3, 1fr); }
     .shine-body { grid-template-columns: 1fr 1fr; gap: 4rem; }
   }
   @media (min-width: 64rem) {
     .intro-grid { grid-template-columns: 1.1fr 1fr; gap: 5rem; align-items: end; }
     .split { grid-template-columns: .85fr 1fr; }
-    .stages { grid-template-columns: repeat(6, 1fr); gap: 0; }
-    .stages li { border-radius: 0; border-right-width: 0; padding: 1.5rem 1.25rem; }
-    .stages li:first-child { border-radius: 1rem 0 0 1rem; }
-    .stages li:last-child { border-radius: 0 1rem 1rem 0; border-right-width: 1px; }
-    .stages li:not(:last-child)::after { content: ""; position: absolute; right: -.45rem; top: 50%; width: .8rem; height: .8rem; border-top: 1px solid var(--color-gold); border-right: 1px solid var(--color-gold); transform: translateY(-50%) rotate(45deg); background: var(--color-ink); z-index: 1; }
     .delivery-head { grid-template-columns: 1fr 1fr; gap: 5rem; }
     .services { grid-template-columns: repeat(3, 1fr); }
     .outcome-grid { grid-template-columns: 1.15fr 1fr; gap: 5rem; }

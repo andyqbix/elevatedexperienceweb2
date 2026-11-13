@@ -34,7 +34,7 @@ const offers = [
 ---
 <Base title={c.meta.title} description={c.meta.description} breadcrumb="Executive Masterclasses" service={{ name: 'Executive Masterclasses: SHINE and ELEVATE', type: 'Executive education', description: c.meta.description, offers }}>
   <!-- SECTION 1 | THE HERO -->
-  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.heading} video={{ src: '/video/masterclass-hero.mp4', poster: '/video/masterclass-hero-poster.jpg', sound: true }} position="50% 40%">
+  <PageHero eyebrow={c.hero.eyebrow} title={c.hero.heading} video={{ src: '/video/masterclass-hero.mp4', poster: '/video/masterclass-hero-poster.jpg' }} position="50% 40%">
     <p class="hero-line gold">{c.hero.line}</p>
     {c.hero.body.map((p) => <p class="hero-text" set:html={rich(p)} />)}
     <div class="hero-cta"><a class="btn btn-primary" href={c.hero.cta.href}>{c.hero.cta.label} <Icon name="arrow-down" /></a></div>
@@ -70,7 +70,7 @@ const offers = [
     <div class="wrap rel">
       <div class="head head-center reveal">
         <p class="eyebrow no-rule">{c.programmes.eyebrow}</p>
-        <h2 class="display-lg mt-6">{c.programmes.heading}</h2>
+        <h2 class="display-lg mt-6 lines">{c.programmes.heading.replace('Transformations. ', 'Transformations.\n').replace('Mission: ', 'Mission:\n')}</h2>
         <div class="prose-ee">{c.programmes.body.map((p) => <p set:html={rich(p)} />)}</div>
       </div>
 
@@ -189,6 +189,7 @@ const offers = [
 </Base>
 
 <style>
+  .lines { white-space: pre-line; }
   .rel { position: relative; }
   .exp-media { display: grid; gap: 1.25rem; }
   .exp-photo { aspect-ratio: 16 / 10; }

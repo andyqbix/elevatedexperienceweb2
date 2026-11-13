@@ -14,7 +14,15 @@ const path = Astro.url.pathname;
     </a>
     <nav class="primary" aria-label="Primary">
       <ul>
-        {nav.map((n) => (
+        {nav.map((n, i) => n.children ? (
+          <li class="has-sub" data-sub>
+            <a href={n.href} aria-current={path === n.href ? 'page' : undefined} class:list={[n.children.some((c) => c.href === path) && 'in-section']}>{n.label}</a>
+            <button type="button" class="sub-btn" aria-expanded="false" aria-controls={`sub-${i}`} data-sub-btn><span class="sr-only">Show pages under {n.label}</span><Icon name="chevron" /></button>
+            <ul class="sub" id={`sub-${i}`}>
+              {n.children.map((c) => <li><a href={c.href} aria-current={path === c.href ? 'page' : undefined}>{c.label}</a></li>)}
+            </ul>
+          </li>
+        ) : (
           <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>
         ))}
       </ul>
@@ -31,7 +39,14 @@ const path = Astro.url.pathname;
     <nav aria-label="Mobile">
       <ul>
         {nav.map((n, i) => (
-          <li style={`--i:${i}`}><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>
+          <li style={`--i:${i}`}>
+            <a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a>
+            {n.children && (
+              <ul class="m-sub">
+                {n.children.map((c) => <li><a href={c.href} aria-current={path === c.href ? 'page' : undefined}>{c.label}</a></li>)}
+              </ul>
+            )}
+          </li>
         ))}
       </ul>
       <a class="btn btn-primary" href={links.bookCall} target="_blank" rel="noopener noreferrer">Book a Call</a>
@@ -50,10 +65,26 @@ const path = Astro.url.pathname;
   .brand:hover .brand-mark { transform: scale(1.05); }
   .primary { display: none; }
   .primary ul { display: flex; align-items: center; gap: clamp(1rem, 1.6vw, 2rem); }
-  .primary a { position: relative; font-size: .74rem; font-weight: 600; letter-spacing: .12em; color: rgb(255 255 255 / .82); text-decoration: none; padding-block: .6rem; white-space: nowrap; transition: color .3s; }
+  .primary a { display: block; position: relative; font-size: .74rem; font-weight: 600; letter-spacing: .12em; color: rgb(255 255 255 / .82); text-decoration: none; padding-block: .6rem; white-space: nowrap; transition: color .3s; }
   .primary a::after { content: ""; position: absolute; left: 0; right: 0; bottom: .2rem; height: 1px; background: var(--grad-gold); transform: scaleX(0); transform-origin: left; transition: transform .45s var(--ease-flow); }
   .primary a:hover, .primary a[aria-current] { color: #fff; }
-  .primary a:hover::after, .primary a[aria-current]::after { transform: scaleX(1); }
+  .primary a:hover::after, .primary a[aria-current]::after, .primary a.in-section::after { transform: scaleX(1); }
+  .primary a.in-section { color: #fff; }
+  /* Dropdown under Power Duo: opens on hover, keyboard focus or the arrow button */
+  .has-sub { position: relative; display: flex; align-items: center; gap: .2rem; }
+  .sub-btn { margin-left: -.15rem; width: 1.6rem; height: 1.6rem; display: grid; place-items: center; color: rgb(255 255 255 / .7); cursor: pointer; border-radius: 50%; }
+  .sub-btn :global(svg) { width: .8rem; height: .8rem; transition: transform .3s var(--ease-flow); }
+  .sub-btn:hover { color: var(--color-gold); }
+  .sub { position: absolute; top: 100%; left: -1rem; min-width: 13rem; padding: .5rem; margin-top: .4rem; display: grid !important; gap: 0 !important; border-radius: .9rem; background: rgb(11 12 15 / .96); border: 1px solid rgb(221 198 134 / .2); box-shadow: 0 20px 40px -20px #000; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .25s, transform .3s var(--ease-flow), visibility .25s; }
+  .sub::before { content: ""; position: absolute; inset: -.8rem 0 auto 0; height: .8rem; }
+  .sub a { display: block; padding: .7rem .9rem; border-radius: .6rem; }
+  .sub a::after { display: none; }
+  .sub a:hover, .sub a[aria-current] { background: rgb(221 198 134 / .1); color: var(--color-gold); }
+  .has-sub:hover .sub, .has-sub:focus-within .sub, .has-sub.open .sub { opacity: 1; visibility: visible; transform: none; }
+  .has-sub:hover .sub-btn :global(svg), .has-sub.open .sub-btn :global(svg) { transform: rotate(180deg); }
+  .m-sub { display: grid; padding: 0 0 .9rem 1.25rem; }
+  .mobile li .m-sub li { border: 0; animation: none; }
+  .mobile li .m-sub a { padding: .45rem 0; font-size: 1.15rem; font-weight: 500; color: rgb(255 255 255 / .75); }
   .actions { display: flex; align-items: center; gap: .75rem; }
   .cta { min-height: 2.6rem; padding: .55rem 1.25rem; font-size: .7rem; display: none; }
   .menu-btn { width: 2.9rem; height: 2.9rem; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgb(255 255 255 / .25); color: #fff; cursor: pointer; }
@@ -88,6 +119,13 @@ const path = Astro.url.pathname;
   };
   btn.addEventListener('click', () => setOpen(menu.hidden));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { setOpen(false); btn.focus(); } });
+  document.querySelectorAll<HTMLElement>('[data-sub]').forEach((li) => {
+    const b = li.querySelector<HTMLButtonElement>('[data-sub-btn]')!;
+    const set = (open: boolean) => { li.classList.toggle('open', open); b.setAttribute('aria-expanded', String(open)); };
+    b.addEventListener('click', () => set(!li.classList.contains('open')));
+    li.addEventListener('focusout', (e) => { if (!li.contains(e.relatedTarget as Node)) set(false); });
+    li.addEventListener('keydown', (e) => { if (e.key === 'Escape' && li.classList.contains('open')) { set(false); b.focus(); e.stopPropagation(); } });
+  });
   menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
   window.matchMedia('(min-width: 76rem)').addEventListener('change', (e) => e.matches && setOpen(false));
 </script>

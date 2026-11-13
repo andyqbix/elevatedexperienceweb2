@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import logo from '@/assets/brand/ee-logo-full.png';
 import Icon from '@/components/Icon.astro';
-import { site, nav, social, links } from '@/data/site';
+import { site, navFlat, social, links } from '@/data/site';
 const year = new Date().getFullYear();
 ---
 <footer class="site-footer">
@@ -24,7 +24,7 @@ const year = new Date().getFullYear();
     <nav class="col" aria-label="Footer">
       <p class="h">Explore</p>
       <ul class="links">
-        {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+        {navFlat.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
       </ul>
     </nav>
     <div class="col">

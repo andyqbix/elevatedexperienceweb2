@@ -32,16 +32,18 @@ export const links = {
   andy: 'https://andyjarvis.digital/about',
 };
 
-export const nav = [
-  { label: 'Power Duo', href: links.powerDuo },
-  { label: 'SHINE Blueprint', href: links.shine },
+export interface NavItem { label: string; href: string; children?: NavItem[] }
+export const nav: NavItem[] = [
+  { label: 'Power Duo', href: links.powerDuo, children: [{ label: 'SHINE Blueprint', href: links.shine }] },
   { label: 'Keynote', href: links.keynote },
-  { label: 'eXperiences', href: links.experiences },
   { label: 'Masterclasses', href: links.masterclass },
   { label: 'Coachsulting', href: links.coachsulting },
+  { label: 'eXperiences', href: links.experiences },
   { label: 'Resources', href: links.resources },
   { label: 'Contact', href: links.contact },
 ];
+/** Every page in menu order, sub-pages included (footer). */
+export const navFlat: NavItem[] = nav.flatMap((n) => [n, ...(n.children ?? [])]);
 
 export const social = [
   { name: 'LinkedIn', icon: 'linkedin', href: 'https://www.linkedin.com/company/elevated-experience/' },
