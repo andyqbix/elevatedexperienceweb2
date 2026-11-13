@@ -56,7 +56,12 @@ const path = Astro.url.pathname;
 
 <style>
   .site-header { position: fixed; inset: 0 0 auto 0; z-index: 50; height: var(--header-h); transition: background-color .45s var(--ease-flow), box-shadow .45s; background: linear-gradient(180deg, rgb(11 12 15 / .72), rgb(11 12 15 / 0)); }
-  .site-header.scrolled, .site-header.open { background: rgb(11 12 15 / .88); -webkit-backdrop-filter: blur(16px) saturate(130%); backdrop-filter: blur(16px) saturate(130%); box-shadow: 0 1px 0 rgb(203 108 82 / .2); }
+  /* The frosted bar is drawn on a separate layer: a blur on the header itself would trap the
+     full-screen mobile menu inside the header's own height. */
+  .site-header::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; background: rgb(11 12 15 / .88); -webkit-backdrop-filter: blur(16px) saturate(130%); backdrop-filter: blur(16px) saturate(130%); box-shadow: 0 1px 0 rgb(203 108 82 / .2); transition: opacity .45s var(--ease-flow); pointer-events: none; }
+  .site-header.scrolled::before, .site-header.open::before { opacity: 1; }
+  .site-header.open::before { background: var(--color-ink); }
+  .site-header.scrolled, .site-header.open { background: transparent; }
   .bar { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; max-width: 96rem; }
   .brand { display: flex; align-items: center; gap: .7rem; flex: none; }
   .brand-word { height: 2.05rem; width: auto; }
@@ -92,7 +97,7 @@ const path = Astro.url.pathname;
   .menu-btn :global(.i-close) { opacity: 0; transform: rotate(-45deg); }
   .open .menu-btn :global(.i-open) { opacity: 0; transform: rotate(45deg); }
   .open .menu-btn :global(.i-close) { opacity: 1; transform: none; }
-  .mobile { position: fixed; inset: var(--header-h) 0 0 0; background: rgb(11 12 15 / .97); overflow-y: auto; padding: 1.5rem var(--gutter) 3rem; }
+  .mobile { position: fixed; inset: var(--header-h) 0 0 0; height: calc(100dvh - var(--header-h)); background: var(--color-ink); overflow-y: auto; padding: 1.5rem var(--gutter) 3rem; }
   .mobile ul { display: grid; }
   .mobile li { border-bottom: 1px solid rgb(255 255 255 / .08); animation: slide .5s var(--ease-flow) both; animation-delay: calc(var(--i) * 40ms); }
   .mobile li a { display: block; padding: 1.05rem 0; font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; color: #fff; text-decoration: none; }
