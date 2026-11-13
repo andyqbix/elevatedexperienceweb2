@@ -6,3 +6,6 @@ dist/
 .env.*
 # Original high-resolution media (too large for GitHub). Web versions are generated from these.
 assets-source/
+
+# Sanity Studio build output
+studio/.sanity/
