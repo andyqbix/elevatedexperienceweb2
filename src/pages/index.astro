@@ -4,6 +4,7 @@ import Base from '@/layouts/Base.astro';
 import Icon from '@/components/Icon.astro';
 import LogoStrip from '@/components/LogoStrip.astro';
 import PageHero from '@/components/PageHero.astro';
+import ShowreelButton from '@/components/ShowreelButton.astro';
 import Journey from '@/components/Journey.astro';
 import { shineStages } from '@/content/shine';
 import { home as c } from '@/content/home';
@@ -33,6 +34,9 @@ const serviceAlt = {
   <!-- HERO | VIDEO BANNER -->
   <PageHero eyebrow={c.hero.identifier} title={c.hero.heading} video={{ src: '/video/home-hero.mp4', mobileSrc: '/video/home-hero-mobile.mp4', poster: '/video/home-hero-poster.jpg' }} position="50% 40%" wideTitle>
     <p class="hero-line">{c.hero.sub}</p>
+    <div class="hero-cta">
+      <ShowreelButton src="/video/showreel.mp4" poster="/video/showreel-poster.jpg" label={c.hero.showreel.label} eyebrow={c.hero.showreel.eyebrow} title={c.hero.showreel.title} />
+    </div>
     <a href="#problem" class="scroll-cue" aria-label="Scroll to the real issue"><span></span><Icon name="arrow-down" /></a>
   </PageHero>
 

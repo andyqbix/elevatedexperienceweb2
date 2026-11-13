@@ -12,6 +12,7 @@ export const home = typeset({
     identifier: 'ELEVATED EXPERIENCE · FROM FRICTION TO FLOW',
     heading: 'What Friction Is Slowing Your Organisation Down in 2027?',
     sub: 'The tech, the people, the customer journey, or the disconnection between them?',
+    showreel: { label: 'WATCH SHOWREEL', eyebrow: 'SHOWREEL', title: 'The Power Duo in action' },
   },
   problem: {
     eyebrow: 'WHY | THE REAL ISSUE',
