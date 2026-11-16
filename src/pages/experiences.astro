@@ -9,7 +9,17 @@ import { rich } from '@/lib/text';
 import heroImg from '@/assets/photos/stage-duo-room.jpg';
 import designImg from '@/assets/photos/stage-duo-screen.jpg';
 import hxLogo from '@/assets/brand/hx-hive-experience-full.png';
+import humanxLogo from '@/assets/brand/humanx-logo.png';
+import digitalxLogo from '@/assets/brand/digitalx-logo.png';
+import customerxLogo from '@/assets/brand/customerx-logo.png';
+import hivexLogo from '@/assets/brand/hivex-logo.png';
 
+const logos: Record<string, { src: ImageMetadata; alt: string }> = {
+  humanx: { src: humanxLogo, alt: 'HumanX' },
+  digitalx: { src: digitalxLogo, alt: 'DigitalX' },
+  customerx: { src: customerxLogo, alt: 'CustomerX' },
+  communityx: { src: hivexLogo, alt: 'HiveX' },
+};
 const accents: Record<string, string> = { humanx: 'accent-gold', digitalx: 'accent-blue', customerx: 'accent-copper', communityx: 'accent-silver' };
 ---
 <Base title={c.meta.title} description={c.meta.description} breadcrumb="eXperiences" service={{ name: 'The eXecutive eXperience', type: 'Bespoke executive programme', description: c.meta.description }}>
@@ -25,7 +35,9 @@ const accents: Record<string, string> = { humanx: 'accent-gold', digitalx: 'acce
         {c.items.map((x, i) => (
           <article class={`card card-hover accent-top ${accents[x.key]} x reveal`} style={`--d:${(i % 2) * 120}ms`}>
             <p class="x-n">{String(i + 1).padStart(2, '0')}</p>
-            <h2 class="x-name">{x.name.slice(0, -1)}<span class="x-x">X</span></h2>
+            <h2 class="x-name x-logo-h">{logos[x.key]
+              ? <Image src={logos[x.key].src} alt={logos[x.key].alt} height={84} class="x-logo" />
+              : <>{x.name.slice(0, -1)}<span class="x-x">X</span></>}</h2>
             <p class="x-lead">{x.lead}</p>
             <p class="x-text">{x.text}</p>
             {x.link && (
@@ -82,6 +94,8 @@ const accents: Record<string, string> = { humanx: 'accent-gold', digitalx: 'acce
   .x { padding: clamp(1.75rem, 3vw, 2.75rem); display: flex; flex-direction: column; gap: .9rem; }
   .x-n { font-size: .72rem; font-weight: 700; letter-spacing: .24em; color: var(--accent-solid, var(--color-gold)); }
   .x-name { font-size: clamp(2.2rem, 4vw, 3.25rem); font-weight: 800; letter-spacing: -.02em; }
+  .x-logo-h { line-height: 0; }
+  .x-logo { height: clamp(2.6rem, 4.6vw, 3.6rem); width: auto; max-width: 100%; }
   .x-x { background: var(--accent); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .x-lead { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; line-height: 1.2; color: var(--accent-solid, var(--color-gold)); }
   .x-text { color: rgb(255 255 255 / .8); flex: 1; }
