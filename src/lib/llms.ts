@@ -62,7 +62,7 @@ export function summary(posts: Post[] = []): string {
     `- Signature Keynote, 'The Gaps Killing Your Business Growth': $12,888 all inclusive for both speakers. ${abs(links.keynote)}`,
     `- Strategic Event Partnership: complimentary keynote with 12 confirmed, paying Executive Masterclass participants at $998 each. ${abs(links.keynote)}`,
     `- Executive Masterclasses (SHINE and ELEVATE): $998 per participant for the Conference & Event Add-On and the City Edition; Private Retreat from $19,998 for two days. ${abs(links.masterclass)}`,
-    `- The eXecutive eXperience (HumanX, DigitalX, CustomerX, CommunityX or your own X-topic): bespoke investment. ${abs(links.experiences)}`,
+    `- The eXecutive eXperience (HumanX, DigitalX, CustomerX, HiveX or your own X-topic): bespoke investment. ${abs(links.experiences)}`,
     `- Coachsulting: The Two-Day eXperience Audit $4,998; The Full eXperience Transformation $29,998; The 12-Month eXperience Partnership, bespoke investment priced following the audit. ${abs(links.coachsulting)}`,
     '',
     '## The people',

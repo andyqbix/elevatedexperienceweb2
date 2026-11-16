@@ -10,7 +10,7 @@ import { typeset } from '@/lib/text';
 export const experiences = typeset({
   meta: {
     title: 'eXperiences: Bespoke Executive Programmes',
-    description: 'HumanX, DigitalX, CustomerX, CommunityX or your own X-topic. Choose one of our signature executive experiences or let us create something entirely unique around your vision.',
+    description: 'HumanX, DigitalX, CustomerX, HiveX or your own X-topic. Choose one of our signature executive experiences or let us create something entirely unique around your vision.',
   },
   hero: {
     eyebrow: 'EXPERIENCES',
@@ -33,7 +33,7 @@ export const experiences = typeset({
       text: 'Connect leadership, employee culture, digital systems and customer journeys to create seamless experiences, strengthen loyalty and drive business performance.',
     },
     {
-      key: 'communityx', name: 'CommunityX', lead: 'Turning Connection into Belonging, Collaboration and Growth.',
+      key: 'hivex', name: 'HiveX', lead: 'Turning Connection into Belonging, Collaboration and Growth.',
       text: 'Explore how organisations, associations and communities can build trust, strengthen engagement and create meaningful opportunities for people to belong, contribute and prosper together.',
     },
   ],

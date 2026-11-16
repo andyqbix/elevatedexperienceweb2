@@ -18,9 +18,9 @@ const logos: Record<string, { src: ImageMetadata; alt: string }> = {
   humanx: { src: humanxLogo, alt: 'HumanX' },
   digitalx: { src: digitalxLogo, alt: 'DigitalX' },
   customerx: { src: customerxLogo, alt: 'CustomerX' },
-  communityx: { src: hivexLogo, alt: 'HiveX' },
+  hivex: { src: hivexLogo, alt: 'HiveX' },
 };
-const accents: Record<string, string> = { humanx: 'accent-gold', digitalx: 'accent-blue', customerx: 'accent-copper', communityx: 'accent-silver' };
+const accents: Record<string, string> = { humanx: 'accent-gold', digitalx: 'accent-blue', customerx: 'accent-copper', hivex: 'accent-silver' };
 ---
 <Base title={c.meta.title} description={c.meta.description} breadcrumb="eXperiences" service={{ name: 'The eXecutive eXperience', type: 'Bespoke executive programme', description: c.meta.description }}>
   <PageHero eyebrow={c.hero.eyebrow} title={c.hero.heading} image={heroImg} alt="Claire Boscq CSP and Andy Jarvis presenting to a full conference room" position="50% 40%" size="compact" mobileFit>

@@ -3,7 +3,7 @@
 // Approved corrections applied:
 //  - Executive programme card: "The X eXecutive eXperience" -> "The eXecutive eXperience"
 //  - Card link: "EXPLORE THE bespoke X.X.Xperience" -> "EXPLORE THE BESPOKE EXPERIENCE"
-//  - Topic line uses pipes throughout: "HumanX | DigitalX | CustomerX | CommunityX | Your own X-topic"
+//  - Topic line uses pipes throughout: "HumanX | DigitalX | CustomerX | HiveX | Your own X-topic"
 // The three first-person lines in the takeaways are illustrative audience reactions, not testimonials.
 import { links } from '@/data/site';
 import { typeset } from '@/lib/text';
@@ -88,7 +88,7 @@ export const keynote = typeset({
         valueLabel: 'TAILORED TO YOUR ORGANISATION',
         lead: 'One day. Your challenges. The right experts.',
         text: "A curated one day executive programme bringing together the Power Duo and specialist keynote speakers, tailored to your organisation's challenges and ambitions.",
-        included: ['A one day programme designed around your challenges', 'Claire Boscq CSP and Andy Jarvis', 'Specialist keynote speakers', 'Themes from HumanX, DigitalX, CustomerX and CommunityX', 'Or your own X topic'],
+        included: ['A one day programme designed around your challenges', 'Claire Boscq CSP and Andy Jarvis', 'Specialist keynote speakers', 'Themes from HumanX, DigitalX, CustomerX and HiveX', 'Or your own X topic'],
         closing: 'Your challenges. Our experts. One EPIC day.',
         cta: { label: 'DESIGN YOUR PROGRAMME', href: links.experiences },
       },
