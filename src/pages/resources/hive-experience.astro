@@ -233,7 +233,14 @@ const schema = [
                   <span class="faq-icon" aria-hidden="true"></span>
                 </button>
               </h3>
-              <div class="faq-a" id={`faq-panel-${i}`} role="region" aria-labelledby={`faq-btn-${i}`}><p>{f.a}</p></div>
+              <div class="faq-a" id={`faq-panel-${i}`} role="region" aria-labelledby={`faq-btn-${i}`}>
+                <p>{f.a}</p>
+                {'links' in f && f.links && (
+                  <ul class="faq-links">
+                    {f.links.map((l) => <li><a href={l.href} {...ext}>{l.label}<span class="sr-only"> (opens in a new tab)</span></a></li>)}
+                  </ul>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -425,6 +432,9 @@ const schema = [
   .faq-icon::after { transform: rotate(90deg); }
   [aria-expanded="true"] .faq-icon::after { transform: rotate(0deg); }
   .faq-a { padding: 0 2.5rem 1.5rem 0; max-width: 65ch; }
+  .faq-links { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; margin-top: .9rem; }
+  .faq-links a { font-weight: 600; color: var(--hx-bronze); text-decoration: underline; text-underline-offset: .2em; }
+  .faq-links a:hover { color: var(--hx-graphite); }
 
   /* 11 | CTA band */
   .cta-band { position: relative; overflow: hidden; background: var(--hx-umber); color: var(--hx-ivory); padding-block: clamp(5rem, 10vw, 8rem); text-align: center; }

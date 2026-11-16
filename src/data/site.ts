@@ -31,6 +31,8 @@ export const links = {
   bookCall: 'https://bookings.cloud.microsoft/book/ElevatedExperienceLtd@elevatedexperience.vip/?ismsaljsauthenabled',
   hx: 'https://hive.elevatedexperience.vip/',
   hxEvents: 'https://hive.elevatedexperience.vip/events',
+  hxMicrosoftStore: 'https://apps.microsoft.com/detail/9NKRSD0B4FPH',
+  hxGooglePlay: 'https://play.google.com/store/apps/details?id=com.elevatedexperience.hive',
   humanxIndia: 'https://hive.elevatedexperience.vip/events/humanx-india-new-delhi-2027-adadc759-d8c7-42da-87de-825be77dfbfe?ref=link',
   digitalxMauritius: 'https://hive.elevatedexperience.vip/events/digitalx-mauritius-2027-the-digital-advantage-290f9cff-31da-450b-bda6-97250cfe79b7?ref=link',
   mailchimp: 'https://mailchi.mp/457ee259e0eb/elevated-experience-sign-up',

@@ -4,6 +4,7 @@
 // Community (never Network), School (never Learn).
 // `img` names the screenshot used by each feature row; `alt` is the approved alt text.
 import { typeset } from '@/lib/text';
+import { links } from '@/data/site';
 
 export const hx = typeset({
   meta: {
@@ -140,7 +141,14 @@ export const hx = typeset({
       { q: 'Are there ads?', a: "No. There are no ads on HX and your members' attention is never sold." },
       { q: 'How does the feed decide what I see?', a: 'It does not. The Café shows posts in the order they were written, with no algorithm choosing what you miss.' },
       { q: 'How do I get paid for events, courses and sales?', a: 'Payments run through PayPal and payouts to hosts and sellers are fully automatic. There is nothing to chase.' },
-      { q: 'Is there an app?', a: 'HX runs in any modern browser and can be installed on your phone or desktop like an app, straight from the browser.' },
+      {
+        q: 'Is there an app?',
+        a: 'Yes. HX is on the Microsoft Store for Windows and on Google Play for Android. It also runs in any modern browser, and can be installed on your phone or desktop straight from the browser.',
+        links: [
+          { label: 'Get it from the Microsoft Store', href: links.hxMicrosoftStore },
+          { label: 'Get it on Google Play', href: links.hxGooglePlay },
+        ],
+      },
       { q: 'How do you keep the community safe?', a: 'Every account should be a real person. Fake accounts are not allowed and are removed by Hive admins.' },
       { q: 'Can my organisation have its own private version?', a: 'Yes. HX Enterprise is a private, white label instance of HX for organisations. Get in touch and we will walk you through it.' },
       { q: 'Who is behind HX?', a: 'HX is created by Andy Jarvis and Claire Boscq and powered by Elevated eXperience™, from Elevated eXperience Ltd, registered in Jersey.' },
