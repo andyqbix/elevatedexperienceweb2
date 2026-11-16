@@ -131,7 +131,7 @@ const schema = [
         </div>
         <ul class="spaces">
           {c.inside.spaces.map((s, i) => (
-            <li class="space reveal" style={`--d:${i * 80}ms`}>
+            <li class="space reveal" style={`--d:${(i % 4) * 80}ms`}>
               <svg class="hex" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 20.66 7 20.66 17 12 22 3.34 17 3.34 7" /></svg>
               <h3 class="h4">{s.name}</h3>
               <p>{s.text}</p>

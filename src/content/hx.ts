@@ -40,14 +40,20 @@ export const hx = typeset({
   },
   inside: {
     eyebrow: 'INSIDE EVERY HIVE',
-    heading: 'Four spaces, one knot.',
+    heading: 'Eight spaces, one knot.',
     intro: 'Each space stands on its own. Together they hold your community in one place, so nobody hunts for the link.',
     alt: 'The HX Home, Café and Community screens showing a Global HX Hive with upcoming events and members.',
     spaces: [
+      // Same order as the honeycomb on the HX Home screen.
+      // Noticeboard, Community, Businesses and Radio lines were added after the approved copy (Noticeboard and Radio from How We Hive).
+      { name: 'Noticeboard', text: 'Notices, bring lists, sign up sheets and questions for the whole Hive.' },
       { name: 'Café', text: 'Where conversations keep going after the event ends.' },
+      { name: 'Community', text: 'Find your people by name, skill or place, and keep them close.' },
+      { name: 'Businesses', text: 'A local directory of members’ businesses that grows with your Hive.' },
       { name: 'HXEvents', text: 'Host, book and replay in one place.' },
       { name: 'HXSchool', text: 'Courses and workshop replays your members can actually find.' },
       { name: 'HXMarketPlace', text: 'Sell to people who already know you. 5% only when you make a sale.' },
+      { name: 'Radio', text: 'Podcasts and recordings shared by members, heard only inside your Hive.' },
     ],
   },
   features: [
