@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, Picture } from 'astro:assets';
 import Base from '@/layouts/Base.astro';
 import VideoCard from '@/components/VideoCard.astro';
 import Icon from '@/components/Icon.astro';
@@ -10,6 +10,8 @@ import flame from '@/assets/brand/ee-flame.png';
 import dx from '@/assets/brand/dx-colour.png';
 import ex from '@/assets/brand/ex-colour.png';
 import cx from '@/assets/brand/cx-colour.png';
+import hxHome from '@/assets/hx/hx-feature-home.png';
+import { links } from '@/data/site';
 import ArticleCard from '@/components/ArticleCard.astro';
 import { getPosts } from '@/lib/sanity';
 
@@ -29,6 +31,22 @@ const topics = [...new Set(posts.flatMap((p) => p.topics || []))];
       <p class="kicker metal-gold r-line">{c.hero.line}</p>
       <div class="prose-ee r-body">{c.hero.body.map((p) => <p set:html={rich(p)} />)}</div>
       <p class="statement r-close">{c.hero.closing}</p>
+    </div>
+  </section>
+
+  <!-- HX | HIVE EXPERIENCE CARD -->
+  <section class="section-tight bg-charcoal" aria-labelledby="hx-card">
+    <div class="wrap">
+      <a class="card card-hover hx-card reveal" href={links.hxPage}>
+        <div class="hx-card-img">
+          <Picture src={hxHome} formats={['webp']} fallbackFormat="png" widths={[640, 960, 1280]} sizes="(min-width: 64rem) 40rem, 92vw" alt="The HX Home screen with a honeycomb of spaces and a list of upcoming events." loading="lazy" decoding="async" />
+        </div>
+        <div class="hx-card-body">
+          <h2 class="display-sm" id="hx-card">{c.hxCard.name}</h2>
+          <p class="hx-card-text">{c.hxCard.text}</p>
+          <span class="link-arrow">{c.hxCard.cta} <Icon name="arrow" /></span>
+        </div>
+      </a>
     </div>
   </section>
 
@@ -101,6 +119,12 @@ const topics = [...new Set(posts.flatMap((p) => p.topics || []))];
 </Base>
 
 <style>
+  .hx-card { display: grid; overflow: hidden; text-decoration: none; color: #fff; }
+  .hx-card-img { background: #f8f4ec; }
+  .hx-card-img :global(img) { width: 100%; height: auto; display: block; }
+  .hx-card-body { display: grid; align-content: center; justify-items: start; gap: 1.1rem; padding: clamp(1.75rem, 4vw, 3rem); }
+  .hx-card-text { color: rgb(255 255 255 / .82); max-width: 44ch; }
+  @media (min-width: 64rem) { .hx-card { grid-template-columns: 1.1fr 1fr; } }
   .filters { display: flex; flex-wrap: wrap; gap: .6rem; margin: clamp(2rem, 4vw, 3rem) 0 2rem; }
   .chip { min-height: 2.75rem; padding: .5rem 1.1rem; border-radius: 999px; border: 1px solid rgb(255 255 255 / .2); font-size: .8rem; font-weight: 600; letter-spacing: .04em; color: rgb(255 255 255 / .82); cursor: pointer; transition: border-color .3s, background-color .3s, color .3s; }
   .chip:hover { border-color: var(--color-copper); color: #fff; }

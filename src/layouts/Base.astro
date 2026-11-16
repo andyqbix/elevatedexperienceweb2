@@ -20,8 +20,14 @@ interface Props {
   noindex?: boolean;
   /** Article pages: published details for search engines, AI assistants and social sharing. */
   article?: { headline: string; image: string; imageAlt: string; datePublished: string; dateModified: string; author?: string; topics?: string[] };
+  /** Parent page in the breadcrumb trail, for sub-pages that are not articles (articles always sit under Resources). */
+  parent?: { name: string; href: string };
+  /** Social sharing image for this page (absolute URL), in place of the default Power Duo photo. */
+  shareImage?: { src: string; alt: string };
+  /** Extra structured data nodes for this page, added to the site graph. */
+  schema?: Record<string, unknown>[];
 }
-const { title, description, breadcrumb, service, contactPage, aboutPage, noindex, article } = Astro.props;
+const { title, description, breadcrumb, service, contactPage, aboutPage, noindex, article, parent, shareImage: pageShare, schema } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const og = await getImage({ src: ogImage, width: 1200, height: 630, format: 'jpg' });
 const logo = await getImage({ src: logoImage, width: 512, format: 'png' });
@@ -62,13 +68,14 @@ const graph: Record<string, unknown>[] = [
   { '@type': 'WebSite', '@id': siteId, url: site.url, name: site.name, inLanguage: 'en-GB', publisher: { '@id': orgId } },
   {
     '@type': contactPage ? 'ContactPage' : aboutPage ? 'AboutPage' : 'WebPage', '@id': canonical + '#webpage', url: canonical, name: fullTitle, description,
-    inLanguage: 'en-GB', isPartOf: { '@id': siteId }, about: { '@id': orgId }, primaryImageOfPage: article ? article.image : abs(og.src),
+    inLanguage: 'en-GB', isPartOf: { '@id': siteId }, about: { '@id': orgId }, primaryImageOfPage: article ? article.image : pageShare ? pageShare.src : abs(og.src),
     ...(breadcrumb ? { breadcrumb: { '@id': canonical + '#breadcrumb' } } : {}),
   },
 ];
 if (breadcrumb) {
-  const trail = article
-    ? [{ name: 'Home', item: abs('/') }, { name: 'Resources', item: abs(links.resources) }, { name: breadcrumb, item: canonical }]
+  const up = article ? { name: 'Resources', href: links.resources } : parent;
+  const trail = up
+    ? [{ name: 'Home', item: abs('/') }, { name: up.name, item: abs(up.href) }, { name: breadcrumb, item: canonical }]
     : [{ name: 'Home', item: abs('/') }, { name: breadcrumb, item: canonical }];
   graph.push({
     '@type': 'BreadcrumbList', '@id': canonical + '#breadcrumb',
@@ -84,8 +91,8 @@ if (article) {
     ...(article.topics?.length ? { keywords: article.topics.join(', '), articleSection: article.topics[0] } : {}),
   });
 }
-const shareImage = article ? article.image : abs(og.src);
-const shareAlt = article ? article.imageAlt : 'Claire Boscq CSP and Andy Jarvis, the Power Duo behind Elevated eXperience';
+const shareImage = article ? article.image : pageShare ? pageShare.src : abs(og.src);
+const shareAlt = article ? article.imageAlt : pageShare ? pageShare.alt : 'Claire Boscq CSP and Andy Jarvis, the Power Duo behind Elevated eXperience';
 if (service) {
   graph.push({
     '@type': 'Service', '@id': canonical + '#service', name: service.name, serviceType: service.type, description: service.description, url: canonical,
@@ -93,6 +100,7 @@ if (service) {
     ...(service.offers ? { offers: service.offers.map((o) => ({ ...o, url: canonical })) } : {}),
   });
 }
+if (schema) graph.push(...schema);
 const jsonLd = { '@context': 'https://schema.org', '@graph': graph };
 const robots = noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 ---

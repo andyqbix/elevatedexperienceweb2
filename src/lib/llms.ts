@@ -11,6 +11,7 @@ import { masterclass } from '@/content/masterclass';
 import { coachsulting } from '@/content/coachsulting';
 import { resources } from '@/content/resources';
 import { contact } from '@/content/contact';
+import { hx } from '@/content/hx';
 import { type Post, postUrl, plainText, formatDate } from '@/lib/sanity';
 
 const abs = (p: string) => new URL(p, site.url).href;
@@ -24,10 +25,11 @@ export const pages = [
   { name: 'Executive Masterclasses', path: links.masterclass, content: masterclass },
   { name: 'Coachsulting', path: links.coachsulting, content: coachsulting },
   { name: 'Resources', path: links.resources, content: resources },
+  { name: 'HX | Hive eXperience', path: links.hxPage, content: hx },
   { name: 'Contact', path: links.contact, content: contact },
 ].map((p) => ({ ...p, url: abs(p.path), description: (p.content as any).meta.description as string }));
 
-const SKIP = new Set(['meta', 'href', 'key', 'icon', 'accent', 'external', 'featured', 'explore', 'n', 'figure']);
+const SKIP = new Set(['meta', 'href', 'key', 'icon', 'accent', 'external', 'featured', 'explore', 'n', 'figure', 'img', 'alt']);
 const clean = (s: string) => s.replace(/\*\*/g, '').trim();
 
 // Walks a content object in page order and writes its copy as plain text.

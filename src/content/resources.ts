@@ -21,6 +21,12 @@ export const resources = typeset({
     ],
     closing: 'Because better business begins with better thinking.',
   },
+  // Card linking to the HX | Hive eXperience page
+  hxCard: {
+    name: 'HX | Hive eXperience',
+    text: 'Free community platform. Bring your members, events, courses and sales into one Hive you own.',
+    cta: 'Explore HX',
+  },
   // Hidden until Sanity is connected
   // Heading for the related articles strip at the foot of each article page
   featured: { eyebrow: 'FEATURED INSIGHTS', heading: 'Fresh Perspectives Worth Exploring.' },
