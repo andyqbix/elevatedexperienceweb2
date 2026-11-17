@@ -56,7 +56,7 @@ export const hxEnterprise = typeset({
   assurances: ['Fully hosted', 'Fully supported', 'Fully maintained'],
   cta: {
     heading: 'Ready to Bring HX to Your Organisation?',
-    email: 'enterprise@hive.elevatedexperience.vip',
+    email: 'hx@elevatedexperience.vip',
     primary: 'Talk to us about HX Enterprise',
     secondary: 'Book a Call',
   },
