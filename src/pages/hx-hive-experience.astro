@@ -1,0 +1,465 @@
+---
+// HX | Hive eXperience landing page: /hx-hive-experience/
+// Sits under Resources in the menu (see nav in src/data/site.ts). The old /resources/hive-experience/
+// address redirects here permanently (see vercel.json).
+// Uses the HX Belonging Knot palette, scoped to this page as --hx- custom properties so it does not leak.
+// Fonts match the rest of the site: League Spartan for headings, Montserrat for text (with its true italic).
+//
+// Images: drop the supplied artwork into src/assets/hx/landing/ using the file names below and the page
+// picks them up on the next build. Until a file is there, the page shows the fallback noted beside it.
+//   hx-belonging-knot.(png|jpg|webp)       Belonging Knot with HX logo   (fallback: existing copper knot)
+//   hx-cx-dx-ex-diagram.(png|jpg|webp)     CX / DX / EX diagram          (fallback: section shows text only)
+//   hx-screen-home.(png|jpg|webp)          HX home screen                (fallback: existing home screen)
+//   hx-screen-your-hives.(png|jpg|webp)    "Your Hives" switcher         (fallback: not shown)
+//   icons/HXCafe.jpg ... icons/HXPayment.jpg   13 app icons              (fallback: copper hexagon)
+import '@fontsource-variable/montserrat/wght-italic.css';
+import { Picture, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '@/layouts/Base.astro';
+import { hxLanding as c } from '@/content/hx-hive-experience';
+import { links, site } from '@/data/site';
+import knotFallback from '@/assets/hx/hx-hero-mobile.png';
+import ogFallback from '@/assets/hx/hx-hero-belonging-knot.png';
+import homeFallback from '@/assets/hx/hx-feature-home.png';
+import knotIvory from '@/assets/hx/hx-belonging-knot-ivory.png';
+
+// Find a supplied image by file name (any extension, ignoring case and accents, so HXCafe and HXCafé both match).
+const supplied = import.meta.glob<ImageMetadata>('/src/assets/hx/landing/**/*.{png,jpg,jpeg,webp,avif}', { eager: true, import: 'default' });
+const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const asset = (name: string): ImageMetadata | undefined => {
+  const key = Object.keys(supplied).find((k) => norm(k.split('/').pop()!.replace(/\.[^.]+$/, '')) === norm(name));
+  return key ? supplied[key] : undefined;
+};
+
+const knotSupplied = asset('hx-belonging-knot');
+const knot = knotSupplied ?? knotFallback;
+// Hero: the knot with the full "HX HIVE eXperience" logo (supplied at 400 x 400, so it is never shown larger than that).
+const heroKnot = asset('hx-hero-knot');
+const diagram = asset('hx-cx-dx-ex-diagram');
+const screenHome = asset('hx-screen-home') ?? homeFallback;
+const screenHives = asset('hx-screen-your-hives');
+const icons = c.apps.cards.map((a) => asset(a.icon));
+
+// Each picture is served as WebP with a fallback in its original format; width and height are set automatically.
+// Logos keep PNG (they may have transparency); screenshots and the existing artwork are opaque, so JPG keeps them light.
+const opaque = [knotFallback, homeFallback, screenHome, screenHives];
+const fallbackOf = (img: ImageMetadata) => (img.format === 'png' && !opaque.includes(img) ? 'png' : 'jpg') as 'png' | 'jpg';
+const lazy = { loading: 'lazy' as const, decoding: 'async' as const };
+
+// Social sharing image: the Belonging Knot, 1200 x 630.
+const og = knotSupplied
+  ? await getImage({ src: knotSupplied, format: 'jpg', width: 1200, height: 630, fit: 'contain', background: '#2F2F2F' } as any)
+  : await getImage({ src: ogFallback, format: 'jpg', width: 1200, height: 630, fit: 'cover' });
+
+const abs = (p: string) => new URL(p, site.url).href;
+const pricing = 'https://hive.elevatedexperience.vip/pricing';
+
+const schema = [
+  {
+    '@type': 'SoftwareApplication', '@id': abs(links.hxPage) + '#software', name: 'HX | Hive eXperience',
+    applicationCategory: 'SocialNetworkingApplication', operatingSystem: 'Web browser', url: links.hx,
+    description: c.meta.description, image: abs(og.src),
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'GBP' },
+    publisher: { '@id': site.url + '/#organization' },
+  },
+  {
+    '@type': 'FAQPage', '@id': abs(links.hxPage) + '#faq',
+    mainEntity: c.faq.items.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+const ext = { target: '_blank', rel: 'noopener noreferrer' };
+---
+<Base
+  title={c.meta.title}
+  exactTitle
+  description={c.meta.description}
+  breadcrumb="HX | Hive eXperience"
+  parent={{ name: 'Resources', href: links.resources }}
+  shareTitle={c.hero.heading}
+  shareImage={{ src: abs(og.src), alt: c.hero.alt }}
+  schema={schema}
+>
+  <div class="hxl">
+    <!-- 1 | HERO -->
+    <section class="hero dark">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="label">{c.hero.label}</p>
+          <h1 class="hero-title">{c.hero.heading}</h1>
+          <p class="hero-text">{c.hero.text}</p>
+          <p class="hero-italic">{c.hero.italic}</p>
+          <div class="actions">
+            <a class="btn-hx" href={links.hx} rel="noopener">{c.hero.primary}</a>
+            <a class="btn-hx btn-hx-ghost" href="#whats-inside">{c.hero.secondary}</a>
+          </div>
+        </div>
+        {heroKnot ? (
+          <div class="hero-art hero-art-logo">
+            <Picture src={heroKnot} alt={c.hero.altLogo} widths={[heroKnot.width]} sizes={`${heroKnot.width}px`} formats={['webp']} fallbackFormat="png" loading="eager" fetchpriority="high" decoding="async" />
+          </div>
+        ) : (
+          <div class:list={['hero-art', !knotSupplied && 'knot-blend']}>
+            <Picture src={knot} alt={c.hero.alt} widths={[480, 720, 1080]} sizes="(min-width: 64rem) 34rem, (min-width: 30rem) 26rem, 88vw" formats={['webp']} fallbackFormat={fallbackOf(knot)} loading="eager" fetchpriority="high" decoding="async" />
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- 2 | WHY HX -->
+    <section class="sec ivory">
+      <div class:list={['wrap', diagram ? 'why-grid' : 'why-solo']}>
+        <div class="prose reveal">
+          <h2 class="h2">{c.why.heading}</h2>
+          {c.why.body.map((p) => <p>{p}</p>)}
+          <p class="why-bold"><strong>{c.why.bold}</strong></p>
+          <p class="why-closing"><em>{c.why.closing}</em></p>
+        </div>
+        {diagram && (
+          <figure class="why-art reveal" style="--d:90ms">
+            <Picture src={diagram} alt={c.why.alt} widths={[480, 800, 1200]} sizes="(min-width: 64rem) 38vw, 92vw" formats={['webp']} fallbackFormat={fallbackOf(diagram)} {...lazy} />
+          </figure>
+        )}
+      </div>
+    </section>
+
+    <!-- 3 | WHAT'S IN YOUR HIVE -->
+    <section class="sec ivory sec-rule" id="whats-inside">
+      <div class="wrap">
+        <div class="head reveal">
+          <h2 class="h2">{c.apps.heading}</h2>
+          <p class="lead">{c.apps.intro}</p>
+        </div>
+        <ul class="apps">
+          {c.apps.cards.map((a, i) => (
+            <li class="app reveal" style={`--d:${(i % 4) * 60}ms`}>
+              {icons[i] ? (
+                <Picture src={icons[i]!} alt={`${a.name} app icon`} widths={[80, 160, 240]} sizes="80px" formats={['webp']} fallbackFormat={fallbackOf(icons[i]!)} class="app-icon" {...lazy} />
+              ) : (
+                <svg class="app-icon app-hex" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 20.66 7 20.66 17 12 22 3.34 17 3.34 7" /></svg>
+              )}
+              <h3 class="app-name">{a.name}</h3>
+              <p>{a.text}</p>
+            </li>
+          ))}
+        </ul>
+        <figure class="screens reveal">
+          <div class:list={['screens-row', screenHives && 'screens-two']}>
+            <Picture src={screenHome} alt={c.apps.homeAlt} widths={[640, 960, 1280, 1600]} sizes={screenHives ? '(min-width: 64rem) 46vw, 92vw' : '(min-width: 64rem) 60rem, 92vw'} formats={['webp']} fallbackFormat={fallbackOf(screenHome)} {...lazy} />
+            {screenHives && <Picture src={screenHives} alt={c.apps.hivesAlt} widths={[640, 960, 1280, 1600]} sizes="(min-width: 64rem) 46vw, 92vw" formats={['webp']} fallbackFormat={fallbackOf(screenHives)} {...lazy} />}
+          </div>
+          <figcaption>{c.apps.caption}</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 4 | WHAT HIVERS SAY -->
+    <section class="sec ivory sec-rule">
+      <div class="wrap">
+        <h2 class="h2 reveal">{c.testimonials.heading}</h2>
+        <div class="quotes">
+          {c.testimonials.items.map((t, i) => (
+            <figure class="quote reveal" style={`--d:${i * 90}ms`}>
+              <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+              <blockquote><p>{t.quote}</p></blockquote>
+              <figcaption><strong>{t.name}</strong><span>{t.title}</span></figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 | THE HX PROMISE -->
+    <section class="sec dark">
+      <div class="wrap">
+        <h2 class="h2 reveal">{c.promise.heading}</h2>
+        <ul class="promise">
+          {c.promise.points.map((p, i) => (
+            <li class="reveal" style={`--d:${i * 90}ms`}>
+              <h3 class="promise-h">{p.heading}</h3>
+              <p>{p.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- 6 | WHO IT'S FOR -->
+    <section class="sec ivory">
+      <div class="wrap who reveal">
+        <h2 class="h2">{c.who.heading}</h2>
+        <ul class="pills">
+          {c.who.pills.map((p) => <li>{p}</li>)}
+        </ul>
+        <p class="lead">{c.who.text}</p>
+      </div>
+    </section>
+
+    <!-- 7 | FREE TO JOIN -->
+    <section class="sec dark">
+      <div class="wrap free-grid">
+        <div class="reveal">
+          <h2 class="h2">{c.free.heading}</h2>
+          <p class="lead">{c.free.text} <a class="link-sand" href={pricing} rel="noopener">{c.free.pricing}</a></p>
+          <p class="mt-btn"><a class="btn-hx" href={links.hx} rel="noopener">{c.free.cta}</a></p>
+          <p class="domain">{c.free.domain}</p>
+          <p class="purpose">{c.free.closing}</p>
+        </div>
+        <div class:list={['free-art reveal', !knotSupplied && 'knot-blend']} style="--d:90ms">
+          <Picture src={knot} alt={c.free.alt} widths={[320, 480, 720]} sizes="(min-width: 64rem) 18rem, 14rem" formats={['webp']} fallbackFormat={fallbackOf(knot)} {...lazy} />
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 | HOW TO GET STARTED -->
+    <section class="sec ivory">
+      <div class="wrap">
+        <h2 class="h2 reveal">{c.start.heading}</h2>
+        <ol class="steps">
+          {c.start.steps.map((s, i) => (
+            <li class="step reveal" style={`--d:${i * 90}ms`}>
+              <span class="step-n" aria-hidden="true">{i + 1}</span>
+              <p><strong>{s.lead}</strong> {s.text}</p>
+            </li>
+          ))}
+        </ol>
+        <p class="mt-btn reveal"><a class="btn-hx" href={links.hx} rel="noopener">{c.start.cta}</a></p>
+      </div>
+    </section>
+
+    <!-- 9 | WHAT THE KNOT MEANS -->
+    <section class="sec ivory sec-rule">
+      <div class="wrap meaning">
+        <div class="meaning-art reveal">
+          <Picture src={knotIvory} alt={c.meaning.alt} widths={[480, 800, 1200]} sizes="(min-width: 64rem) 36vw, 92vw" formats={['webp']} fallbackFormat="jpg" {...lazy} />
+        </div>
+        <div class="reveal" style="--d:90ms">
+          <p class="label label-ivory">{c.meaning.label}</p>
+          <h2 class="h2 h2-sm">{c.meaning.heading}</h2>
+          <dl class="points">
+            {c.meaning.points.map((p) => <div class="point"><dt>{p.term}</dt><dd>{p.text}</dd></div>)}
+          </dl>
+          <p class="meaning-closing">{c.meaning.closing}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 | FAQ -->
+    <section class="sec ivory sec-rule" id="faq">
+      <div class="wrap faq-wrap">
+        <h2 class="h2 reveal">{c.faq.heading}</h2>
+        <div class="faq" data-faq>
+          {c.faq.items.map((f, i) => (
+            <div class="faq-item">
+              <h3 class="faq-q">
+                <button type="button" id={`faq-btn-${i}`} aria-expanded="true" aria-controls={`faq-panel-${i}`} data-faq-btn>
+                  <span>{f.q}</span>
+                  <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq-a" id={`faq-panel-${i}`} role="region" aria-labelledby={`faq-btn-${i}`}>
+                <p>{f.a}</p>
+                {'links' in f && f.links && (
+                  <ul class="faq-links">
+                    {f.links.map((l) => l.external
+                      ? <li><a href={l.href} {...ext}>{l.label}<span class="sr-only"> (opens in a new tab)</span></a></li>
+                      : <li><a href={l.href}>{l.label}</a></li>)}
+                  </ul>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .hxl {
+    /* HX Belonging Knot palette */
+    --hx-graphite: #2f2f2f;
+    --hx-ivory: #f8f4ec;
+    --hx-copper: #b96e50;
+    --hx-bronze: #9a4e25;
+    --hx-copper-light: #d3854f;
+    --hx-sand: #eeb37c;
+    --hx-peach: #f6cb9d;
+    --hx-taupe: #9e9388;
+    --hx-umber: #4e3f36;
+    --hx-line: rgb(158 147 136 / .35);
+    --hx-radius: 6px;
+    font-family: var(--font-sans);
+    color: var(--hx-graphite);
+    background: var(--hx-ivory);
+    overflow-x: clip;
+  }
+  /* Visible focus: Sand on graphite, Deep Bronze on ivory */
+  .hxl :focus-visible { outline: 3px solid var(--hx-sand); outline-offset: 3px; border-radius: 2px; }
+  .ivory :focus-visible { outline-color: var(--hx-bronze); }
+
+  /* Surfaces */
+  .dark { background: var(--hx-graphite); color: var(--hx-ivory); }
+  .ivory { background: var(--hx-ivory); color: var(--hx-graphite); }
+  .sec { position: relative; padding-block: clamp(4.5rem, 9vw, 8rem); }
+  .sec-rule::before { content: ""; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); height: 1px; background: var(--hx-line); }
+  .ivory + .sec-rule { padding-top: clamp(4rem, 8vw, 7rem); }
+
+  /* Type */
+  .hxl h1, .hxl h2, .hxl h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.015em; line-height: 1.1; }
+  .label { font-size: .8rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--hx-copper-light); }
+  .h2 { font-size: clamp(1.9rem, 3.8vw, 3rem); text-wrap: balance; max-width: 26ch; }
+  .lead { margin-top: 1.25rem; font-size: clamp(1.075rem, 1.4vw, 1.2rem); line-height: 1.65; max-width: 62ch; }
+  .head { max-width: 50rem; }
+  .prose > p { margin-top: 1.15rem; font-size: 1.075rem; line-height: 1.7; max-width: 62ch; }
+  .prose > .h2 + p { margin-top: 1.75rem; }
+
+  /* Buttons: flat Copper with ivory text, Deep Bronze on hover. Text is 19px bold so it meets AA contrast as large text. */
+  .actions { display: flex; flex-wrap: wrap; gap: .9rem; margin-top: 2.25rem; }
+  .btn-hx { display: inline-flex; align-items: center; justify-content: center; min-height: 3.25rem; padding: .75rem 1.6rem; border: 2px solid var(--hx-copper); border-radius: var(--hx-radius); background: var(--hx-copper); color: var(--hx-ivory); font-size: 1.1875rem; font-weight: 700; letter-spacing: .04em; line-height: 1.25; text-align: center; text-decoration: none; transition: background-color .25s, border-color .25s, color .25s; }
+  .btn-hx:hover { background: var(--hx-bronze); border-color: var(--hx-bronze); color: var(--hx-ivory); }
+  .btn-hx-ghost { background: transparent; border-color: rgb(248 244 236 / .7); letter-spacing: 0; }
+  .btn-hx-ghost:hover { background: rgb(248 244 236 / .1); border-color: var(--hx-ivory); }
+  .mt-btn { margin-top: 2.25rem; }
+
+  /* 1 | Hero: knot below the copy on phones, on the right from desktop */
+  .hero-grid { display: grid; gap: 2.5rem; padding-top: calc(var(--header-h) + clamp(2.5rem, 7vh, 4.5rem)); padding-bottom: clamp(3.5rem, 7vw, 6rem); }
+  .hero-title { margin-top: 1.25rem; font-size: clamp(2.4rem, 5.6vw, 4.5rem); line-height: 1.08; max-width: 16ch; text-wrap: balance; }
+  .hero-text { margin-top: 1.5rem; font-size: clamp(1.125rem, 1.6vw, 1.3rem); line-height: 1.6; max-width: 34rem; }
+  .hero-italic { margin-top: 1.1rem; font-family: var(--font-sans); font-style: italic; font-size: clamp(1.1rem, 1.5vw, 1.25rem); line-height: 1.55; color: var(--hx-sand); max-width: 34rem; }
+  .hero-art { width: min(100%, 26rem); justify-self: center; }
+  .hero-art.hero-art-logo { width: min(100%, 25rem); }
+  .hero-art :global(img), .free-art :global(img) { display: block; width: 100%; height: auto; }
+  /* The fallback knot artwork is on its own dark square, so its edges are softened into the section */
+  .knot-blend :global(img) { -webkit-mask-image: radial-gradient(circle, #000 58%, transparent 71%); mask-image: radial-gradient(circle, #000 58%, transparent 71%); }
+  @media (min-width: 64rem) {
+    .hero-grid { grid-template-columns: 1.1fr .9fr; align-items: center; gap: clamp(2rem, 5vw, 5rem); min-height: min(100svh, 52rem); }
+    .hero-art { width: 100%; max-width: 34rem; justify-self: end; }
+    .hero-art-logo { max-width: 25rem; justify-self: center; }
+  }
+
+  /* 2 | Why HX */
+  .why-solo .prose { max-width: 50rem; }
+  .why-grid { display: grid; gap: clamp(2.5rem, 6vw, 5rem); align-items: center; }
+  @media (min-width: 64rem) { .why-grid { grid-template-columns: 1.15fr .85fr; } }
+  .why-art :global(img) { display: block; width: 100%; height: auto; }
+  .prose > .why-bold { margin-top: 1.75rem; font-size: 1.2rem; }
+  .why-bold strong { font-weight: 700; }
+  .prose > .why-closing { margin-top: 1rem; font-family: var(--font-sans); font-size: clamp(1.15rem, 1.6vw, 1.35rem); line-height: 1.5; color: var(--hx-bronze); }
+
+  /* 3 | App cards: 1 column on phones, 2 on tablets, 3 on desktop, 4 on wide screens. A short last row is centred. */
+  .apps { --gap: 1.25rem; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap); margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+  .app { flex: 0 0 100%; display: grid; align-content: start; gap: .6rem; padding: 1.75rem; border: 1px solid var(--hx-line); border-radius: var(--hx-radius); background: var(--hx-ivory); }
+  @media (min-width: 40rem) { .app { flex-basis: calc((100% - var(--gap)) / 2); } }
+  @media (min-width: 64rem) { .app { flex-basis: calc((100% - 2 * var(--gap)) / 3); } }
+  @media (min-width: 90rem) { .app { flex-basis: calc((100% - 3 * var(--gap)) / 4); } }
+  .app :global(.app-icon) { display: block; width: 5rem; height: 5rem; object-fit: contain; margin-bottom: .5rem; }
+  .app-hex { fill: none; stroke: var(--hx-copper); stroke-width: 1.25; stroke-linejoin: round; padding: .5rem; }
+  .hxl .app-name { font-size: 1.35rem; color: var(--hx-bronze); overflow-wrap: anywhere; }
+  .app p { line-height: 1.6; }
+
+  .screens { margin-top: clamp(3rem, 6vw, 4.5rem); }
+  .screens-row { display: grid; gap: 1.25rem; max-width: 60rem; margin-inline: auto; }
+  .screens-two { max-width: none; }
+  @media (min-width: 64rem) { .screens-two { grid-template-columns: 1fr 1fr; } }
+  .screens-row :global(img) { display: block; width: 100%; height: auto; border-radius: var(--hx-radius); border: 1px solid var(--hx-line); }
+  .screens figcaption { margin-top: 1rem; text-align: center; font-size: .9rem; color: var(--hx-umber); }
+
+  /* 4 | Testimonials */
+  .quotes { display: grid; gap: 1.25rem; margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+  @media (min-width: 64rem) { .quotes { grid-template-columns: repeat(3, 1fr); } }
+  .quote { display: flex; flex-direction: column; gap: 1rem; padding: clamp(1.75rem, 3vw, 2.25rem); border-radius: var(--hx-radius); background: #fff; box-shadow: 0 1px 2px rgb(78 63 54 / .08), 0 12px 32px -18px rgb(78 63 54 / .25); }
+  .quote-mark { font-family: var(--font-display); font-size: 4.5rem; line-height: .6; height: 2.25rem; color: var(--hx-copper); }
+  .quote blockquote { flex: 1; font-size: 1.05rem; line-height: 1.7; }
+  .quote figcaption { display: grid; gap: .2rem; padding-top: 1rem; border-top: 1px solid var(--hx-line); }
+  .quote figcaption strong { font-weight: 700; }
+  .quote figcaption span { font-size: .95rem; color: var(--hx-umber); }
+
+  /* 5 | Promise */
+  .promise { display: grid; gap: 2rem; margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+  @media (min-width: 56rem) { .promise { grid-template-columns: repeat(3, 1fr); gap: clamp(2rem, 4vw, 3.5rem); } }
+  .promise li { padding-top: 1.5rem; border-top: 1px solid rgb(238 179 124 / .4); }
+  .hxl .promise-h { font-size: clamp(1.4rem, 2.2vw, 1.75rem); color: var(--hx-sand); }
+  .promise p { margin-top: .75rem; font-size: 1.075rem; line-height: 1.65; color: var(--hx-ivory); }
+
+  /* 6 | Who it's for */
+  .who { max-width: 56rem; }
+  .pills { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 2rem; }
+  .pills li { padding: .55rem 1.15rem; border: 1px solid var(--hx-copper); border-radius: 999px; background: #fff; font-weight: 600; font-size: .98rem; color: var(--hx-graphite); }
+  .who .lead { margin-top: 2rem; }
+
+  /* 7 | Free to join */
+  .free-grid { display: grid; gap: 3rem; align-items: center; }
+  @media (min-width: 64rem) { .free-grid { grid-template-columns: 1fr auto; } }
+  .link-sand { color: var(--hx-sand); font-weight: 600; text-decoration: underline; text-underline-offset: .2em; white-space: nowrap; }
+  .link-sand:hover { color: var(--hx-peach); }
+  .domain { margin-top: 1rem; font-size: .95rem; color: var(--hx-ivory); opacity: .85; }
+  .purpose { margin-top: 2.25rem; font-family: var(--font-display); font-size: clamp(1.3rem, 2vw, 1.6rem); color: var(--hx-sand); }
+  .free-art { width: 14rem; justify-self: center; }
+  @media (min-width: 64rem) { .free-art { width: 18rem; } }
+
+  /* 8 | Steps */
+  .steps { display: grid; gap: 1.25rem; margin-top: clamp(2rem, 4vw, 3rem); }
+  @media (min-width: 56rem) { .steps { grid-template-columns: repeat(3, 1fr); gap: 2rem; } }
+  .step { display: grid; gap: 1rem; align-content: start; padding-top: 1.5rem; border-top: 1px solid var(--hx-line); font-size: 1.075rem; line-height: 1.65; }
+  .step-n { font-family: var(--font-display); font-size: 3rem; line-height: 1; color: var(--hx-copper); }
+  .step strong { font-weight: 700; }
+
+  /* 9 | What the knot means */
+  .label-ivory { color: var(--hx-bronze); }
+  .h2-sm { margin-top: 1rem; font-size: clamp(1.6rem, 2.8vw, 2.3rem); }
+  .meaning { display: grid; gap: clamp(2.5rem, 5vw, 5rem); align-items: center; }
+  .meaning-art { max-width: 30rem; width: 100%; margin-inline: auto; }
+  .meaning-art :global(img) { display: block; width: 100%; height: auto; border-radius: var(--hx-radius); }
+  @media (min-width: 64rem) { .meaning { grid-template-columns: .9fr 1.1fr; } }
+  .points { margin-top: 2rem; border-top: 1px solid var(--hx-line); }
+  .point { padding-block: 1rem; border-bottom: 1px solid var(--hx-line); }
+  .point dt { font-weight: 700; }
+  .point dd { margin-top: .2rem; line-height: 1.6; }
+  .meaning-closing { margin-top: 1.75rem; font-family: var(--font-sans); font-size: clamp(1.15rem, 1.6vw, 1.35rem); line-height: 1.5; }
+
+  /* 10 | FAQ */
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .faq-wrap { max-width: 56rem; }
+  .faq { margin-top: clamp(2rem, 4vw, 3rem); border-top: 1px solid var(--hx-line); }
+  .faq-item { border-bottom: 1px solid var(--hx-line); }
+  .hxl .faq-q { font-family: var(--font-sans); font-size: 1.125rem; font-weight: 600; line-height: 1.4; }
+  .faq-q button { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 1.25rem 0; text-align: left; cursor: pointer; color: inherit; font: inherit; }
+  .faq-q button:hover { color: var(--hx-bronze); }
+  .faq-icon { position: relative; flex: none; width: 1.1rem; height: 1.1rem; }
+  .faq-icon::before, .faq-icon::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: var(--hx-copper); transition: transform .3s var(--ease-flow); }
+  .faq-icon::after { transform: rotate(90deg); }
+  [aria-expanded="true"] .faq-icon::after { transform: rotate(0deg); }
+  .faq-a { padding: 0 2.5rem 1.5rem 0; max-width: 65ch; line-height: 1.65; }
+  .faq-links { display: flex; flex-wrap: wrap; gap: .5rem 1.75rem; margin-top: .9rem; }
+  .faq-links a { font-weight: 600; color: var(--hx-bronze); text-decoration: underline; text-underline-offset: .2em; }
+  .faq-links a:hover { color: var(--hx-graphite); }
+
+  /* Entrance: subtle fade and 8px rise, off when reduced motion is set */
+  :global(.js) .hxl .reveal { transform: translateY(8px); transition: opacity .7s var(--ease-flow), transform .7s var(--ease-flow); transition-delay: var(--d, 0ms); }
+  :global(.js) .hxl .reveal:global(.in) { transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .hxl .reveal { opacity: 1; transform: none; transition: none; }
+    .btn-hx, .faq-icon::before, .faq-icon::after { transition: none; }
+  }
+</style>
+
+<script>
+  // FAQ accordion. Answers are open without JavaScript; with it, they start closed.
+  const faq = document.querySelector<HTMLElement>('[data-faq]');
+  if (faq) {
+    const btns = [...faq.querySelectorAll<HTMLButtonElement>('[data-faq-btn]')];
+    const set = (b: HTMLButtonElement, open: boolean) => {
+      b.setAttribute('aria-expanded', String(open));
+      document.getElementById(b.getAttribute('aria-controls')!)!.hidden = !open;
+    };
+    btns.forEach((b) => {
+      set(b, false);
+      b.addEventListener('click', () => set(b, b.getAttribute('aria-expanded') !== 'true'));
+      b.addEventListener('keydown', (e) => {
+        const i = btns.indexOf(b);
+        const to = e.key === 'ArrowDown' ? btns[(i + 1) % btns.length] : e.key === 'ArrowUp' ? btns[(i - 1 + btns.length) % btns.length] : e.key === 'Home' ? btns[0] : e.key === 'End' ? btns[btns.length - 1] : null;
+        if (to) { e.preventDefault(); to.focus(); }
+      });
+    });
+  }
+</script>

@@ -11,7 +11,8 @@ import { masterclass } from '@/content/masterclass';
 import { coachsulting } from '@/content/coachsulting';
 import { resources } from '@/content/resources';
 import { contact } from '@/content/contact';
-import { hx } from '@/content/hx';
+import { hxLanding as hx } from '@/content/hx-hive-experience';
+import { hxEnterprise } from '@/content/hx-enterprise';
 import { type Post, postUrl, plainText, formatDate } from '@/lib/sanity';
 
 const abs = (p: string) => new URL(p, site.url).href;
@@ -26,6 +27,7 @@ export const pages = [
   { name: 'Coachsulting', path: links.coachsulting, content: coachsulting },
   { name: 'Resources', path: links.resources, content: resources },
   { name: 'HX | Hive eXperience', path: links.hxPage, content: hx },
+  { name: 'HX Enterprise', path: links.hxEnterprise, content: hxEnterprise },
   { name: 'Contact', path: links.contact, content: contact },
 ].map((p) => ({ ...p, url: abs(p.path), description: (p.content as any).meta.description as string }));
 

@@ -1,0 +1,221 @@
+---
+// HX Enterprise page: /hx-enterprise/
+// Sits under Resources in the menu, after HX | Hive eXperience. Same HX palette and fonts as /hx-hive-experience/.
+// Copy: src/content/hx-enterprise.ts (from the HX Enterprise one-pager).
+import { Picture, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '@/layouts/Base.astro';
+import { hxEnterprise as c } from '@/content/hx-enterprise';
+import { links, site } from '@/data/site';
+import knotFallback from '@/assets/hx/hx-hero-mobile.png';
+
+// Use the supplied Belonging Knot with HX logo when it is in src/assets/hx/landing/, as on the HX page.
+const supplied = import.meta.glob<ImageMetadata>('/src/assets/hx/landing/hx-belonging-knot.{png,jpg,jpeg,webp}', { eager: true, import: 'default' });
+const knotSupplied = Object.values(supplied)[0];
+const knot = knotSupplied ?? knotFallback;
+
+const abs = (p: string) => new URL(p, site.url).href;
+const og = await getImage({ src: knot, format: 'jpg', width: 1200, height: 630, fit: 'contain', background: '#2F2F2F' } as any);
+const mail = `mailto:${c.cta.email}?subject=HX%20Enterprise`;
+const ext = { target: '_blank', rel: 'noopener noreferrer' };
+
+const schema = [
+  {
+    '@type': 'Service', '@id': abs(links.hxEnterprise) + '#service', name: 'HX Enterprise', serviceType: 'White-label community platform',
+    description: c.meta.description, url: abs(links.hxEnterprise), provider: { '@id': site.url + '/#organization' }, areaServed: 'Worldwide',
+    offers: [
+      { '@type': 'Offer', name: 'Platform licence', price: '498', priceCurrency: 'GBP', description: c.pricing.platform.unit },
+      { '@type': 'Offer', name: 'Per seat', price: '0.98', priceCurrency: 'GBP', description: c.pricing.seat.unit },
+    ],
+  },
+];
+---
+<Base
+  title={c.meta.title}
+  description={c.meta.description}
+  breadcrumb="HX Enterprise"
+  parent={{ name: 'Resources', href: links.resources }}
+  shareImage={{ src: abs(og.src), alt: c.hero.alt }}
+  schema={schema}
+>
+  <div class="hxl">
+    <!-- HERO -->
+    <section class="hero dark">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="label">{c.hero.label}</p>
+          <h1 class="hero-title">{c.hero.heading}</h1>
+          <p class="purpose">{c.hero.purpose}</p>
+          <p class="tagline">{c.hero.tagline}</p>
+          <p class="hero-text">{c.hero.body}</p>
+          <div class="actions">
+            <a class="btn-hx" href={mail}>{c.hero.primary}</a>
+            <a class="btn-hx btn-hx-ghost" href={links.bookCall} {...ext}>{c.hero.secondary}<span class="sr-only"> (opens in a new tab)</span></a>
+          </div>
+        </div>
+        <div class:list={['hero-art', !knotSupplied && 'knot-blend']}>
+          <Picture src={knot} alt={c.hero.alt} widths={[400, 600, 800]} sizes="(min-width: 64rem) 26rem, (min-width: 30rem) 20rem, 72vw" formats={['webp']} fallbackFormat="png" loading="eager" fetchpriority="high" decoding="async" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 01 | WHAT YOUR PEOPLE GET -->
+    <section class="sec ivory">
+      <div class="wrap">
+        <h2 class="h2 reveal"><span class="num" aria-hidden="true">{c.modules.label}</span>{c.modules.heading}</h2>
+        <ul class="modules">
+          {c.modules.items.map((m, i) => (
+            <li class="module reveal" style={`--d:${(i % 4) * 60}ms`}>
+              <svg class="hex" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 20.66 7 20.66 17 12 22 3.34 17 3.34 7" /></svg>
+              <h3 class="module-name">{m.name}</h3>
+              <p>{m.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- 02 | WHAT'S INCLUDED + PRICING -->
+    <section class="sec ivory sec-rule">
+      <div class="wrap licence-grid">
+        <div class="reveal">
+          <h2 class="h2"><span class="num" aria-hidden="true">{c.licence.label}</span>{c.licence.heading}</h2>
+          <ul class="ticks">
+            {c.licence.items.map((l) => <li><strong>{l.lead}</strong> {l.text}</li>)}
+          </ul>
+        </div>
+        <aside class="ent-price reveal" style="--d:90ms" aria-labelledby="price-label">
+          <p class="price-label" id="price-label">{c.pricing.label}</p>
+          <p class="price-row"><span class="price-big">{c.pricing.platform.price}</span> <span class="price-unit">{c.pricing.platform.unit}</span></p>
+          <p class="price-row price-row-2"><span class="price-mid">{c.pricing.seat.price}</span> <span class="price-unit">{c.pricing.seat.unit}</span></p>
+          <p class="price-note">{c.pricing.note} <strong>{c.pricing.noteBold}</strong></p>
+        </aside>
+      </div>
+      <ul class="wrap assurances reveal">
+        {c.assurances.map((a) => <li>{a}</li>)}
+      </ul>
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section class="sec dark">
+      <div class="wrap cta reveal">
+        <h2 class="h2">{c.cta.heading}</h2>
+        <p class="cta-mail"><a class="link-sand" href={mail}>{c.cta.email}</a></p>
+        <div class="actions actions-center">
+          <a class="btn-hx" href={mail}>{c.cta.primary}</a>
+          <a class="btn-hx btn-hx-ghost" href={links.bookCall} {...ext}>{c.cta.secondary}<span class="sr-only"> (opens in a new tab)</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- BACK TO HX -->
+    <section class="back ivory">
+      <div class="wrap back-row">
+        <p class="back-label">{c.back.label}</p>
+        <a class="btn-hx btn-hx-outline" href={`${links.hxPage}#whats-inside`}>{c.back.cta}</a>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .hxl {
+    --hx-graphite: #2f2f2f;
+    --hx-ivory: #f8f4ec;
+    --hx-copper: #b96e50;
+    --hx-bronze: #9a4e25;
+    --hx-copper-light: #d3854f;
+    --hx-sand: #eeb37c;
+    --hx-peach: #f6cb9d;
+    --hx-umber: #4e3f36;
+    --hx-line: rgb(158 147 136 / .35);
+    --hx-radius: 6px;
+    font-family: var(--font-sans);
+    background: var(--hx-ivory);
+    color: var(--hx-graphite);
+    overflow-x: clip;
+  }
+  .hxl :focus-visible { outline: 3px solid var(--hx-sand); outline-offset: 3px; border-radius: 2px; }
+  .ivory :focus-visible { outline-color: var(--hx-bronze); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .dark { background: var(--hx-graphite); color: var(--hx-ivory); }
+  .ivory { background: var(--hx-ivory); color: var(--hx-graphite); }
+  .sec { position: relative; padding-block: clamp(4.5rem, 9vw, 7rem); }
+  .sec-rule::before { content: ""; position: absolute; top: 0; left: var(--gutter); right: var(--gutter); height: 1px; background: var(--hx-line); }
+
+  .hxl h1, .hxl h2, .hxl h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.015em; line-height: 1.1; }
+  .label { font-size: .8rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--hx-copper-light); }
+  .h2 { font-size: clamp(1.9rem, 3.8vw, 3rem); text-wrap: balance; }
+  .num { display: inline-block; margin-right: .6rem; font-size: .55em; vertical-align: .35em; color: var(--hx-bronze); }
+
+  /* Hero */
+  .hero-grid { display: grid; gap: 2.5rem; padding-top: calc(var(--header-h) + clamp(2.5rem, 7vh, 4.5rem)); padding-bottom: clamp(3.5rem, 7vw, 6rem); }
+  .hero-title { margin-top: 1.25rem; font-size: clamp(2.6rem, 6vw, 4.75rem); }
+  .purpose { margin-top: 1rem; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.2rem, 1.8vw, 1.5rem); color: var(--hx-sand); }
+  .tagline { margin-top: .4rem; font-style: italic; font-size: 1.05rem; color: var(--hx-ivory); opacity: .9; }
+  .hero-text { margin-top: 1.5rem; font-size: clamp(1.1rem, 1.5vw, 1.2rem); line-height: 1.65; max-width: 40rem; }
+  .hero-art { width: min(72%, 20rem); justify-self: center; }
+  .hero-art :global(img) { display: block; width: 100%; height: auto; }
+  .knot-blend :global(img) { -webkit-mask-image: radial-gradient(circle, #000 58%, transparent 71%); mask-image: radial-gradient(circle, #000 58%, transparent 71%); }
+  @media (min-width: 64rem) {
+    .hero-grid { grid-template-columns: 1.25fr .75fr; align-items: center; gap: clamp(2rem, 5vw, 5rem); min-height: min(90svh, 46rem); }
+    .hero-art { width: 100%; max-width: 26rem; justify-self: end; }
+  }
+
+  /* Buttons: flat Copper with ivory text, Deep Bronze on hover. 19px bold for AA contrast as large text. */
+  .actions { display: flex; flex-wrap: wrap; gap: .9rem; margin-top: 2.25rem; }
+  .actions-center { justify-content: center; }
+  .btn-hx { display: inline-flex; align-items: center; justify-content: center; min-height: 3.25rem; padding: .75rem 1.6rem; border: 2px solid var(--hx-copper); border-radius: var(--hx-radius); background: var(--hx-copper); color: var(--hx-ivory); font-size: 1.1875rem; font-weight: 700; line-height: 1.25; text-align: center; text-decoration: none; transition: background-color .25s, border-color .25s, color .25s; }
+  .btn-hx:hover { background: var(--hx-bronze); border-color: var(--hx-bronze); }
+  .btn-hx-ghost { background: transparent; border-color: rgb(248 244 236 / .7); }
+  .btn-hx-ghost:hover { background: rgb(248 244 236 / .1); border-color: var(--hx-ivory); }
+  .btn-hx-outline { background: transparent; border-color: var(--hx-graphite); color: var(--hx-graphite); }
+  .btn-hx-outline:hover { background: var(--hx-graphite); border-color: var(--hx-graphite); color: var(--hx-ivory); }
+
+  /* 01 | Modules: 1 column on phones, 2 on tablets, 4 on desktop */
+  .modules { display: grid; gap: 1.25rem; margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+  @media (min-width: 40rem) { .modules { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 64rem) { .modules { grid-template-columns: repeat(4, 1fr); } }
+  .module { display: grid; align-content: start; gap: .6rem; padding: 1.6rem; border: 1px solid var(--hx-line); border-radius: var(--hx-radius); background: #fff; }
+  .hex { width: 2.25rem; height: 2.25rem; fill: none; stroke: var(--hx-copper); stroke-width: 1.5; stroke-linejoin: round; }
+  .hxl .module-name { font-size: 1.3rem; color: var(--hx-bronze); overflow-wrap: anywhere; }
+  .module p { line-height: 1.6; }
+
+  /* 02 | Licence and pricing */
+  .licence-grid { display: grid; gap: clamp(2.5rem, 5vw, 4rem); align-items: start; }
+  @media (min-width: 64rem) { .licence-grid { grid-template-columns: 1.2fr .8fr; } }
+  .ticks { display: grid; gap: 1rem; margin-top: 2rem; }
+  .ticks li { position: relative; padding-left: 2rem; font-size: 1.075rem; line-height: 1.6; }
+  .ticks li::before { content: ""; position: absolute; left: .1rem; top: .35rem; width: .9rem; height: .5rem; border-left: 2px solid var(--hx-copper); border-bottom: 2px solid var(--hx-copper); transform: rotate(-45deg); }
+  .ticks strong { font-weight: 700; }
+  .ent-price { padding: clamp(1.75rem, 3vw, 2.5rem); border-radius: var(--hx-radius); background: var(--hx-umber); color: var(--hx-ivory); }
+  .price-label { font-weight: 700; font-size: .85rem; letter-spacing: .14em; text-transform: uppercase; color: var(--hx-sand); }
+  .price-row { margin-top: 1.25rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .75rem; }
+  .price-row-2 { padding-top: 1.25rem; border-top: 1px solid rgb(248 244 236 / .2); }
+  .price-big { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.6rem, 5vw, 3.4rem); line-height: 1; }
+  .price-mid { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 3.5vw, 2.4rem); line-height: 1; color: var(--hx-peach); }
+  .price-unit { font-size: .98rem; }
+  .price-note { margin-top: 1.5rem; font-size: .98rem; line-height: 1.6; }
+  .price-note strong { font-weight: 700; }
+  .assurances { display: flex; flex-wrap: wrap; gap: .75rem 2rem; margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+  .assurances li { display: flex; align-items: center; gap: .6rem; font-weight: 700; font-size: .85rem; letter-spacing: .12em; text-transform: uppercase; color: var(--hx-umber); }
+  .assurances li::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: var(--hx-copper); }
+
+  /* Call to action */
+  .cta { display: grid; justify-items: center; text-align: center; }
+  .cta-mail { margin-top: 1rem; font-size: 1.1rem; overflow-wrap: anywhere; }
+  .link-sand { color: var(--hx-sand); font-weight: 600; text-decoration: underline; text-underline-offset: .2em; }
+  .link-sand:hover { color: var(--hx-peach); }
+
+  /* Back to HX */
+  .back { padding-block: clamp(3rem, 6vw, 4.5rem); }
+  .back-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; }
+  .back-label { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.4rem, 2.4vw, 1.9rem); }
+
+  :global(.js) .hxl .reveal { transform: translateY(8px); transition: opacity .7s var(--ease-flow), transform .7s var(--ease-flow); transition-delay: var(--d, 0ms); }
+  :global(.js) .hxl .reveal:global(.in) { transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .hxl .reveal { opacity: 1; transform: none; transition: none; }
+    .btn-hx { transition: none; }
+  }
+</style>

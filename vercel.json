@@ -4,6 +4,7 @@
   "trailingSlash": true,
   "redirects": [
     { "source": "/hx/", "destination": "https://hive.elevatedexperience.vip/", "permanent": true },
+    { "source": "/resources/hive-experience/", "destination": "/hx-hive-experience/", "statusCode": 301 },
     { "source": "/corporate-event-from-burnout-to-brilliance/", "destination": "/experiences/", "permanent": true },
     { "source": "/partners/", "destination": "/coachsulting/", "permanent": true },
     { "source": "/2026/11/09/hx-free-whats-the-catch-there-isnt-one/", "destination": "/resources/hx-free-whats-the-catch-there-isnt-one/", "permanent": true },

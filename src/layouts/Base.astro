@@ -26,13 +26,18 @@ interface Props {
   shareImage?: { src: string; alt: string };
   /** Extra structured data nodes for this page, added to the site graph. */
   schema?: Record<string, unknown>[];
+  /** Use the title exactly as given, without adding " | Elevated eXperience". */
+  exactTitle?: boolean;
+  /** Headline for social sharing cards, in place of the page title. */
+  shareTitle?: string;
 }
-const { title, description, breadcrumb, service, contactPage, aboutPage, noindex, article, parent, shareImage: pageShare, schema } = Astro.props;
+const { title, description, breadcrumb, service, contactPage, aboutPage, noindex, article, parent, shareImage: pageShare, schema, exactTitle, shareTitle } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).href;
 const og = await getImage({ src: ogImage, width: 1200, height: 630, format: 'jpg' });
 const logo = await getImage({ src: logoImage, width: 512, format: 'png' });
 const abs = (p: string) => new URL(p, site.url).href;
-const fullTitle = title.includes('Elevated eXperience') ? title : title + ' | Elevated eXperience';
+const fullTitle = exactTitle || title.includes('Elevated eXperience') ? title : title + ' | Elevated eXperience';
+const socialTitle = shareTitle ?? fullTitle;
 
 // Structured data: one connected graph so search engines and AI assistants can tell who we are,
 // what each page is and what we offer. Every fact here already appears in the approved page copy.
@@ -122,7 +127,7 @@ const robots = noindex ? 'noindex, follow' : 'index, follow, max-image-preview:l
     {article && <meta property="article:modified_time" content={article.dateModified} />}
     <meta property="og:locale" content="en_GB" />
     <meta property="og:site_name" content={site.name} />
-    <meta property="og:title" content={fullTitle} />
+    <meta property="og:title" content={socialTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={shareImage} />
@@ -130,7 +135,7 @@ const robots = noindex ? 'noindex, follow' : 'index, follow, max-image-preview:l
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={shareAlt} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:title" content={socialTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={shareImage} />
     <script is:inline>document.documentElement.classList.add('js');</script>

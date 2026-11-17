@@ -23,7 +23,8 @@ export const links = {
   masterclass: '/executive-masterclass/',
   coachsulting: '/coachsulting/',
   resources: '/resources/',
-  hxPage: '/resources/hive-experience/',
+  hxPage: '/hx-hive-experience/',
+  hxEnterprise: '/hx-enterprise/',
   contact: '/contact/',
   privacy: '/privacy-policy/',
   // External, verified destinations supplied in the brief
@@ -47,7 +48,7 @@ export const nav: NavItem[] = [
   { label: 'Masterclasses', href: links.masterclass },
   { label: 'Coachsulting', href: links.coachsulting },
   { label: 'eXperiences', href: links.experiences },
-  { label: 'Resources', href: links.resources, children: [{ label: 'HX | Hive eXperience', href: links.hxPage }] },
+  { label: 'Resources', href: links.resources, children: [{ label: 'HX | Hive eXperience', href: links.hxPage }, { label: 'HX Enterprise', href: links.hxEnterprise }] },
   { label: 'Contact', href: links.contact },
 ];
 /** Every page in menu order, sub-pages included (footer). */
