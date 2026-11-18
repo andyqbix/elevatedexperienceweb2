@@ -1,18 +1,35 @@
 ---
 // HX Enterprise page: /hx-enterprise/
-// Sits under Resources in the menu, after HX | Hive eXperience. Same HX palette and fonts as /hx-hive-experience/.
-// Copy: src/content/hx-enterprise.ts (from the HX Enterprise one-pager).
+// Sits under Resources in the menu, after HX | Hive eXperience. Same HX palette, fonts, app icons and screens
+// as /hx-hive-experience/, so the two pages look and read as one family.
+// Copy: src/content/hx-enterprise.ts (app cards and testimonials are shared with the HX page).
 import { Picture, getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Base from '@/layouts/Base.astro';
 import { hxEnterprise as c } from '@/content/hx-enterprise';
 import { links, site } from '@/data/site';
 import knotFallback from '@/assets/hx/hx-hero-mobile.png';
+import homeFallback from '@/assets/hx/hx-feature-home.png';
 
-// Use the supplied Belonging Knot with HX logo when it is in src/assets/hx/landing/, as on the HX page.
-const supplied = import.meta.glob<ImageMetadata>('/src/assets/hx/landing/hx-belonging-knot.{png,jpg,jpeg,webp}', { eager: true, import: 'default' });
-const knotSupplied = Object.values(supplied)[0];
+// Find a supplied image in src/assets/hx/landing/ by file name (any extension, ignoring case and accents), as on the HX page.
+const supplied = import.meta.glob<ImageMetadata>('/src/assets/hx/landing/**/*.{png,jpg,jpeg,webp,avif}', { eager: true, import: 'default' });
+const norm = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const asset = (name: string): ImageMetadata | undefined => {
+  const key = Object.keys(supplied).find((k) => norm(k.split('/').pop()!.replace(/\.[^.]+$/, '')) === norm(name));
+  return key ? supplied[key] : undefined;
+};
+
+const knotSupplied = asset('hx-belonging-knot');
 const knot = knotSupplied ?? knotFallback;
+// The knot with the full "HX HIVE eXperience" logo, as in the HX page hero, never shown larger than its real size.
+const heroKnot = asset('hx-hero-knot');
+const screenHome = asset('hx-screen-home') ?? homeFallback;
+const phones = c.modules.inAction.map((p) => ({ ...p, src: asset(p.img) })).filter((p) => p.src) as (typeof c.modules.inAction[number] & { src: ImageMetadata })[];
+const cards = c.modules.items.map((a) => ({ ...a, img: asset(a.icon), nameBreakable: a.name.replace(/([a-zé])([A-Z])/g, '$1<wbr>$2') }));
+
+const opaque = [knotFallback, homeFallback, screenHome];
+const fallbackOf = (img: ImageMetadata) => (img.format === 'png' && !opaque.includes(img) ? 'png' : 'jpg') as 'png' | 'jpg';
+const lazy = { loading: 'lazy' as const, decoding: 'async' as const };
 
 const abs = (p: string) => new URL(p, site.url).href;
 const og = await getImage({ src: knot, format: 'jpg', width: 1200, height: 630, fit: 'contain', background: '#2F2F2F' } as any);
@@ -21,12 +38,16 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
 
 const schema = [
   {
-    '@type': 'Service', '@id': abs(links.hxEnterprise) + '#service', name: 'HX Enterprise', serviceType: 'White-label community platform',
+    '@type': 'Service', '@id': abs(links.hxEnterprise) + '#service', name: 'HX Enterprise', serviceType: 'White label community platform',
     description: c.meta.description, url: abs(links.hxEnterprise), provider: { '@id': site.url + '/#organization' }, areaServed: 'Worldwide',
     offers: [
       { '@type': 'Offer', name: 'Platform licence', price: '498', priceCurrency: 'GBP', description: c.pricing.platform.unit },
       { '@type': 'Offer', name: 'Per seat', price: '0.98', priceCurrency: 'GBP', description: c.pricing.seat.unit },
     ],
+  },
+  {
+    '@type': 'FAQPage', '@id': abs(links.hxEnterprise) + '#faq',
+    mainEntity: c.faq.items.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
   },
 ];
 ---
@@ -53,24 +74,101 @@ const schema = [
             <a class="btn-hx btn-hx-ghost" href={links.bookCall} {...ext}>{c.hero.secondary}<span class="sr-only"> (opens in a new tab)</span></a>
           </div>
         </div>
-        <div class:list={['hero-art', !knotSupplied && 'knot-blend']}>
-          <Picture src={knot} alt={c.hero.alt} widths={[400, 600, 800]} sizes="(min-width: 64rem) 26rem, (min-width: 30rem) 20rem, 72vw" formats={['webp']} fallbackFormat="png" loading="eager" fetchpriority="high" decoding="async" />
+        {heroKnot ? (
+          <div class="hero-art hero-art-logo">
+            <Picture src={heroKnot} alt={c.hero.alt} widths={[heroKnot.width]} sizes={`${heroKnot.width}px`} formats={['webp']} fallbackFormat="png" loading="eager" fetchpriority="high" decoding="async" />
+          </div>
+        ) : (
+          <div class:list={['hero-art', !knotSupplied && 'knot-blend']}>
+            <Picture src={knot} alt={c.hero.alt} widths={[400, 600, 800]} sizes="(min-width: 64rem) 26rem, (min-width: 30rem) 20rem, 72vw" formats={['webp']} fallbackFormat="png" loading="eager" fetchpriority="high" decoding="async" />
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- THE PROBLEM: TOO MANY PLATFORMS -->
+    <section class="sec ivory">
+      <div class="wrap prose reveal">
+        <h2 class="h2 h2-wide">{c.problem.heading.split(/(?<=[.…])\s+/).map((phrase, i) => <>{i > 0 && ' '}<span class="keep">{phrase}</span></>)}</h2>
+        {c.problem.intro.map((p) => <p>{p}</p>)}
+        <p class="closing">{c.problem.closing}</p>
+      </div>
+    </section>
+
+    <!-- 01 | WHAT YOUR PEOPLE GET: the same HX apps and screens as the HX page -->
+    <section class="sec ivory sec-rule" id="apps">
+      <div class="wrap">
+        <div class="prose reveal">
+          <h2 class="h2"><span class="num" aria-hidden="true">{c.modules.label}</span>{c.modules.heading}</h2>
+          <p>{c.modules.intro}</p>
+        </div>
+        {(['photo', 'symbol'] as const).map((row) => (
+          <ul class:list={['apps', `apps-${row}`]}>
+            {cards.filter((a) => a.row === row).map((a, i) => (
+              <li class="app reveal" style={`--d:${(i % 4) * 60}ms`}>
+                {a.img ? (
+                  <Picture src={a.img} alt={`${a.name} app icon`} widths={[80, 160, 240]} sizes="80px" formats={['webp']} fallbackFormat={fallbackOf(a.img)} class="app-icon" {...lazy} />
+                ) : (
+                  <svg class="app-icon app-hex" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 20.66 7 20.66 17 12 22 3.34 17 3.34 7" /></svg>
+                )}
+                <h3 class="app-name" set:html={a.nameBreakable} />
+                <p>{a.text}</p>
+              </li>
+            ))}
+          </ul>
+        ))}
+        <figure class="screens reveal">
+          <div class="screens-row">
+            <Picture src={screenHome} alt={c.modules.homeAlt} widths={[640, 960, 1280, 1600]} sizes="(min-width: 64rem) 60rem, 92vw" formats={['webp']} fallbackFormat={fallbackOf(screenHome)} {...lazy} />
+          </div>
+          {phones.length > 0 && (
+            <ul class="phones">
+              {phones.map((p) => (
+                <li class="phone">
+                  <div class="phone-frame">
+                    <Picture src={p.src} alt={p.alt} widths={[320, 480, 640]} sizes="(min-width: 64rem) 18rem, (min-width: 40rem) 30vw, 80vw" formats={['webp']} fallbackFormat="jpg" {...lazy} />
+                  </div>
+                  <h3 class="phone-label">{p.label}</h3>
+                  <p class="phone-text">{p.text}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+          <figcaption>{c.modules.caption}</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- THE PROMISE -->
+    <section class="sec dark">
+      <div class="wrap">
+        <div class="promise-head reveal">
+          <h2 class="h2">{c.promise.heading}</h2>
+          <p class="promise-sub">{c.promise.subheading}</p>
+          {c.promise.intro.map((p) => <p class="promise-intro">{p}</p>)}
+        </div>
+        <p class="promise-label reveal">{c.promise.label}</p>
+        <ul class="promise">
+          {c.promise.points.map((p, i) => (
+            <li class="reveal" style={`--d:${i * 90}ms`}>
+              <h3 class="promise-h">{p.heading}<span class="promise-h-sub">{p.sub}</span></h3>
+              <p>{p.text}</p>
+            </li>
+          ))}
+        </ul>
+        <div class="promise-close reveal">
+          <p class="promise-closing">{c.promise.closing}</p>
         </div>
       </div>
     </section>
 
-    <!-- 01 | WHAT YOUR PEOPLE GET -->
+    <!-- WHO IT'S FOR -->
     <section class="sec ivory">
-      <div class="wrap">
-        <h2 class="h2 reveal"><span class="num" aria-hidden="true">{c.modules.label}</span>{c.modules.heading}</h2>
-        <ul class="modules">
-          {c.modules.items.map((m, i) => (
-            <li class="module reveal" style={`--d:${(i % 4) * 60}ms`}>
-              <svg class="hex" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 20.66 7 20.66 17 12 22 3.34 17 3.34 7" /></svg>
-              <h3 class="module-name">{m.name}</h3>
-              <p>{m.text}</p>
-            </li>
-          ))}
+      <div class="wrap who reveal">
+        <h2 class="h2">{c.who.heading}</h2>
+        <p class="who-p">{c.who.intro}</p>
+        <ul class="pills">
+          {c.who.pills.map((p) => <li>{p}</li>)}
         </ul>
       </div>
     </section>
@@ -96,6 +194,22 @@ const schema = [
       </ul>
     </section>
 
+    <!-- WHAT HIVERS SAY (same quotes as the HX page) -->
+    <section class="sec ivory sec-rule">
+      <div class="wrap">
+        <h2 class="h2 reveal">{c.testimonials.heading}</h2>
+        <div class="quotes">
+          {c.testimonials.items.map((t, i) => (
+            <figure class="quote reveal" style={`--d:${i * 90}ms`}>
+              <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+              <blockquote><p>{t.quote}</p></blockquote>
+              <figcaption><strong>{t.name}</strong><span>{t.title}</span></figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
     <!-- CALL TO ACTION -->
     <section class="sec dark">
       <div class="wrap cta reveal">
@@ -108,11 +222,33 @@ const schema = [
       </div>
     </section>
 
+    <!-- FAQ -->
+    <section class="sec ivory" id="faq">
+      <div class="wrap faq-wrap">
+        <h2 class="h2 reveal">{c.faq.heading}</h2>
+        <div class="faq" data-faq>
+          {c.faq.items.map((f, i) => (
+            <div class="faq-item">
+              <h3 class="faq-q">
+                <button type="button" id={`faq-btn-${i}`} aria-expanded="true" aria-controls={`faq-panel-${i}`} data-faq-btn>
+                  <span>{f.q}</span>
+                  <span class="faq-icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq-a" id={`faq-panel-${i}`} role="region" aria-labelledby={`faq-btn-${i}`}>
+                <p>{f.a}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
     <!-- BACK TO HX -->
-    <section class="back ivory">
+    <section class="back ivory sec-rule">
       <div class="wrap back-row">
         <p class="back-label">{c.back.label}</p>
-        <a class="btn-hx btn-hx-outline" href={`${links.hxPage}#whats-inside`}>{c.back.cta}</a>
+        <a class="btn-hx btn-hx-outline" href={c.back.href}>{c.back.cta}</a>
       </div>
     </section>
   </div>
@@ -146,7 +282,13 @@ const schema = [
   .hxl h1, .hxl h2, .hxl h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.015em; line-height: 1.1; }
   .label { font-size: .8rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--hx-copper-light); }
   .h2 { font-size: clamp(1.9rem, 3.8vw, 3rem); text-wrap: balance; }
+  .h2-wide { max-width: none; }
   .num { display: inline-block; margin-right: .6rem; font-size: .55em; vertical-align: .35em; color: var(--hx-bronze); }
+  /* Each short phrase in a heading stays on one line (e.g. "Too Many Logins."), from tablet up */
+  @media (min-width: 40rem) { .keep { white-space: nowrap; } }
+  .prose > p { margin-top: 1.15rem; font-size: 1.075rem; line-height: 1.7; max-width: 62ch; }
+  .prose > .h2 + p { margin-top: 1.75rem; }
+  .prose > .closing { margin-top: 1.75rem; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.3rem, 2vw, 1.6rem); line-height: 1.4; color: var(--hx-bronze); max-width: none; }
 
   /* Hero */
   .hero-grid { display: grid; gap: 2.5rem; padding-top: calc(var(--header-h) + clamp(2.5rem, 7vh, 4.5rem)); padding-bottom: clamp(3.5rem, 7vw, 6rem); }
@@ -155,11 +297,13 @@ const schema = [
   .tagline { margin-top: .4rem; font-style: italic; font-size: 1.05rem; color: var(--hx-ivory); opacity: .9; }
   .hero-text { margin-top: 1.5rem; font-size: clamp(1.1rem, 1.5vw, 1.2rem); line-height: 1.65; max-width: 40rem; }
   .hero-art { width: min(72%, 20rem); justify-self: center; }
+  .hero-art.hero-art-logo { width: min(100%, 25rem); }
   .hero-art :global(img) { display: block; width: 100%; height: auto; }
   .knot-blend :global(img) { -webkit-mask-image: radial-gradient(circle, #000 58%, transparent 71%); mask-image: radial-gradient(circle, #000 58%, transparent 71%); }
   @media (min-width: 64rem) {
-    .hero-grid { grid-template-columns: 1.25fr .75fr; align-items: center; gap: clamp(2rem, 5vw, 5rem); min-height: min(90svh, 46rem); }
+    .hero-grid { grid-template-columns: 1.2fr .8fr; align-items: center; gap: clamp(2rem, 5vw, 5rem); min-height: min(90svh, 46rem); }
     .hero-art { width: 100%; max-width: 26rem; justify-self: end; }
+    .hero-art-logo { max-width: 25rem; justify-self: center; }
   }
 
   /* Buttons: flat Copper with ivory text, Deep Bronze on hover. 19px bold for AA contrast as large text. */
@@ -172,14 +316,53 @@ const schema = [
   .btn-hx-outline { background: transparent; border-color: var(--hx-graphite); color: var(--hx-graphite); }
   .btn-hx-outline:hover { background: var(--hx-graphite); border-color: var(--hx-graphite); color: var(--hx-ivory); }
 
-  /* 01 | Modules: 1 column on phones, 2 on tablets, 4 on desktop */
-  .modules { display: grid; gap: 1.25rem; margin-top: clamp(2.5rem, 5vw, 3.5rem); }
-  @media (min-width: 40rem) { .modules { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 64rem) { .modules { grid-template-columns: repeat(4, 1fr); } }
-  .module { display: grid; align-content: start; gap: .6rem; padding: 1.6rem; border: 1px solid var(--hx-line); border-radius: var(--hx-radius); background: #fff; }
-  .hex { width: 2.25rem; height: 2.25rem; fill: none; stroke: var(--hx-copper); stroke-width: 1.5; stroke-linejoin: round; }
-  .hxl .module-name { font-size: 1.3rem; color: var(--hx-bronze); overflow-wrap: anywhere; }
-  .module p { line-height: 1.6; }
+  /* 01 | App cards, as on the HX page. Photo cards: 1 / 2 / 4 per row. Symbol cards (6 here, with Recognition): 1 / 2 / 3 per row. */
+  .apps { --gap: 1.25rem; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap); margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+  .apps-symbol { margin-top: var(--gap); }
+  .app { flex: 0 0 100%; display: grid; align-content: start; gap: .6rem; padding: 1.75rem; border: 1px solid var(--hx-line); border-radius: var(--hx-radius); background: var(--hx-ivory); }
+  @media (min-width: 40rem) { .app { flex-basis: calc((100% - var(--gap)) / 2); } }
+  @media (min-width: 56rem) { .apps-symbol .app { flex-basis: calc((100% - 2 * var(--gap)) / 3); } }
+  @media (min-width: 64rem) {
+    .apps-photo .app { flex-basis: calc((100% - 3 * var(--gap)) / 4); }
+    .apps-symbol .app { padding: 1.5rem; }
+    .apps-symbol .app :global(.app-icon) { width: 4rem; height: 4rem; }
+  }
+  .app :global(.app-icon) { display: block; width: 5rem; height: 5rem; object-fit: contain; margin-bottom: .5rem; }
+  .app-hex { fill: none; stroke: var(--hx-copper); stroke-width: 1.25; stroke-linejoin: round; padding: .5rem; }
+  .hxl .app-name { font-size: 1.35rem; color: var(--hx-bronze); overflow-wrap: break-word; }
+  .app p { line-height: 1.6; }
+
+  .screens { margin-top: clamp(3rem, 6vw, 4.5rem); }
+  .screens-row { max-width: 60rem; margin-inline: auto; }
+  .screens-row :global(img) { display: block; width: 100%; height: auto; border-radius: var(--hx-radius); border: 1px solid var(--hx-line); }
+  .screens figcaption { margin-top: 1.5rem; text-align: center; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: var(--hx-bronze); }
+  .phones { display: grid; gap: 2rem; margin-top: clamp(2.5rem, 5vw, 3.5rem); justify-items: center; }
+  @media (min-width: 40rem) { .phones { grid-template-columns: repeat(3, 1fr); gap: clamp(1rem, 3vw, 2.5rem); } }
+  .phone { width: 100%; max-width: 18rem; text-align: center; }
+  .phone-frame { aspect-ratio: 9 / 16; overflow: hidden; border-radius: 1.5rem; border: 6px solid var(--hx-graphite); background: #fff; box-shadow: 0 1px 2px rgb(78 63 54 / .1), 0 20px 40px -22px rgb(78 63 54 / .45); }
+  .phone-frame :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .hxl .phone-label { margin-top: 1.1rem; font-size: 1.2rem; color: var(--hx-bronze); }
+  .phone-text { margin-top: .4rem; font-size: .98rem; line-height: 1.55; }
+
+  /* Promise */
+  .promise-sub { margin-top: 1rem; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.25rem, 2vw, 1.6rem); line-height: 1.3; color: var(--hx-sand); }
+  .promise-intro { margin-top: 1.15rem; font-size: 1.075rem; line-height: 1.7; color: var(--hx-ivory); max-width: 62ch; }
+  .promise-head > .promise-sub + .promise-intro { margin-top: 1.5rem; }
+  .promise-label { margin-top: clamp(2.5rem, 5vw, 3.5rem); font-size: .85rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--hx-sand); }
+  .promise { display: grid; gap: 2rem; margin-top: 1.5rem; }
+  @media (min-width: 56rem) { .promise { grid-template-columns: repeat(3, 1fr); gap: clamp(2rem, 4vw, 3.5rem); } }
+  .promise li { padding-top: 1.5rem; border-top: 1px solid rgb(238 179 124 / .4); }
+  .hxl .promise-h { font-size: clamp(1.5rem, 2.4vw, 1.9rem); color: var(--hx-sand); }
+  .promise-h-sub { display: block; margin-top: .3rem; font-size: .7em; color: var(--hx-ivory); }
+  .promise p { margin-top: .9rem; font-size: 1.075rem; line-height: 1.65; color: var(--hx-ivory); }
+  .promise-close { margin-top: clamp(3rem, 6vw, 4.5rem); padding-top: 2rem; border-top: 1px solid rgb(238 179 124 / .4); text-align: center; }
+  .promise-closing { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.4rem, 2.6vw, 2rem); line-height: 1.3; color: var(--hx-ivory); }
+
+  /* Who it's for */
+  .who { max-width: 56rem; }
+  .who-p { margin-top: 1.5rem; font-size: 1.075rem; line-height: 1.7; }
+  .pills { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.75rem; }
+  .pills li { padding: .5rem 1.05rem; border: 1px solid var(--hx-copper); border-radius: 999px; background: #fff; font-weight: 600; font-size: .95rem; color: var(--hx-graphite); }
 
   /* 02 | Licence and pricing */
   .licence-grid { display: grid; gap: clamp(2.5rem, 5vw, 4rem); align-items: start; }
@@ -189,6 +372,7 @@ const schema = [
   .ticks li::before { content: ""; position: absolute; left: .1rem; top: .35rem; width: .9rem; height: .5rem; border-left: 2px solid var(--hx-copper); border-bottom: 2px solid var(--hx-copper); transform: rotate(-45deg); }
   .ticks strong { font-weight: 700; }
   .ent-price { padding: clamp(1.75rem, 3vw, 2.5rem); border-radius: var(--hx-radius); background: var(--hx-umber); color: var(--hx-ivory); }
+  @media (min-width: 64rem) { .ent-price { position: sticky; top: calc(var(--header-h) + 1.5rem); } }
   .price-label { font-weight: 700; font-size: .85rem; letter-spacing: .14em; text-transform: uppercase; color: var(--hx-sand); }
   .price-row { margin-top: 1.25rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .75rem; }
   .price-row-2 { padding-top: 1.25rem; border-top: 1px solid rgb(248 244 236 / .2); }
@@ -201,11 +385,34 @@ const schema = [
   .assurances li { display: flex; align-items: center; gap: .6rem; font-weight: 700; font-size: .85rem; letter-spacing: .12em; text-transform: uppercase; color: var(--hx-umber); }
   .assurances li::before { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: var(--hx-copper); }
 
+  /* Testimonials */
+  .quotes { display: grid; gap: 1.25rem; margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+  @media (min-width: 64rem) { .quotes { grid-template-columns: repeat(3, 1fr); } }
+  .quote { display: flex; flex-direction: column; gap: 1rem; padding: clamp(1.75rem, 3vw, 2.25rem); border-radius: var(--hx-radius); background: #fff; box-shadow: 0 1px 2px rgb(78 63 54 / .08), 0 12px 32px -18px rgb(78 63 54 / .25); }
+  .quote-mark { font-family: var(--font-display); font-size: 4.5rem; line-height: .6; height: 2.25rem; color: var(--hx-copper); }
+  .quote blockquote { flex: 1; font-size: 1.05rem; line-height: 1.7; }
+  .quote figcaption { display: grid; gap: .2rem; padding-top: 1rem; border-top: 1px solid var(--hx-line); }
+  .quote figcaption strong { font-weight: 700; }
+  .quote figcaption span { font-size: .95rem; color: var(--hx-umber); }
+
   /* Call to action */
   .cta { display: grid; justify-items: center; text-align: center; }
   .cta-mail { margin-top: 1rem; font-size: 1.1rem; overflow-wrap: anywhere; }
   .link-sand { color: var(--hx-sand); font-weight: 600; text-decoration: underline; text-underline-offset: .2em; }
   .link-sand:hover { color: var(--hx-peach); }
+
+  /* FAQ */
+  .faq-wrap { max-width: 56rem; }
+  .faq { margin-top: clamp(2rem, 4vw, 3rem); border-top: 1px solid var(--hx-line); }
+  .faq-item { border-bottom: 1px solid var(--hx-line); }
+  .hxl .faq-q { font-family: var(--font-sans); font-size: 1.125rem; font-weight: 600; line-height: 1.4; }
+  .faq-q button { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 1.25rem 0; text-align: left; cursor: pointer; color: inherit; font: inherit; }
+  .faq-q button:hover { color: var(--hx-bronze); }
+  .faq-icon { position: relative; flex: none; width: 1.1rem; height: 1.1rem; }
+  .faq-icon::before, .faq-icon::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: var(--hx-copper); transition: transform .3s var(--ease-flow); }
+  .faq-icon::after { transform: rotate(90deg); }
+  [aria-expanded="true"] .faq-icon::after { transform: rotate(0deg); }
+  .faq-a { padding: 0 2.5rem 1.5rem 0; max-width: 65ch; line-height: 1.65; }
 
   /* Back to HX */
   .back { padding-block: clamp(3rem, 6vw, 4.5rem); }
@@ -216,6 +423,27 @@ const schema = [
   :global(.js) .hxl .reveal:global(.in) { transform: none; }
   @media (prefers-reduced-motion: reduce) {
     :global(.js) .hxl .reveal { opacity: 1; transform: none; transition: none; }
-    .btn-hx { transition: none; }
+    .btn-hx, .faq-icon::before, .faq-icon::after { transition: none; }
   }
 </style>
+
+<script>
+  // FAQ accordion, as on the HX page. Answers are open without JavaScript; with it, they start closed.
+  const faq = document.querySelector<HTMLElement>('[data-faq]');
+  if (faq) {
+    const btns = [...faq.querySelectorAll<HTMLButtonElement>('[data-faq-btn]')];
+    const set = (b: HTMLButtonElement, open: boolean) => {
+      b.setAttribute('aria-expanded', String(open));
+      document.getElementById(b.getAttribute('aria-controls')!)!.hidden = !open;
+    };
+    btns.forEach((b) => {
+      set(b, false);
+      b.addEventListener('click', () => set(b, b.getAttribute('aria-expanded') !== 'true'));
+      b.addEventListener('keydown', (e) => {
+        const i = btns.indexOf(b);
+        const to = e.key === 'ArrowDown' ? btns[(i + 1) % btns.length] : e.key === 'ArrowUp' ? btns[(i - 1 + btns.length) % btns.length] : e.key === 'Home' ? btns[0] : e.key === 'End' ? btns[btns.length - 1] : null;
+        if (to) { e.preventDefault(); to.focus(); }
+      });
+    });
+  }
+</script>
