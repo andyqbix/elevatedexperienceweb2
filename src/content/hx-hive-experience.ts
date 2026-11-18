@@ -110,21 +110,24 @@ export const hxLanding = typeset({
     freeText: 'Use every HX app at no cost. HX is free. You only pay when you sell something.',
     pricing: 'See what HX costs',
     cta: 'JOIN HX NOW',
-    quote: 'Because Every eXperience Starts With People. And Every Great Community Starts With You.',
     networkAlt: 'The HX Community "Your Network" map: a member at the centre, connected to friends, family and professional contacts shown as hexagon portraits.',
   },
   meaning: {
-    label: 'What the knot means',
-    heading: 'Six Interlocking Loops Around an Open Centre, Drawn From the Honeycomb of a Hive.',
-    alt: 'The closed HX Belonging Knot in copper on an ivory background.',
-    points: [
-      { term: 'Each hexagon', text: 'A person or community, with its own identity and space.' },
-      { term: 'The interlocking edges', text: 'Contribution: people sharing knowledge, making introductions and creating opportunities together.' },
-      { term: 'The open centre', text: 'Belonging: a shared space with room for everyone to take part.' },
-      { term: 'The copper', text: 'Warmth, and the thread that connects HX to the Elevated eXperience™ family.' },
-      { term: 'Closed and open', text: 'The closed knot is our emblem for belonging. The open knot is a frame that invites people in.' },
+    heading: 'The HX Belonging Knot. Connected by Purpose. Stronger Together.',
+    alt: 'The HX Belonging Knot: interwoven copper hexagons around an open centre, with the HX | Hive eXperience logo at its heart.',
+    body: [
+      'We believe the world becomes a better place when people come together.',
+      'Every great community begins with people. Different stories, different passions, different dreams, yet connected by something greater than themselves.',
+      'That is what inspired our HX Belonging Knot.',
+      'Its interwoven shapes represent people and communities connected through shared purpose. Each one keeps its own identity, yet becomes part of something greater through the strength of the whole. At the centre, there is space. Space to join. Space to contribute. Space to belong. Space for YOU.',
+      'The Belonging Knot is more than our identity. It is a symbol of the world we want to help create. It is our promise to keep people at the heart of everything we create, one connection, one community, one Hive at a time.',
     ],
-    closing: 'The spirit of Ubuntu and Ayni sits at the core of what we do. When people belong and contribute, they and their communities prosper.',
+  },
+  // Big closing statement, after What Hivers Say and before the FAQ.
+  statement: {
+    quote: 'Because Every eXperience Starts With People. And Every Great Community Starts With You.',
+    purpose: 'Belong. Contribute. Prosper.',
+    cta: 'READY TO JOIN YOUR VILLAGE WITHOUT WALLS?',
   },
   faq: {
     heading: 'Frequently Asked Questions',
