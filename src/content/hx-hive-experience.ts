@@ -38,7 +38,12 @@ export const hxLanding = typeset({
   },
   apps: {
     heading: 'Everything Your Community Needs. One Hive. All for Free.',
-    intro: 'Someone asks for the replay. Someone else has the old booking link. With HX, your conversations, events, learning and connections live in one place, with one login and one set of people.',
+    intro: [
+      'Too many platforms. Too many logins. Too much time and money spent keeping everything connected.',
+      "Managing your community shouldn't mean juggling subscriptions, chasing information and wasting hours on admin.",
+      'HX brings your community, events, conversations, learning and business opportunities together in one place. Simplify your operations, reduce costs, save valuable time and focus your energy where it belongs: building relationships, growing your community and creating opportunities.',
+    ],
+    introClosing: 'One Hive. Less hassle. More impact.',
     cards: [
       { name: 'HXCafé', icon: 'HXCafe', text: 'Share updates, ask questions and keep conversations flowing.' },
       { name: 'HXChats', icon: 'HXChats', text: 'Stay in touch through direct, group and Hive conversations.' },

@@ -125,9 +125,10 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
     <!-- 3 | WHAT'S IN YOUR HIVE -->
     <section class="sec ivory sec-rule" id="whats-inside">
       <div class="wrap">
-        <div class="head reveal">
+        <div class="head head-full prose reveal">
           <h2 class="h2">{c.apps.heading}</h2>
-          <p class="lead">{c.apps.intro}</p>
+          {c.apps.intro.map((p) => <p>{p}</p>)}
+          <p class="why-closing">{c.apps.introClosing}</p>
         </div>
         <ul class="apps">
           {c.apps.cards.map((a, i) => (
@@ -312,6 +313,8 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
   .h2 { font-size: clamp(1.9rem, 3.8vw, 3rem); text-wrap: balance; max-width: 26ch; }
   .lead { margin-top: 1.25rem; font-size: clamp(1.075rem, 1.4vw, 1.2rem); line-height: 1.65; max-width: 62ch; }
   .head { max-width: 50rem; }
+  /* Apps intro runs the full width of the page, like Why HX */
+  .head.head-full, .head.head-full > p, .head.head-full .h2 { max-width: none; }
   .prose > p { margin-top: 1.15rem; font-size: 1.075rem; line-height: 1.7; max-width: 62ch; }
   .prose > .h2 + p { margin-top: 1.75rem; }
 
