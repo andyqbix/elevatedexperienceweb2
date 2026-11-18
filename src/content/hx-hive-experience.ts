@@ -25,11 +25,13 @@ export const hxLanding = typeset({
     body: [
       'At Elevated eXperience, we bring together two complementary worlds: Customer eXperience (CX) and Digital eXperience (DX). Through everything we do, one thing has become clear. Technology, businesses and communities thrive when people are at the heart of the eXperience.',
       'CX is about people. DX is about how people use technology. EX is about how people feel, connect and contribute.',
-      'When these eXperiences work together, connections grow stronger, conversations become more meaningful and more people find their opportunity.',
-      "That's why we created HX | Hive eXperience: a digital platform that puts people first. Technology that brings people together rather than replacing human connection. A place where individuals share their passions, businesses build relationships, charities grow their impact and communities grow together.",
+      'When these eXperiences work together, connections grow stronger, conversations become more meaningful and more people find their opportunity to shine.',
+      'Inspired by the African philosophy of Ubuntu, “I am because we are,” and the Andean principle of Ayni, the power of reciprocity and mutual support, we believe that when people lift each other up, everyone has the opportunity to grow.',
+      'Because belonging is more than joining a group. It is about feeling seen, being valued, sharing what you know, discovering what others have to offer and knowing that your contribution matters.',
+      'This is the heart of HX | Hive eXperience.',
+      'A digital village where technology brings people closer, connections become relationships, and individuals, businesses, charities and communities can flourish together.',
     ],
-    bold: 'A place where everyone can Belong. Contribute. Prosper.',
-    closing: "We don't just talk about elevating eXperiences. We create them.",
+    closing: 'One village. Endless connections. A world of opportunities.',
     alt: 'Diagram showing how Customer eXperience (CX), Digital eXperience (DX) and Employee eXperience (EX) connect, with people at the centre.',
   },
   apps: {
