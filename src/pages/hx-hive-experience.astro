@@ -38,7 +38,8 @@ const heroKnot = asset('hx-hero-knot');
 const diagram = asset('hx-cx-dx-ex-diagram');
 const screenHome = asset('hx-screen-home') ?? homeFallback;
 const screenHives = asset('hx-screen-your-hives');
-const icons = c.apps.cards.map((a) => asset(a.icon));
+// Each app card with its icon. Long names may wrap between words (HXSocial|Media|Connector), never mid-word.
+const cards = c.apps.cards.map((a) => ({ ...a, img: asset(a.icon), nameBreakable: a.name.replace(/([a-zé])([A-Z])/g, '$1<wbr>$2') }));
 
 // Each picture is served as WebP with a fallback in its original format; width and height are set automatically.
 // Logos keep PNG (they may have transparency); screenshots and the existing artwork are opaque, so JPG keeps them light.
@@ -130,19 +131,21 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
           {c.apps.intro.map((p) => <p>{p}</p>)}
           <p class="why-closing">{c.apps.introClosing}</p>
         </div>
-        <ul class="apps">
-          {c.apps.cards.map((a, i) => (
-            <li class="app reveal" style={`--d:${(i % 4) * 60}ms`}>
-              {icons[i] ? (
-                <Picture src={icons[i]!} alt={`${a.name} app icon`} widths={[80, 160, 240]} sizes="80px" formats={['webp']} fallbackFormat={fallbackOf(icons[i]!)} class="app-icon" {...lazy} />
-              ) : (
-                <svg class="app-icon app-hex" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 20.66 7 20.66 17 12 22 3.34 17 3.34 7" /></svg>
-              )}
-              <h3 class="app-name">{a.name}</h3>
-              <p>{a.text}</p>
-            </li>
-          ))}
-        </ul>
+        {(['photo', 'symbol'] as const).map((row) => (
+          <ul class:list={['apps', `apps-${row}`]}>
+            {cards.filter((a) => a.row === row).map((a, i) => (
+              <li class="app reveal" style={`--d:${(i % 5) * 60}ms`}>
+                {a.img ? (
+                  <Picture src={a.img} alt={`${a.name} app icon`} widths={[80, 160, 240]} sizes="80px" formats={['webp']} fallbackFormat={fallbackOf(a.img)} class="app-icon" {...lazy} />
+                ) : (
+                  <svg class="app-icon app-hex" viewBox="0 0 24 24" aria-hidden="true"><polygon points="12 2 20.66 7 20.66 17 12 22 3.34 17 3.34 7" /></svg>
+                )}
+                <h3 class="app-name" set:html={a.nameBreakable} />
+                <p>{a.text}</p>
+              </li>
+            ))}
+          </ul>
+        ))}
         <figure class="screens reveal">
           <div class:list={['screens-row', screenHives && 'screens-two']}>
             <Picture src={screenHome} alt={c.apps.homeAlt} widths={[640, 960, 1280, 1600]} sizes={screenHives ? '(min-width: 64rem) 46vw, 92vw' : '(min-width: 64rem) 60rem, 92vw'} formats={['webp']} fallbackFormat={fallbackOf(screenHome)} {...lazy} />
@@ -356,12 +359,21 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
   /* 3 | App cards: 1 column on phones, 2 on tablets, 3 on desktop, 4 on wide screens. A short last row is centred. */
   .apps { --gap: 1.25rem; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap); margin-top: clamp(2.5rem, 5vw, 3.5rem); }
   .app { flex: 0 0 100%; display: grid; align-content: start; gap: .6rem; padding: 1.75rem; border: 1px solid var(--hx-line); border-radius: var(--hx-radius); background: var(--hx-ivory); }
+  /* Photo cards: 1 column on phones, 2 on tablets, 4 on desktop (two rows of 4).
+     Symbol cards: smaller boxes, 2 on tablets, 3 on small laptops, all 5 on one row on desktop. */
+  .apps-symbol { margin-top: var(--gap); }
   @media (min-width: 40rem) { .app { flex-basis: calc((100% - var(--gap)) / 2); } }
-  @media (min-width: 64rem) { .app { flex-basis: calc((100% - 2 * var(--gap)) / 3); } }
-  @media (min-width: 90rem) { .app { flex-basis: calc((100% - 3 * var(--gap)) / 4); } }
+  @media (min-width: 56rem) { .apps-symbol .app { flex-basis: calc((100% - 2 * var(--gap)) / 3); } }
+  @media (min-width: 64rem) {
+    .apps-photo .app { flex-basis: calc((100% - 3 * var(--gap)) / 4); }
+    .apps-symbol .app { flex-basis: calc((100% - 4 * var(--gap)) / 5); padding: 1.25rem; }
+    .apps-symbol .app-name { font-size: 1.15rem; }
+    .apps-symbol .app p { font-size: .95rem; }
+    .apps-symbol .app :global(.app-icon) { width: 4rem; height: 4rem; }
+  }
   .app :global(.app-icon) { display: block; width: 5rem; height: 5rem; object-fit: contain; margin-bottom: .5rem; }
   .app-hex { fill: none; stroke: var(--hx-copper); stroke-width: 1.25; stroke-linejoin: round; padding: .5rem; }
-  .hxl .app-name { font-size: 1.35rem; color: var(--hx-bronze); overflow-wrap: anywhere; }
+  .hxl .app-name { font-size: 1.35rem; color: var(--hx-bronze); overflow-wrap: break-word; }
   .app p { line-height: 1.6; }
 
   .screens { margin-top: clamp(3rem, 6vw, 4.5rem); }
