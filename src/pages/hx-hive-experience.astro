@@ -90,7 +90,6 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
           <p class="hero-italic">{c.hero.italic}</p>
           <div class="actions">
             <a class="btn-hx" href={links.hx} rel="noopener">{c.hero.primary}</a>
-            <a class="btn-hx btn-hx-ghost" href="#whats-inside">{c.hero.secondary}</a>
           </div>
         </div>
         {heroKnot ? (
@@ -340,7 +339,8 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
   }
 
   /* 2 | Why HX */
-  .why-solo .prose { max-width: 50rem; }
+  /* Why HX runs the full width of the page (as requested), heading and paragraphs alike */
+  .why-solo .prose, .why-solo .prose > p, .why-solo .h2 { max-width: none; }
   .why-grid { display: grid; gap: clamp(2.5rem, 6vw, 5rem); align-items: center; }
   @media (min-width: 64rem) { .why-grid { grid-template-columns: 1.15fr .85fr; } }
   .why-art :global(img) { display: block; width: 100%; height: auto; }
