@@ -65,7 +65,13 @@ export const hxLanding = typeset({
       { name: 'HXSocialMediaConnector', icon: 'HXSocialMediaConnector', row: 'symbol', text: 'Share HXCafé posts to your social accounts, with optional scheduling.' },
       { name: 'HXPayment', icon: 'HXPayment', row: 'symbol', text: 'Support paid tickets, courses, products and services.' },
     ],
-    caption: 'Illustrative screens. Names, counts and notifications are examples.',
+    caption: 'Built for connection. Live on mobile and desktop.',
+    // Real app screens on phone, shown under the home screen.
+    inAction: [
+      { label: 'HXCafé in Action', img: 'hx-phone-cafe', text: 'A chronological feed with Stories and Sparks.', alt: 'HXCafé on a phone: Stories from members, Sparks, a post composer and the latest post in the feed.' },
+      { label: 'HXEvents in Action', img: 'hx-phone-events', text: 'Ticketed events with details, speakers, sponsors and attendees.', alt: 'HXEvents on a phone: a hybrid conference page with date, venue, places taken, event tabs and ticket price.' },
+      { label: 'HXSchool in Action', img: 'hx-phone-school', text: 'Courses with progress tracking and a certificate when you finish.', alt: 'HXSchool on a phone: a course page with lessons, enrolment, a progress bar and what is included.' },
+    ],
     homeAlt: 'The HX home screen: a honeycomb of HX apps beside a list of upcoming events and recent conversations.',
     hivesAlt: 'The HX Your Hives switcher, listing the Hives a member belongs to so they can move between them.',
   },

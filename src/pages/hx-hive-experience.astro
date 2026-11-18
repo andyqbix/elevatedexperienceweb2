@@ -40,6 +40,8 @@ const diagram = asset('hx-cx-dx-ex-diagram');
 const screenHome = asset('hx-screen-home') ?? homeFallback;
 const screenHives = asset('hx-screen-your-hives');
 const screenNetwork = asset('hx-screen-network');
+// HXCafé, HXEvents and HXSchool "in action" phone screens (only those whose file is present are shown).
+const phones = c.apps.inAction.map((p) => ({ ...p, src: asset(p.img) })).filter((p) => p.src) as (typeof c.apps.inAction[number] & { src: ImageMetadata })[];
 // Each app card with its icon. Long names may wrap between words (HXSocial|Media|Connector), never mid-word.
 const cards = c.apps.cards.map((a) => ({ ...a, img: asset(a.icon), nameBreakable: a.name.replace(/([a-zé])([A-Z])/g, '$1<wbr>$2') }));
 
@@ -156,6 +158,19 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
             <Picture src={screenHome} alt={c.apps.homeAlt} widths={[640, 960, 1280, 1600]} sizes={screenHives ? '(min-width: 64rem) 46vw, 92vw' : '(min-width: 64rem) 60rem, 92vw'} formats={['webp']} fallbackFormat={fallbackOf(screenHome)} {...lazy} />
             {screenHives && <Picture src={screenHives} alt={c.apps.hivesAlt} widths={[640, 960, 1280, 1600]} sizes="(min-width: 64rem) 46vw, 92vw" formats={['webp']} fallbackFormat={fallbackOf(screenHives)} {...lazy} />}
           </div>
+          {phones.length > 0 && (
+            <ul class="phones">
+              {phones.map((p) => (
+                <li class="phone">
+                  <div class="phone-frame">
+                    <Picture src={p.src} alt={p.alt} widths={[320, 480, 640]} sizes="(min-width: 64rem) 18rem, (min-width: 40rem) 30vw, 80vw" formats={['webp']} fallbackFormat="jpg" {...lazy} />
+                  </div>
+                  <h3 class="phone-label">{p.label}</h3>
+                  <p class="phone-text">{p.text}</p>
+                </li>
+              ))}
+            </ul>
+          )}
           <figcaption>{c.apps.caption}</figcaption>
         </figure>
       </div>
@@ -388,7 +403,15 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
   .screens-two { max-width: none; }
   @media (min-width: 64rem) { .screens-two { grid-template-columns: 1fr 1fr; } }
   .screens-row :global(img) { display: block; width: 100%; height: auto; border-radius: var(--hx-radius); border: 1px solid var(--hx-line); }
-  .screens figcaption { margin-top: 1rem; text-align: center; font-size: .9rem; color: var(--hx-umber); }
+  .screens figcaption { margin-top: 1.5rem; text-align: center; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.1rem, 1.6vw, 1.3rem); color: var(--hx-bronze); }
+  /* In action: three real phone screens, side by side from tablet up */
+  .phones { display: grid; gap: 2rem; margin-top: clamp(2.5rem, 5vw, 3.5rem); justify-items: center; }
+  @media (min-width: 40rem) { .phones { grid-template-columns: repeat(3, 1fr); gap: clamp(1rem, 3vw, 2.5rem); } }
+  .phone { width: 100%; max-width: 18rem; text-align: center; }
+  .phone-frame { aspect-ratio: 9 / 16; overflow: hidden; border-radius: 1.5rem; border: 6px solid var(--hx-graphite); background: #fff; box-shadow: 0 1px 2px rgb(78 63 54 / .1), 0 20px 40px -22px rgb(78 63 54 / .45); }
+  .phone-frame :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+  .hxl .phone-label { margin-top: 1.1rem; font-size: 1.2rem; color: var(--hx-bronze); }
+  .phone-text { margin-top: .4rem; font-size: .98rem; line-height: 1.55; }
 
   /* 4 | Testimonials */
   .quotes { display: grid; gap: 1.25rem; margin-top: clamp(2.5rem, 5vw, 3.5rem); }
