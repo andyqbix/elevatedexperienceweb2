@@ -37,7 +37,7 @@ export const hxLanding = typeset({
     alt: 'Diagram showing how Customer eXperience (CX), Digital eXperience (DX) and Employee eXperience (EX) connect, with people at the centre.',
   },
   apps: {
-    heading: 'Everything Your Community Needs, in One Hive.',
+    heading: 'Everything Your Community Needs. One Hive. All for Free.',
     intro: 'Someone asks for the replay. Someone else has the old booking link. With HX, your conversations, events, learning and connections live in one place, with one login and one set of people.',
     cards: [
       { name: 'HXCafé', icon: 'HXCafe', text: 'Share updates, ask questions and keep conversations flowing.' },
