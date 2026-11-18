@@ -32,6 +32,8 @@ export const hxLanding = typeset({
       'A digital village where technology brings people closer, connections become relationships, and individuals, businesses, charities and communities can flourish together.',
     ],
     closing: 'One village. Endless connections. A world of opportunities.',
+    bold: 'A place where everyone can Belong. Contribute. Prosper.',
+    signoff: "We don't just talk about elevating eXperiences. We create them.",
     alt: 'Diagram showing how Customer eXperience (CX), Digital eXperience (DX) and Employee eXperience (EX) connect, with people at the centre.',
   },
   apps: {
