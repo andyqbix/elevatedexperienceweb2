@@ -37,12 +37,11 @@ export const hxLanding = typeset({
     alt: 'Diagram showing how Customer eXperience (CX), Digital eXperience (DX) and Employee eXperience (EX) connect, with people at the centre.',
   },
   apps: {
-    heading: 'Everything Your Community Needs. One Hive. All for Free.',
+    heading: 'Too Many Platforms. Too Many Logins. Too Many Subscriptions…',
     intro: [
-      'Too many platforms. Too many logins. Too many subscriptions…',
       'And far too much time spent trying to make everything work together, sound familiar?',
       'Every hour spent chasing information, switching between systems and managing admin is an hour you could be spending growing your community, supporting your members and creating new opportunities.',
-      'HX | Hive eXperience, bring your conversations, events, learning, business opportunities and connections together in one Hive. Simplify your operations, reduce costs, save valuable time and focus your energy where it belongs: building relationships, growing your community and creating opportunities.',
+      'HX | Hive eXperience brings your conversations, events, learning, business opportunities and connections together in one Hive. Simplify your operations, reduce costs, save valuable time and focus your energy where it belongs: building relationships, growing your community and creating opportunities.',
     ],
     introClosing: 'One Hive. Less Admin. Lower Costs. More Impact.',
     // `row`: 'photo' cards (picture inside the hexagon) show first in two rows of 4;
