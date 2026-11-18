@@ -68,9 +68,9 @@ export const hxLanding = typeset({
     caption: 'Built for connection. Live on mobile and desktop.',
     // Real app screens on phone, shown under the home screen.
     inAction: [
-      { label: 'HXCafé in Action', img: 'hx-phone-cafe', text: 'A chronological feed with Stories and Sparks.', alt: 'HXCafé on a phone: Stories from members, Sparks, a post composer and the latest post in the feed.' },
-      { label: 'HXEvents in Action', img: 'hx-phone-events', text: 'Ticketed events with details, speakers, sponsors and attendees.', alt: 'HXEvents on a phone: a hybrid conference page with date, venue, places taken, event tabs and ticket price.' },
-      { label: 'HXSchool in Action', img: 'hx-phone-school', text: 'Courses with progress tracking and a certificate when you finish.', alt: 'HXSchool on a phone: a course page with lessons, enrolment, a progress bar and what is included.' },
+      { label: 'HXCafé in Action', img: 'hx-phone-cafe', href: links.hxHives, text: 'A chronological feed with Stories and Sparks.', alt: 'HXCafé on a phone: Stories from members, Sparks, a post composer and the latest post in the feed.' },
+      { label: 'HXEvents in Action', img: 'hx-phone-events', href: links.hxEvents, text: 'Ticketed events with details, speakers, sponsors and attendees.', alt: 'HXEvents on a phone: a hybrid conference page with date, venue, places taken, event tabs and ticket price.' },
+      { label: 'HXSchool in Action', img: 'hx-phone-school', href: links.hxCourses, text: 'Courses with progress tracking and a certificate when you finish.', alt: 'HXSchool on a phone: a course page with lessons, enrolment, a progress bar and what is included.' },
     ],
     homeAlt: 'The HX home screen: a honeycomb of HX apps beside a list of upcoming events and recent conversations.',
     hivesAlt: 'The HX Your Hives switcher, listing the Hives a member belongs to so they can move between them.',
@@ -133,6 +133,7 @@ export const hxLanding = typeset({
           'Retain 100% community ownership with zero ad intrusion.',
         ],
         cta: 'Start Your Hive',
+        href: links.hx,
       },
       {
         icon: 'heart',
@@ -144,7 +145,8 @@ export const hxLanding = typeset({
           'Discover events, learn new skills, share your expertise and support businesses and causes you care about.',
           'Be seen and valued for your contributions, not how much you pay for visibility.',
         ],
-        cta: 'Experience the Hive',
+        cta: 'Discover Hives',
+        href: links.hxHives,
       },
     ],
   },

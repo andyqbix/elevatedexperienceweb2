@@ -33,6 +33,7 @@ export const links = {
   hx: 'https://hive.elevatedexperience.vip/',
   hxEvents: 'https://hive.elevatedexperience.vip/events',
   hxHives: 'https://hive.elevatedexperience.vip/hives',
+  hxCourses: 'https://hive.elevatedexperience.vip/courses',
   hxPricing: 'https://hive.elevatedexperience.vip/pricing',
   hxMicrosoftStore: 'https://apps.microsoft.com/detail/9NKRSD0B4FPH',
   hxGooglePlay: 'https://play.google.com/store/apps/details?id=com.elevatedexperience.hive',
