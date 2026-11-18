@@ -156,22 +156,6 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
       </div>
     </section>
 
-    <!-- 4 | WHAT HIVERS SAY -->
-    <section class="sec ivory sec-rule">
-      <div class="wrap">
-        <h2 class="h2 reveal">{c.testimonials.heading}</h2>
-        <div class="quotes">
-          {c.testimonials.items.map((t, i) => (
-            <figure class="quote reveal" style={`--d:${i * 90}ms`}>
-              <span class="quote-mark" aria-hidden="true">&ldquo;</span>
-              <blockquote><p>{t.quote}</p></blockquote>
-              <figcaption><strong>{t.name}</strong><span>{t.title}</span></figcaption>
-            </figure>
-          ))}
-        </div>
-      </div>
-    </section>
-
     <!-- 5 | THE HX PROMISE -->
     <section class="sec dark">
       <div class="wrap">
@@ -243,6 +227,22 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
             {c.meaning.points.map((p) => <div class="point"><dt>{p.term}</dt><dd>{p.text}</dd></div>)}
           </dl>
           <p class="meaning-closing">{c.meaning.closing}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT HIVERS SAY (just before the FAQ) -->
+    <section class="sec ivory sec-rule">
+      <div class="wrap">
+        <h2 class="h2 reveal">{c.testimonials.heading}</h2>
+        <div class="quotes">
+          {c.testimonials.items.map((t, i) => (
+            <figure class="quote reveal" style={`--d:${i * 90}ms`}>
+              <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+              <blockquote><p>{t.quote}</p></blockquote>
+              <figcaption><strong>{t.name}</strong><span>{t.title}</span></figcaption>
+            </figure>
+          ))}
         </div>
       </div>
     </section>
