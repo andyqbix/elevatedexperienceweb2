@@ -99,10 +99,11 @@ export const hxEnterprise = typeset({
     items: [
       { q: 'How is HX Enterprise different from HX?', a: 'HX is the free, public platform where anyone can join or create a Hive. HX Enterprise is your own private, white label instance of HX: your brand, your custom domain and your people only.' },
       { q: 'Who owns our data?', a: 'You do. Your instance is private to your organisation, so the data belongs to your organisation, not to us. There are no ads, and your data is never sold.' },
-      { q: 'Where is our data hosted?', a: 'HX Enterprise runs on AWS, through Vercel, and can be pinned to any AWS region you choose, so your data stays where your organisation needs it.' },
+      { q: 'Where is our data hosted?', a: 'We host HX Enterprise on AWS, through Vercel, and can pin it to any AWS region you choose, so your data stays where your organisation needs it. If you would rather host and support it yourselves, it can run on any hosting provider of your choice.' },
       { q: 'Can we choose which apps our people see?', a: 'Yes. Every HX app is included in your licence, and you can switch any of them on or off at any time.' },
       { q: 'Is there an app?', a: 'Yes. You get native apps for Android and Windows plus a web app that installs on phones and desktops, all under your own name.' },
       { q: 'What does it cost?', a: '£498 per month for your organisation, plus 98p per month for each active user. That covers hosting, maintenance, updates and support, with no separate bills.' },
+      { q: 'What counts as an active user?', a: 'Anyone you give an account to. If a person has an account on your instance, they count as an active user and are included in your monthly bill.' },
       { q: 'When can we start?', a: 'HX Enterprise is available now. Get in touch or book a call and we will walk you through setting up your instance.' },
       { q: 'Who is behind HX?', a: 'HX is created by Andy Jarvis and Claire Boscq and powered by Elevated eXperience™, from Elevated eXperience Ltd, registered in Jersey.' },
     ],
