@@ -86,12 +86,20 @@ export const hxLanding = typeset({
     ],
   },
   promise: {
-    heading: 'Built for People. Not for Advertisers.',
-    points: [
-      { heading: 'No Advertising', text: 'No ads, no boosted posts or banners and no promoted listings.' },
-      { heading: 'No Algorithm', text: 'HXCafé is newest first, for everyone, every time.' },
-      { heading: 'No Data Selling', text: 'We never sell your personal information or build advertising profiles of you.' },
+    heading: 'You Are a Person. Not a Product.',
+    subheading: 'Built Around People. For People. Not Advertisers.',
+    intro: [
+      'Your community deserves better than a platform designed to sell your attention, control what you see or turn your personal information into profit.',
+      'HX is built to move from Attention Economy to the Belonging eXperience, and we intend to keep it that way.',
     ],
+    label: 'Our promise to you…',
+    points: [
+      { heading: 'No Ads', sub: 'Your Attention Is Yours.', text: 'No advertising. No boosted posts. No sponsored distractions. Just genuine conversations, meaningful connections and communities focused on what matters.' },
+      { heading: 'No Algorithms', sub: 'Deciding What You See.', text: 'No fighting for visibility. No paying to reach your own community. HXCafé shows posts in chronological order, giving everyone a fair opportunity to be seen and heard.' },
+      { heading: 'No Selling Your Data.', sub: 'Ever!', text: "Your personal information is yours. We never sell it to advertisers or build advertising profiles. Your trust matters more than your data's commercial value." },
+    ],
+    closing: 'Your People. Your Community. Your Connections.',
+    purpose: 'Belong. Contribute. Prosper.',
   },
   who: {
     heading: 'Whatever You Want to Build Together, There Is Room for It Here.',
