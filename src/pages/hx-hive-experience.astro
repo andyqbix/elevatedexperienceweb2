@@ -90,11 +90,11 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
           <p class="hero-brand">{c.hero.label}</p>
           <h1 class="hero-title">{c.hero.heading}</h1>
           <p class="hero-text">{c.hero.text}</p>
+          <p class="hero-village">{c.hero.village}</p>
           <p class="hero-italic">{c.hero.italic}</p>
-          <div class="actions">
-            <a class="btn-hx" href={links.hx} rel="noopener">{c.hero.primary}</a>
-          </div>
         </div>
+        <p class="hero-cta hero-cta-1"><a class="btn-hx" href={links.hx} rel="noopener">{c.hero.primary}</a></p>
+        <p class="hero-cta hero-cta-2"><a class="btn-hx btn-hx-ghost" href={links.hx} rel="noopener">{c.hero.secondary}</a></p>
         {heroKnot ? (
           <div class="hero-art hero-art-logo">
             <Picture src={heroKnot} alt={c.hero.altLogo} widths={[heroKnot.width]} sizes={`${heroKnot.width}px`} formats={['webp']} fallbackFormat="png" loading="eager" fetchpriority="high" decoding="async" />
@@ -326,7 +326,13 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
   .mt-btn { margin-top: 2.25rem; }
 
   /* 1 | Hero: knot below the copy on phones, on the right from desktop */
-  .hero-grid { display: grid; gap: 2.5rem; padding-top: calc(var(--header-h) + clamp(2.5rem, 7vh, 4.5rem)); padding-bottom: clamp(3.5rem, 7vw, 6rem); }
+  /* Phones: copy, both buttons, then the knot. Desktop: copy and knot side by side, with one button under each, on the same line. */
+  .hero-grid { display: grid; grid-template-areas: "copy" "cta1" "cta2" "art"; row-gap: 1rem; padding-top: calc(var(--header-h) + clamp(2.5rem, 7vh, 4.5rem)); padding-bottom: clamp(3.5rem, 7vw, 6rem); }
+  .hero-copy { grid-area: copy; }
+  .hero-cta-1 { grid-area: cta1; margin-top: 1.25rem; }
+  .hero-cta-2 { grid-area: cta2; }
+  .hero-art { grid-area: art; margin-top: 1.5rem; }
+  .hero-village { margin-top: 1.1rem; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.3rem, 2vw, 1.6rem); line-height: 1.3; color: var(--hx-copper-light); }
   .hero-title { margin-top: 1.25rem; font-size: clamp(2.4rem, 5.6vw, 4.5rem); line-height: 1.08; max-width: 16ch; text-wrap: balance; }
   .hero-text { margin-top: 1.5rem; font-size: clamp(1.125rem, 1.6vw, 1.3rem); line-height: 1.6; max-width: 34rem; }
   .hero-italic { margin-top: 1.1rem; font-family: var(--font-sans); font-style: italic; font-size: clamp(1.1rem, 1.5vw, 1.25rem); line-height: 1.55; color: var(--hx-sand); max-width: 34rem; }
@@ -336,9 +342,11 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
   /* The fallback knot artwork is on its own dark square, so its edges are softened into the section */
   .knot-blend :global(img) { -webkit-mask-image: radial-gradient(circle, #000 58%, transparent 71%); mask-image: radial-gradient(circle, #000 58%, transparent 71%); }
   @media (min-width: 64rem) {
-    .hero-grid { grid-template-columns: 1.1fr .9fr; align-items: center; gap: clamp(2rem, 5vw, 5rem); min-height: min(100svh, 52rem); }
-    .hero-art { width: 100%; max-width: 34rem; justify-self: end; }
+    .hero-grid { grid-template-columns: 1.1fr .9fr; grid-template-areas: "copy art" "cta1 cta2"; column-gap: clamp(2rem, 5vw, 5rem); row-gap: 2.25rem; align-content: center; min-height: min(100svh, 52rem); }
+    .hero-art { width: 100%; max-width: 34rem; justify-self: end; align-self: center; margin-top: 0; }
     .hero-art-logo { max-width: 25rem; justify-self: center; }
+    .hero-cta-1 { margin-top: 0; align-self: start; }
+    .hero-cta-2 { align-self: start; justify-self: center; }
   }
 
   /* 2 | Why HX */

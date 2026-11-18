@@ -15,8 +15,11 @@ export const hxLanding = typeset({
     label: 'HX | Hive eXperience',
     heading: 'Your Free Online Community Platform Built Around People',
     text: 'A place to connect, share, learn and keep relationships growing.',
+    village: 'A Village without Walls…',
     italic: 'Imagine a world where communities have no borders, where people come together through shared passions, purpose and a genuine desire to help one another thrive.',
-    primary: 'JOIN YOUR VILLAGE WITHOUT WALLS HERE',
+    // Two ways in: leaders, coaches and organisers start a Hive; individual members explore first.
+    primary: 'Create Your Free Hive',
+    secondary: 'Explore the Public Hives & Events',
     alt: 'The HX Belonging Knot: six interlocking copper hexagons around an open centre, the symbol of HX | Hive eXperience.',
     altLogo: 'The HX | Hive eXperience logo at the centre of the HX Belonging Knot: six interlocking copper hexagons.',
   },
