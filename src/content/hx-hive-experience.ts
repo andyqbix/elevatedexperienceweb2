@@ -99,31 +99,19 @@ export const hxLanding = typeset({
       { heading: 'No Selling Your Data.', sub: 'Ever!', text: "Your personal information is yours. We never sell it to advertisers or build advertising profiles. Your trust matters more than your data's commercial value." },
     ],
     closing: 'Your People. Your Community. Your Connections.',
-    purpose: 'Belong. Contribute. Prosper.',
   },
-  who: {
+  // One section in place of the former "Who it's for", "Free to join" and "Three steps" sections.
+  join: {
     heading: 'Whatever You Want to Build Together, There Is Room for It Here.',
-    pills: ['Local communities', 'Passion groups', 'Creators', 'Clubs', 'Charities', 'Associations', 'Learning communities', 'Businesses'],
-    text: "Start a mum's group, bring an association together, support a charity or build relationships around your business. What would you love to bring to your community?",
-  },
-  free: {
-    heading: 'Free to Join. Every HX App, Free to Use.',
-    text: 'Whether you join a Hive or create your own, use every HX app at no cost. HX is free. You only pay when you sell something.',
+    intro: "Whether you're bringing a local community together, growing a business, supporting a charity, running an association, sharing your expertise or connecting people around a common passion, there's a place for you on HX.",
+    pills: ['Local communities', 'Passion groups', 'Creators', 'Clubs', 'Charities', 'Associations', 'Learning communities', 'Businesses', 'Memberships'],
+    text: 'Join a Hive or create your own, bring your people together and start building meaningful connections, sharing opportunities and growing something wonderful.',
+    freeHeading: 'Free to Join. Free to Connect. Free to Grow.',
+    freeText: 'Use every HX app at no cost. HX is free. You only pay when you sell something.',
     pricing: 'See what HX costs',
     cta: 'JOIN HX NOW',
-    domain: 'hive.elevatedexperience.vip',
-    closing: 'Belong. Contribute. Prosper.',
-    alt: 'The HX Belonging Knot in copper.',
-  },
-  // Restored from the previous HX page. App names updated to carry the HX prefix.
-  start: {
-    heading: 'Your Hive in Three Steps.',
-    steps: [
-      { lead: 'Join HX free.', text: 'Create your account at hive.elevatedexperience.vip.' },
-      { lead: 'Start your Hive.', text: 'Give it a name, a purpose and a welcome that sounds like you.' },
-      { lead: 'Invite your people.', text: 'Bring in members, clients and event guests, then post your first event or conversation.' },
-    ],
-    cta: 'JOIN HX NOW',
+    quote: 'Because Every eXperience Starts With People. And Every Great Community Starts With You.',
+    networkAlt: 'The HX Community "Your Network" map: a member at the centre, connected to friends, family and professional contacts shown as hexagon portraits.',
   },
   meaning: {
     label: 'What the knot means',

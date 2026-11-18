@@ -38,6 +38,7 @@ const heroKnot = asset('hx-hero-knot');
 const diagram = asset('hx-cx-dx-ex-diagram');
 const screenHome = asset('hx-screen-home') ?? homeFallback;
 const screenHives = asset('hx-screen-your-hives');
+const screenNetwork = asset('hx-screen-network');
 // Each app card with its icon. Long names may wrap between words (HXSocial|Media|Connector), never mid-word.
 const cards = c.apps.cards.map((a) => ({ ...a, img: asset(a.icon), nameBreakable: a.name.replace(/([a-zé])([A-Z])/g, '$1<wbr>$2') }));
 
@@ -175,52 +176,31 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
         </ul>
         <div class="promise-close reveal">
           <p class="promise-closing">{c.promise.closing}</p>
-          <p class="promise-purpose">{c.promise.purpose}</p>
         </div>
       </div>
     </section>
 
-    <!-- 6 | WHO IT'S FOR -->
+    <!-- 6 | WHO IT'S FOR, FREE TO JOIN (one section, with the Your Network screen) -->
     <section class="sec ivory">
-      <div class="wrap who reveal">
-        <h2 class="h2">{c.who.heading}</h2>
-        <ul class="pills">
-          {c.who.pills.map((p) => <li>{p}</li>)}
-        </ul>
-        <p class="lead">{c.who.text}</p>
-      </div>
-    </section>
-
-    <!-- 7 | FREE TO JOIN -->
-    <section class="sec dark">
-      <div class="wrap free-grid">
-        <div class="reveal">
-          <h2 class="h2">{c.free.heading}</h2>
-          <p class="lead">{c.free.text} <a class="link-sand" href={pricing} rel="noopener">{c.free.pricing}</a></p>
-          <p class="mt-btn"><a class="btn-hx" href={links.hx} rel="noopener">{c.free.cta}</a></p>
-          <p class="domain">{c.free.domain}</p>
-          <p class="purpose">{c.free.closing}</p>
+      <div class:list={['wrap', screenNetwork ? 'join-grid' : 'join-solo']}>
+        <div class="join-copy reveal">
+          <h2 class="h2">{c.join.heading}</h2>
+          <p class="join-p">{c.join.intro}</p>
+          <ul class="pills">
+            {c.join.pills.map((p) => <li>{p}</li>)}
+          </ul>
+          <p class="join-p">{c.join.text}</p>
+          <h3 class="join-free">{c.join.freeHeading}</h3>
+          <p class="join-p">{c.join.freeText} <a class="link-bronze" href={pricing} rel="noopener">{c.join.pricing}</a></p>
+          <p class="mt-btn"><a class="btn-hx" href={links.hx} rel="noopener">{c.join.cta}</a></p>
         </div>
-        <div class:list={['free-art reveal', !knotSupplied && 'knot-blend']} style="--d:90ms">
-          <Picture src={knot} alt={c.free.alt} widths={[320, 480, 720]} sizes="(min-width: 64rem) 18rem, 14rem" formats={['webp']} fallbackFormat={fallbackOf(knot)} {...lazy} />
-        </div>
+        {screenNetwork && (
+          <figure class="join-art reveal" style="--d:90ms">
+            <Picture src={screenNetwork} alt={c.join.networkAlt} widths={[480, 720, 1000]} sizes="(min-width: 64rem) 40vw, 92vw" formats={['webp']} fallbackFormat="jpg" {...lazy} />
+          </figure>
+        )}
       </div>
-    </section>
-
-    <!-- 8 | HOW TO GET STARTED -->
-    <section class="sec ivory">
-      <div class="wrap">
-        <h2 class="h2 reveal">{c.start.heading}</h2>
-        <ol class="steps">
-          {c.start.steps.map((s, i) => (
-            <li class="step reveal" style={`--d:${i * 90}ms`}>
-              <span class="step-n" aria-hidden="true">{i + 1}</span>
-              <p><strong>{s.lead}</strong> {s.text}</p>
-            </li>
-          ))}
-        </ol>
-        <p class="mt-btn reveal"><a class="btn-hx" href={links.hx} rel="noopener">{c.start.cta}</a></p>
-      </div>
+      <div class="wrap"><p class="join-quote reveal">{c.join.quote}</p></div>
     </section>
 
     <!-- 9 | WHAT THE KNOT MEANS -->
@@ -345,7 +325,7 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
   .hero-italic { margin-top: 1.1rem; font-family: var(--font-sans); font-style: italic; font-size: clamp(1.1rem, 1.5vw, 1.25rem); line-height: 1.55; color: var(--hx-sand); max-width: 34rem; }
   .hero-art { width: min(100%, 26rem); justify-self: center; }
   .hero-art.hero-art-logo { width: min(100%, 25rem); }
-  .hero-art :global(img), .free-art :global(img) { display: block; width: 100%; height: auto; }
+  .hero-art :global(img) { display: block; width: 100%; height: auto; }
   /* The fallback knot artwork is on its own dark square, so its edges are softened into the section */
   .knot-blend :global(img) { -webkit-mask-image: radial-gradient(circle, #000 58%, transparent 71%); mask-image: radial-gradient(circle, #000 58%, transparent 71%); }
   @media (min-width: 64rem) {
@@ -415,30 +395,24 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
   .promise p { margin-top: .9rem; font-size: 1.075rem; line-height: 1.65; color: var(--hx-ivory); }
   .promise-close { margin-top: clamp(3rem, 6vw, 4.5rem); padding-top: 2rem; border-top: 1px solid rgb(238 179 124 / .4); text-align: center; }
   .promise-closing { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.4rem, 2.6vw, 2rem); line-height: 1.3; color: var(--hx-ivory); }
-  .promise-purpose { margin-top: .75rem; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.15rem, 1.8vw, 1.4rem); color: var(--hx-sand); }
 
-  /* 6 | Who it's for */
-  .who { max-width: 56rem; }
-  .pills { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 2rem; }
-  .pills li { padding: .55rem 1.15rem; border: 1px solid var(--hx-copper); border-radius: 999px; background: #fff; font-weight: 600; font-size: .98rem; color: var(--hx-graphite); }
-  .who .lead { margin-top: 2rem; }
-
-  /* 7 | Free to join */
-  .free-grid { display: grid; gap: 3rem; align-items: center; }
-  @media (min-width: 64rem) { .free-grid { grid-template-columns: 1fr auto; } }
-  .link-sand { color: var(--hx-sand); font-weight: 600; text-decoration: underline; text-underline-offset: .2em; white-space: nowrap; }
-  .link-sand:hover { color: var(--hx-peach); }
-  .domain { margin-top: 1rem; font-size: .95rem; color: var(--hx-ivory); opacity: .85; }
-  .purpose { margin-top: 2.25rem; font-family: var(--font-display); font-size: clamp(1.3rem, 2vw, 1.6rem); color: var(--hx-sand); }
-  .free-art { width: 14rem; justify-self: center; }
-  @media (min-width: 64rem) { .free-art { width: 18rem; } }
-
-  /* 8 | Steps */
-  .steps { display: grid; gap: 1.25rem; margin-top: clamp(2rem, 4vw, 3rem); }
-  @media (min-width: 56rem) { .steps { grid-template-columns: repeat(3, 1fr); gap: 2rem; } }
-  .step { display: grid; gap: 1rem; align-content: start; padding-top: 1.5rem; border-top: 1px solid var(--hx-line); font-size: 1.075rem; line-height: 1.65; }
-  .step-n { font-family: var(--font-display); font-size: 3rem; line-height: 1; color: var(--hx-copper); }
-  .step strong { font-weight: 700; }
+  /* 6 | Who it's for and free to join: text on the left, the Your Network screen on the right (below on phones) */
+  .join-grid { display: grid; gap: clamp(2.5rem, 5vw, 4.5rem); align-items: center; }
+  @media (min-width: 64rem) { .join-grid { grid-template-columns: 1.1fr .9fr; } }
+  .join-solo .join-copy { max-width: 56rem; }
+  .join-p { margin-top: 1.25rem; font-size: 1.075rem; line-height: 1.7; }
+  .join-copy > .h2 + .join-p { margin-top: 1.5rem; }
+  .pills { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.75rem; }
+  .pills li { padding: .5rem 1.05rem; border: 1px solid var(--hx-copper); border-radius: 999px; background: #fff; font-weight: 600; font-size: .95rem; color: var(--hx-graphite); }
+  .pills + .join-p { margin-top: 1.75rem; }
+  .hxl .join-free { margin-top: 2.25rem; font-size: clamp(1.35rem, 2.2vw, 1.75rem); color: var(--hx-bronze); }
+  .join-free + .join-p { margin-top: .75rem; }
+  .link-bronze { color: var(--hx-bronze); font-weight: 600; text-decoration: underline; text-underline-offset: .2em; white-space: nowrap; }
+  .link-bronze:hover { color: var(--hx-graphite); }
+  .join-art { max-width: 34rem; width: 100%; justify-self: center; }
+  .join-art :global(img) { display: block; width: 100%; height: auto; border-radius: var(--hx-radius); border: 1px solid var(--hx-line); box-shadow: 0 1px 2px rgb(78 63 54 / .08), 0 18px 40px -22px rgb(78 63 54 / .35); }
+  .join-quote { margin-top: clamp(3rem, 6vw, 4.5rem); padding-top: 2rem; border-top: 1px solid var(--hx-line); text-align: center; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.3rem, 2.4vw, 1.85rem); line-height: 1.35; color: var(--hx-bronze); text-wrap: balance; }
+  @media (min-width: 64rem) { .join-quote { padding-inline: 4rem; } }
 
   /* 9 | What the knot means */
   .label-ivory { color: var(--hx-bronze); }
