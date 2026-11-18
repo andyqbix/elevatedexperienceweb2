@@ -84,7 +84,7 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
     <section class="hero dark">
       <div class="wrap hero-grid">
         <div class="hero-copy">
-          <p class="label">{c.hero.label}</p>
+          <p class="hero-brand">{c.hero.label}</p>
           <h1 class="hero-title">{c.hero.heading}</h1>
           <p class="hero-text">{c.hero.text}</p>
           <p class="hero-italic">{c.hero.italic}</p>
@@ -307,6 +307,8 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
   /* Type */
   .hxl h1, .hxl h2, .hxl h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.015em; line-height: 1.1; }
   .label { font-size: .8rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--hx-copper-light); }
+  /* Hero brand line: large and in its true spelling (capital X), so visitors see straight away what this is */
+  .hero-brand { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.75rem, 3.6vw, 2.75rem); line-height: 1.1; letter-spacing: -0.01em; color: var(--hx-copper-light); }
   .h2 { font-size: clamp(1.9rem, 3.8vw, 3rem); text-wrap: balance; max-width: 26ch; }
   .lead { margin-top: 1.25rem; font-size: clamp(1.075rem, 1.4vw, 1.2rem); line-height: 1.65; max-width: 62ch; }
   .head { max-width: 50rem; }
