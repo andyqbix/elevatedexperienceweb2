@@ -32,6 +32,8 @@ export const links = {
   bookCall: 'https://bookings.cloud.microsoft/book/ElevatedExperienceLtd@elevatedexperience.vip/?ismsaljsauthenabled',
   hx: 'https://hive.elevatedexperience.vip/',
   hxEvents: 'https://hive.elevatedexperience.vip/events',
+  hxHives: 'https://hive.elevatedexperience.vip/hives',
+  hxPricing: 'https://hive.elevatedexperience.vip/pricing',
   hxMicrosoftStore: 'https://apps.microsoft.com/detail/9NKRSD0B4FPH',
   hxGooglePlay: 'https://play.google.com/store/apps/details?id=com.elevatedexperience.hive',
   humanxIndia: 'https://hive.elevatedexperience.vip/events/humanx-india-new-delhi-2027-adadc759-d8c7-42da-87de-825be77dfbfe?ref=link',

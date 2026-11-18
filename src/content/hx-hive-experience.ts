@@ -17,9 +17,10 @@ export const hxLanding = typeset({
     text: 'A place to connect, share, learn and keep relationships growing.',
     village: 'A Village without Walls…',
     italic: 'Imagine a world where communities have no borders, where people come together through shared passions, purpose and a genuine desire to help one another thrive.',
-    // Two ways in: leaders, coaches and organisers start a Hive; individual members explore first.
+    // Three ways in: start a Hive, or browse public Hives and events first.
     primary: 'Create Your Free Hive',
-    secondary: 'Explore the Public Hives & Events',
+    browse: 'Browse Hives',
+    events: 'Explore Events',
     alt: 'The HX Belonging Knot: six interlocking copper hexagons around an open centre, the symbol of HX | Hive eXperience.',
     altLogo: 'The HX | Hive eXperience logo at the centre of the HX Belonging Knot: six interlocking copper hexagons.',
   },
@@ -135,7 +136,11 @@ export const hxLanding = typeset({
   faq: {
     heading: 'Frequently Asked Questions',
     items: [
-      { q: 'Is HX really free?', a: 'Yes. Joining HX and starting your own Hive is free. HX takes 5% only when you make a sale, for example a paid event ticket, a course or a marketplace item.' },
+      {
+        q: 'Is HX really free?',
+        a: "Yes. It is free to join, free to create a Hive, build a community, use the tools, build a course, or run an event. You only pay if you sell something: HX takes 5% of paid tickets, courses and products, plus payment processing charges. If you don't charge, there's nothing to pay.",
+        links: [{ label: 'See what HX costs', href: links.hxPricing, external: true }],
+      },
       { q: 'What is the difference between HX and a Hive?', a: 'HX is the platform. A Hive is a community inside it. You can belong to several Hives and start your own.' },
       { q: 'Are there ads?', a: "No. There are no ads on HX and your members' attention is never sold." },
       { q: 'How does the feed decide what I see?', a: 'It does not. HXCafé shows posts in the order they were written, with no algorithm choosing what you miss.' },
