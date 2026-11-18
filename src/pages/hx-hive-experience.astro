@@ -211,13 +211,34 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
           <p class="join-p">{c.join.text}</p>
           <h3 class="join-free">{c.join.freeHeading}</h3>
           <p class="join-p">{c.join.freeText} <a class="link-bronze" href={pricing} rel="noopener">{c.join.pricing}</a></p>
-          <p class="mt-btn"><a class="btn-hx" href={links.hx} rel="noopener">{c.join.cta}</a></p>
         </div>
         {screenNetwork && (
           <figure class="join-art reveal" style="--d:90ms">
             <Picture src={screenNetwork} alt={c.join.networkAlt} widths={[480, 720, 1000]} sizes="(min-width: 64rem) 40vw, 92vw" formats={['webp']} fallbackFormat="jpg" {...lazy} />
           </figure>
         )}
+      </div>
+      <div class="wrap">
+        <div class="paths">
+          {c.join.paths.map((p, i) => (
+            <article class:list={['path reveal', i === 0 ? 'path-dark' : 'path-light']} style={`--d:${i * 90}ms`}>
+              <p class="path-label">
+                {p.icon === 'people' ? (
+                  <svg class="path-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                ) : (
+                  <svg class="path-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /><path d="M12 5 9.04 7.96a2.17 2.17 0 0 0 0 3.08c.82.82 2.13.85 3 .07l2.07-1.9a2.82 2.82 0 0 1 3.79 0l2.96 2.66" /><path d="m18 15-2-2" /><path d="m15 18-2-2" /></svg>
+                )}
+                <span>{p.label}</span>
+              </p>
+              <h3 class="path-h">{p.heading}</h3>
+              <p class="path-intro">{p.intro}</p>
+              <ul class="path-points">
+                {p.points.map((pt) => <li>{pt}</li>)}
+              </ul>
+              <p class="path-cta"><a class="btn-hx" href={links.hx} rel="noopener">{p.cta}</a></p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
 
@@ -450,6 +471,25 @@ const ext = { target: '_blank', rel: 'noopener noreferrer' };
   .join-free + .join-p { margin-top: .75rem; }
   .link-bronze { color: var(--hx-bronze); font-weight: 600; text-decoration: underline; text-underline-offset: .2em; white-space: nowrap; }
   .link-bronze:hover { color: var(--hx-graphite); }
+  /* Two journeys: graphite card for builders, white card for members; stacked on phones */
+  .paths { display: grid; gap: 1.5rem; margin-top: clamp(3rem, 6vw, 4.5rem); }
+  @media (min-width: 56rem) { .paths { grid-template-columns: 1fr 1fr; } }
+  .path { display: flex; flex-direction: column; padding: clamp(1.75rem, 3.5vw, 2.75rem); border-radius: var(--hx-radius); }
+  .path-dark { background: var(--hx-graphite); color: var(--hx-ivory); }
+  .path-light { background: #fff; border: 1px solid var(--hx-line); box-shadow: 0 1px 2px rgb(78 63 54 / .08), 0 18px 40px -24px rgb(78 63 54 / .3); }
+  .path-label { display: flex; align-items: center; gap: .75rem; font-size: .82rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; line-height: 1.4; }
+  .path-dark .path-label { color: var(--hx-sand); }
+  .path-light .path-label { color: var(--hx-bronze); }
+  .path-icon { flex: none; width: 2.5rem; height: 2.5rem; padding: .5rem; border-radius: 50%; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+  .path-dark .path-icon { background: rgb(238 179 124 / .14); }
+  .path-light .path-icon { background: rgb(185 110 80 / .12); }
+  .hxl .path-h { margin-top: 1.25rem; font-size: clamp(1.5rem, 2.4vw, 2rem); }
+  .path-intro { margin-top: 1rem; font-size: 1.075rem; line-height: 1.65; }
+  .path-points { display: grid; gap: .8rem; margin-top: 1.5rem; flex: 1; align-content: start; }
+  .path-points li { position: relative; padding-left: 1.75rem; line-height: 1.6; }
+  .path-points li::before { content: ""; position: absolute; left: 0; top: .45rem; width: .8rem; height: .8rem; background: var(--hx-copper); clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+  .path-dark .path-points li::before { background: var(--hx-sand); }
+  .path-cta { margin-top: 2rem; }
   .join-art { max-width: 34rem; width: 100%; justify-self: center; }
   .join-art :global(img) { display: block; width: 100%; height: auto; border-radius: var(--hx-radius); border: 1px solid var(--hx-line); box-shadow: 0 1px 2px rgb(78 63 54 / .08), 0 18px 40px -22px rgb(78 63 54 / .35); }
   .join-quote { margin-top: clamp(3rem, 6vw, 4.5rem); padding-top: 2rem; border-top: 1px solid var(--hx-line); text-align: center; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.3rem, 2.4vw, 1.85rem); line-height: 1.35; color: var(--hx-bronze); text-wrap: balance; }

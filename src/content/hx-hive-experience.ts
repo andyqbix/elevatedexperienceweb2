@@ -119,8 +119,34 @@ export const hxLanding = typeset({
     freeHeading: 'Free to Join. Free to Connect. Free to Grow.',
     freeText: 'Use every HX app at no cost. HX is free. You only pay when you sell something.',
     pricing: 'See what HX costs',
-    cta: 'JOIN HX NOW',
     networkAlt: 'The HX Community "Your Network" map: a member at the centre, connected to friends, family and professional contacts shown as hexagon portraits.',
+    // Two clear journeys: build a Hive, or join one.
+    paths: [
+      {
+        icon: 'people',
+        label: 'For Community Builders, Coaches & Associations',
+        heading: 'Your Community. Your People. Your Way.',
+        intro: 'Create your own branded digital village without walls, where your community can connect, share, learn and grow.',
+        points: [
+          'Replace fragmented tool stacks (WhatsApp, Facebook, Eventbrite, Mailchimp, etc.).',
+          'Bring your conversations, events, courses, communications and opportunities together in one place.',
+          'Retain 100% community ownership with zero ad intrusion.',
+        ],
+        cta: 'Start Your Hive',
+      },
+      {
+        icon: 'heart',
+        label: 'For Members, Creators & Attendees',
+        heading: 'Find Your People. Share Your Passion. Make an Impact.',
+        intro: 'Discover communities built around shared interests, genuine connections and exciting opportunities.',
+        points: [
+          'Connect in chronological, ad-free spaces where you are a person, not a product.',
+          'Discover events, learn new skills, share your expertise and support businesses and causes you care about.',
+          'Be seen and valued for your contributions, not how much you pay for visibility.',
+        ],
+        cta: 'Experience the Hive',
+      },
+    ],
   },
   meaning: {
     heading: 'The HX Belonging Knot. Connected by Purpose. Stronger Together.',
