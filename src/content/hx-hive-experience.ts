@@ -89,7 +89,7 @@ export const hxLanding = typeset({
         title: 'Founder, RENEWALism & Inner Power Coach',
       },
       {
-        quote: "HX strips away the social noise and gives leaders and coaches a genuine digital home. From hosting live cohorts to having deep conversations in the HXCafé without algorithms getting in the way, the platform is pure magic. It's intuitive, beautifully structured, and keeps my community truly engaged.",
+        quote: "I've been part of HX since inception, and have loved creating a new home for my business: my profile, my business, my products, my courses, my events. Everything lives in one place and it's so much easier than my WordPress website. I created a small event as a test run and sold it while I was sleeping! My international coaching clients also have a place where they can read more about my coaching and sign up immediately. I've made nearly USD 2,000 on the platform that wouldn't have been possible before.",
         name: 'Chantelle Botha',
         title: 'The Choice Catalyst & International Keynote Speaker',
       },
